@@ -33,12 +33,15 @@ QUESTION & ANSWER:
 	Q. If {APISET} just forwards to {DLL}, why can't I use all the
 	   functions exported by {DLL}?
 	A. The target windows versions of {APISET} don't have a uniform
-	   interface to all the functions in {DLL}. The choice of excluding
-	   those targets is outside the scope of umbrella libraries.
+	   interface to all the functions in {DLL}. Fine-grained exclusion
+	   of targets is outside the scope of umbrella libraries.
 
 
 REFERENCES:
 ---
+Windows umbrella libraries
+- <https://docs.microsoft.com/en-us/windows/win32/apiindex/windows-umbrella-libraries>
+
 OneCore
 - <https://docs.microsoft.com/en-us/windows-hardware/drivers/develop/building-for-onecore>
 
@@ -48,6 +51,9 @@ WindowsApps
 Universal Windows Platform (UWP)
 - <https://docs.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide>
 - <https://docs.microsoft.com/en-us/uwp/win32-and-com/alternatives-to-windows-apis-uwp>
+
+Windows API sets
+- <https://docs.microsoft.com/en-us/windows/win32/apiindex/windows-apisets?redirectedfrom=MSDN>
 
 TOOLS:
 ---
