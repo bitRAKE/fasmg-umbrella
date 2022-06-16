@@ -1,5 +1,5 @@
-; OneCore.fincg WinRT / UWP API Set
-include "macro/import64_apiset.fincg"
+include "import64_apiset.inc.g"
+
 libraries \
 "ADVAPI32",\
 "AUTHZ",\
