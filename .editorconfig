@@ -1,0 +1,14 @@
+# This file configures editors using the EditorConfig
+# scheme: https://editorconfig.org/
+
+root = true
+
+[*.{asm,inc,g,txt}]
+charset = utf-8
+end_of_line = lf
+tab_width = 8
+indent_size = tab
+indent_style = tab
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = off
