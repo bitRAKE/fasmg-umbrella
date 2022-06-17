@@ -83,7 +83,7 @@ if definite Have_an_older_Windows_version.
 	SetConsoleMode [.hStdIn],[.dwMode]
 end if
 
-collect _CONST_
+collect __CONST
 	msg db \
 		27,'[32m',\
 		'green',10,\
@@ -110,6 +110,13 @@ end  collect
 	cmp eax,107
 	ja .break
 
+;	movzx r8,al
+;	movzx r9,al
+;	wsprintfA ADDR buffer,<_A 27,'[%dm %3d',27,'[m'>,r8,r9
+;	xchg r8,rax
+
+; SHLWAPI *sprintf*, functions are supported in headless, but we can do it ourselves:
+
 	lea rdi,[buffer+2]
 	mov byte [rdi-2],27
 	mov byte [rdi-1],'['
@@ -129,10 +136,6 @@ end  collect
 	pop r8
 	sub r8,buffer
 
-;	movzx r8,al
-;	movzx r9,al
-;	wsprintfA ADDR buffer,<_A 27,'[%dm %3d',27,'[m'>,r8,r9
-;	xchg r8,rax
 	WriteConsoleA [.hStdOut],ADDR buffer,r8,ADDR .rit,0
 
 	inc [.j]
@@ -157,7 +160,8 @@ section '.rdata' data readable
 align 64
 digit_table db '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-	_CONST_
+	__CONST
 
 section '.data' data readable writeable
+	__DATA
 	buffer rw 1024 ; api limits to 1k characters
