@@ -27,7 +27,9 @@ Main:
 	enter .frame,0
 	GetStdHandle STD_OUTPUT_HANDLE
 	mov [.hStdOut],rax
-	WriteConsoleW [.hStdOut],ADDR mess0,mess0.chars,ADDR .kitten,0
+	; note: parameter processing is in reverse order, so we manually load RDX to insure .bytes is set correctly
+	lea rdx,<_W 27,'[31mCommand-line:',27,'[7m',9>
+	WriteConsoleW [.hStdOut],rdx,(.bytes shr 1),ADDR .kitten,0
 
 ; replace GetCommandlineW, Windows XP through Windows 11:
 
@@ -63,23 +65,12 @@ Main:
 .parm_loop_exit:
 	LocalFree rdi
 
-	; be nice, and reset text attributes
-	WriteConsoleW [.hStdOut],ADDR mess1,mess1.chars,ADDR .kitten,0
+	; be nice - reset text attributes
+	lea rdx,<_W 27,'[m'>
+	WriteConsoleW [.hStdOut],rdx,(.bytes shr 1),ADDR .kitten,0
 	leave
 	pop rdi rbx
 	retn
-
-; invert text to make spaces output more explicit
-collect CONST.2
-	mess0:
-		du 27,'[31mCommand-line:'
-		du 27,'[7m',9
-	mess0.chars := ($ - mess0) shr 1
-
-	mess1:
-		du 27,'[m'
-	mess1.chars := ($ - mess1) shr 1
-end collect
 
 collect BSS.64
 	buffer rw 1024

@@ -87,7 +87,7 @@ if definite Have_an_older_Windows_version.
 	SetConsoleMode [.hStdIn],[.dwMode]
 end if
 
-collect CONST.1
+	collect CONST.1
 	.msg db \
 		27,'[32m',\
 		'green',10,\
@@ -100,7 +100,7 @@ collect CONST.1
 		27,'[m',\
 		'back to noral text',10
 	.msg_bytes := $ - .msg
-end  collect
+	end  collect
 	WriteConsoleA [.hStdOut],ADDR .msg,.msg_bytes,ADDR .rit,0
 
 

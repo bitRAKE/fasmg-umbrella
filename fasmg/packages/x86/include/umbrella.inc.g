@@ -138,15 +138,8 @@ iterate reg, rcx,rdx,r8,r9,rax,r10,r11
 			mov [.P#index],reg
 		end if
 	else match =CONST? any,arg
-; TODO: batch into granulatity group
-		collect CONST.1
-			label llabl
-			any
-		end collect
-		if index < 5
-			lea reg,[llabl]
-		else
-			lea reg,[llabl]
+		lea reg,< any >
+		if 4 < index
 			mov [.P#index],reg
 		end if
 	else match =_W any,arg
