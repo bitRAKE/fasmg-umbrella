@@ -45,7 +45,6 @@ Main:
 	mov [.cmdsW],rdx
 	WriteConsoleW [.hStdOut],rdx,r8,ADDR .kitten,0
 
-	xchg rcx,rax
 	CommandLineToArgvW [.cmdsW],ADDR .argc
 	xchg rdi,rax
 	xor ebx,ebx
