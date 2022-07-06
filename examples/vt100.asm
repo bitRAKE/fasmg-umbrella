@@ -2,6 +2,10 @@ format PE64 CONSOLE 6.2 at 0x1_0000
 define UMBRELLA_LIBRARY "windowscoreheadless"
 include 'umbrella.inc.g'
 
+collect CONST.1
+	digit_table db '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+end collect
+
 UINT64__Baseform:
 ; RAX number to convert
 ; RCX number base to use [2,36]
@@ -83,8 +87,8 @@ if definite Have_an_older_Windows_version.
 	SetConsoleMode [.hStdIn],[.dwMode]
 end if
 
-collect __CONST
-	msg db \
+collect CONST.1
+	.msg db \
 		27,'[32m',\
 		'green',10,\
 		27,'[38;5;10m',\
@@ -95,9 +99,9 @@ collect __CONST
 		'bright blinky red',10,\
 		27,'[m',\
 		'back to noral text',10
-	msg_bytes := $ - msg
+	.msg_bytes := $ - .msg
 end  collect
-	WriteConsoleA [.hStdOut],ADDR msg,msg_bytes,ADDR .rit,0
+	WriteConsoleA [.hStdOut],ADDR .msg,.msg_bytes,ADDR .rit,0
 
 
 
@@ -142,8 +146,8 @@ end  collect
 	cmp [.j],10
 	jnz .parts
 .break:
-	define Linefeed (msg + msg_bytes - 1)
-	WriteConsoleA [.hStdOut],ADDR Linefeed,1,ADDR .rit,0
+	define .Linefeed (.msg + .msg_bytes - 1)
+	WriteConsoleA [.hStdOut],ADDR .Linefeed,1,ADDR .rit,0
 
 	inc [.i]
 	cmp [.i],11
@@ -156,12 +160,6 @@ end  collect
 	pop rdi rsi
 	retn
 
-section '.rdata' data readable
-align 64
-digit_table db '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-	__CONST
-
-section '.data' data readable writeable
-	__DATA
-	buffer rw 1024 ; api limits to 1k characters
+collect BSS.64
+	buffer rw 1024
+end collect

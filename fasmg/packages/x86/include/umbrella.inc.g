@@ -35,13 +35,18 @@ include 'equates/wsock32.inc'
 
 
 include 'macro\collect.inc'
-collect __CONST
-end collect
-collect __DATA
-end collect
-collect __BSS
-end collect
 
+; initialize data collections
+repeat 7
+repeat 1,I:1 shl (7-%)
+	collect CONST.I		; read-only
+	end collect
+	collect DATA.I		; initialized read-write
+	end collect
+	collect BSS.I		; uninitialized read-write
+	end collect
+end repeat
+end repeat
 
 include 'macro\rstrings.inc'
 dummy RSTRING ; zero id
@@ -134,7 +139,7 @@ iterate reg, rcx,rdx,r8,r9,rax,r10,r11
 		end if
 	else match =CONST? any,arg
 ; TODO: batch into granulatity group
-		collect __CONST
+		collect CONST.1
 			label llabl
 			any
 		end collect
@@ -145,26 +150,13 @@ iterate reg, rcx,rdx,r8,r9,rax,r10,r11
 			mov [.P#index],reg
 		end if
 	else match =_W any,arg
-		collect __CONST
-			align 2
-			label llabl
-			du any,0
-		end collect
-		if index < 5
-			lea reg,[llabl]
-		else
-			lea reg,[llabl]
+		lea reg,< arg >
+		if 4 < index
 			mov [.P#index],reg
 		end if
 	else match =_A any,arg
-		collect __CONST
-			label llabl
-			db any,0
-		end collect
-		if index < 5
-			lea reg,[llabl]
-		else
-			lea reg,[llabl]
+		lea reg,< arg >
+		if 4 < index
 			mov [.P#index],reg
 		end if
 	else match =_R any,arg
@@ -173,18 +165,6 @@ iterate reg, rcx,rdx,r8,r9,rax,r10,r11
 			mov reg32.reg,word_id
 		else
 			mov [.P#index],word_id
-		end if
-	else match =_T any,arg
-		collect __CONST
-			align sizeof.TCHAR
-			label llabl
-			TCHAR any,0
-		end collect
-		if index < 5
-			lea reg,[llabl]
-		else
-			lea reg,[llabl]
-			mov [.P#index],reg
 		end if
 	else
 		x86.parse_operand@src arg
@@ -250,25 +230,18 @@ macro lea? line&
 ; NOTE: spaces needed for possible line breaks! Use most general configuration!
 	match any =, =< values =>,line
 		local nstart,nend
-		match =_T V,values
-			collect __CONST
-				align sizeof.TCHAR
-				label nstart
-				TCHAR V,0
-				label nend
-			end collect
-		else match =_A V,values
-			collect __CONST
+		match =_A V,values
+			collect CONST.1
 				nstart db V,0
 				label nend
 			end collect
 		else match =_W V,values
-			collect __CONST
+			collect CONST.2
 				nstart du V,0
 				label nend
 			end collect
-		else
-			collect __CONST
+		else ; TODO: could assume granularity group based on size
+			collect CONST.1
 				label nstart
 				values
 				label nend
@@ -302,9 +275,62 @@ macro mov? line&
 end macro
 
 section '.text' code readable executable
+
+; If needed, resource data should be at end of program:
+;	+ resource file
+;	+ instruction stream defined resource
+;		+ with resource strings:
+;			RT_STRING, strings		; directory entry
+;			resource_RSTRINGS strings	; generate tables
+;
+;section '.rsrc' resource from 'file.res' data readable
+;section '.rsrc' resource data readable
+;include 'rsrc\rsrc.inc.g'
+
 postpone
+	; The following defines the section layout for the executable:
+
+	; Grouping starts at cacheline size and decreases to one. This insures each
+	; successive group is aligned.
+	;
+	; "How can multiple sections of file be generated in parallel?"
+	; https://flatassembler.net/docs.php?article=fasmg
+	section '.rdata' data readable ; granularity groups for constant data
+		CONST.64
+		CONST.32
+		CONST.16
+		CONST.8
+		CONST.4
+		CONST.2
+		CONST.1
+		if $ = $$ ; loader doesn't like zero length sections
+			db 0
+		end if
+
+	section '.data' data readable writeable ; granularity groups for variable data
+		DATA.64
+		DATA.32
+		DATA.16
+		DATA.8
+		DATA.4
+		DATA.2
+		DATA.1
+
+		align 64
+
+		BSS.64
+		BSS.32
+		BSS.16
+		BSS.8
+		BSS.4
+		BSS.2
+		BSS.1
+		if $ = $$ ; loader doesn't like zero length sections
+			db ?
+		end if
+
 	; build import table
-	match ,UMBRELLA_LIBRARY
+	match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
 		include 'api\OneCoreUAP.inc.g'
 	else
 		eval "include 'api\",UMBRELLA_LIBRARY,".inc.g'"
@@ -312,9 +338,9 @@ postpone
 
 	; Assume user wants 32-bit addressing if they specifying a low base,
 	; don't output fixups to force loader to do what is implied.
-	if PE.IMAGE_BASE > 0x30_0000
+	if (PE.IMAGE_BASE - PE.RELOCATION) > 0x30_0000
 	section '.reloc' fixups data readable discardable
-	if $=$$
+	if $ = $$ ; loader doesn't like zero length sections
 		dd 0,8 ; if there are no fixups, generate dummy entry
 		display 10,9,"No relocations needed."
 	else
