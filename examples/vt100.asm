@@ -103,8 +103,6 @@ end if
 	end  collect
 	WriteConsoleA [.hStdOut],ADDR .msg,.msg_bytes,ADDR .rit,0
 
-
-
 	mov [.i],0
 .lines:
 	mov [.j],0

@@ -56,7 +56,7 @@ Main:
 	cmp qword [rdi+rbx*8],0 ; this should never happen?
 	jz .parm_loop_skip
 
-	wsprintfW ADDR buffer,<_W 10,27,'[m',27,'[32mParameter %d:',9,27,'[7m%s'>,rbx,[rdi+rbx*8]
+	wsprintfW ADDR buffer,<_W 27,'[m',10,27,'[32mParameter %d:',9,27,'[7m%s'>,rbx,[rdi+rbx*8]
 	xchg r8,rax ; characters
 	WriteConsoleW [.hStdOut],ADDR buffer,r8,ADDR .kitten,0
 .parm_loop_skip:
@@ -66,7 +66,7 @@ Main:
 	LocalFree rdi
 
 	; be nice - reset text attributes
-	lea rdx,<_W 27,'[m'>
+	lea rdx,<_W 27,'[m',10>
 	WriteConsoleW [.hStdOut],rdx,(.bytes shr 1),ADDR .kitten,0
 	leave
 	pop rdi rbx
