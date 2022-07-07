@@ -406,8 +406,7 @@ TxGetHorzExtent: ; LONG* plHorzExtent
 end namespace ; xITextHost2
 
 
-collect __DATA
-align 16
+collect DATA.8
 xITextHost2.vftable dq \
 	xITextHost2.QueryInterface,\
 	xITextHost2.AddRef,\

@@ -32,8 +32,7 @@ end repeat
 end virtual
 end postpone
 
-collect __CONST
-	align 64
+collect CONST.64
 	GUIDS db __GUID__
 end collect
 
