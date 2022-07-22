@@ -100,7 +100,7 @@ end if
 		27,'[m',\
 		'back to noral text',10
 	.msg_bytes := $ - .msg
-	end  collect
+	end collect
 	WriteConsoleA [.hStdOut],ADDR .msg,.msg_bytes,ADDR .rit,0
 
 	mov [.i],0

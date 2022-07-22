@@ -7,7 +7,7 @@ struct UNICODE_STRING
 	Length		dw ?	; USHORT, bytes
 	MaximumLength	dw ?	; USHORT, bytes
 			dw ?,?	;
-	Buffer		dq ?	; PWSTR ; array of MaximumLength words
+	Buffer		dq ?	; PWSTR ; array of MaximumLength bytes
 ends
 
 Main:
@@ -39,10 +39,10 @@ Main:
 	mov rax,[rax+0x20]
 	; access UNICODE_STRING CommandLine member of structure
 	virtual at rax+0x70
-		.cmdline UNICODE_STRING
+		.CommandLine UNICODE_STRING
 	end virtual
-	mov rdx,[.cmdline.Buffer]
-	movzx r8,[.cmdline.Length]
+	mov rdx,[.CommandLine.Buffer]
+	movzx r8,[.CommandLine.Length]
 	shr r8,1
 	mov [.cmdsW],rdx
 	WriteConsoleW [.hStdOut],rdx,r8,ADDR .kitten,0

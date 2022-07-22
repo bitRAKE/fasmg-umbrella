@@ -72,8 +72,6 @@ InterfaceListQuery:
 	retn
 
 
-
-
 WinMain:entry $
 	virtual at RBP-.frame
 			rq 4
@@ -294,7 +292,6 @@ iterate <iid,uuid>,\
 	\
 	ITextInputSupport,	B8E0C04E-5BFC-4065-B424-80901C24CD6E,\
 	IRichEditOle,		00020D00-0000-0000-C000-000000000046
-
 
 	; contruct three tables: values, string pointers, and strings
 	UUID uuid
