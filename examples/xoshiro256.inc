@@ -1,15 +1,21 @@
 
 ; see: https://prng.di.unimi.it/
 
-; Requirements:
-;	include 'macro\collect.inc'
+; TODO:
+;	+ build test cases to confirm algorithms
+;	+ more type abstractions
+;	+ AVX2 parallel version
 
-;define state rbp ; redefined this based on usage
-if ~ defined xoshiro256.state
-	; no forward reference
-	define xoshiro256.state
-	redefine xoshiro256.state rbp
-end if
+
+; configure this based on usage:
+;	align 32
+;	xoshiro256.state dq ?,?,?,?
+	if ~ defined xoshiro256.state
+		; no forward reference
+		define xoshiro256.state
+		redefine xoshiro256.state rbp
+	end if
+
 
 namespace xoshiro256
 
@@ -63,28 +69,21 @@ iterate <FUNCTION,DATAS>,\
 			jnc .skip
 			vpxor ymm0,ymm0,qqword [state]
 		.skip:
-;			push rcx
 			call next
-;			pop rcx
 			inc cl
 			jnz .scan
 			vmovdqa [state],ymm0
-;			vzeroupper
 			retn
 	end if ; used FUNCTION
 end iterate
 
-; build test cases to confirm algorithms
 
-;macro xoshiro256.data
-;namespace xoshiro256
-;	s dq ?,?,?,?
-;end namespace ; xoshiro256
-;end macro
-
-; [1,2)
-;	or rax,0x3FF
-;	ror rax,10		; favor high random bits
-;	shr rax,2		; clear top two bits
+; [1.0,2.0)
+macro double2.0
+	call xoshiro256.next
+	or rax,0x3FF
+	ror rax,10		; favor high random bits
+	shr rax,2		; clear top two bits
+end macro
 
 end namespace ; xoshiro256
