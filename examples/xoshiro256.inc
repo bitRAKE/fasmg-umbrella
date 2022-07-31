@@ -46,6 +46,27 @@ next:	mov r11,[state+1*8]
 ; Jump functions for the generator are equivalent to 2^K calls of next()
 ; it can be used to generate 2^(256-K) non-overlapping subsequences for
 ; parallel computations.
+;
+; TODO: produce these constants from the polynomial, reduce jump functions
+; to 32 bytes of code - doesn't need to be fast; usually only one is needed.
+; Here is one possiblity ...
+;::	; produce jump context/state in YMM0, based on current state
+;::	_FUNCTION:
+;::		xor eax,eax ; any legacy 32-bit register
+;::		vpxor ymm0,ymm0,ymm0
+;::	.scan:
+;::		push rax
+;::		bt dword [xoshiro256.2],eax  ; RIP+<offset>
+;::		jnc .skip
+;::		vpxor ymm0,ymm0,qqword [state]
+;::	.skip:
+;::		call next
+;::		pop rax
+;::		inc al
+;::		jnz .scan
+;::		retn
+;::	assert 32 = $ - _FUNCTION ; <state> addressing mode could alter size.
+
 
 iterate <FUNCTION,DATAS>,\
 	jump128,<\
@@ -56,14 +77,14 @@ iterate <FUNCTION,DATAS>,\
 		0x77710069854EE241,0x39109BB02ACBE635>
 
 	if used FUNCTION
-		collect DATA.32
+		collect CONST.32
 			xoshiro256.% dq DATAS
 		end collect
 
 		align 16
-		FUNCTION: ; 38 bytes
+		FUNCTION: ; 34 bytes
 			xor ecx,ecx
-			vpxor xmm0,xmm0,xmm0
+			vpxor ymm0,ymm0,ymm0
 		.scan:
 			bt dword [xoshiro256.%],ecx
 			jnc .skip

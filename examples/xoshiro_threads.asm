@@ -30,12 +30,9 @@ macro ThreadData_at base*
 		.flags	dd ?
 		.tsc	dq ?	; cached time
 			dq ?	; non-cached time
-			dq ?
-		.xo_ctx: rb 32
 
-;		.f0	dq ?
-;		.fx	dt ?
-;		.fy	dt ?
+		_align 32
+		.xo_ctx: rb 32
 
 		if ~ definite ThreadData.bytes
 			_align __CACHE_LINE__
@@ -243,7 +240,8 @@ WinMain:entry $
 
 	; RDI : number of valid threads
 
-	; set YMM0 to PRNG seed
+	; set YMM0 to PRNG seed, initial seed gets discarded on first jump,
+	; TODO: fix loop to remove extra jump
 	mov ecx,4
 .seed_loop:
         rdseed rax
