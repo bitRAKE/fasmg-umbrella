@@ -59,15 +59,15 @@ dummy RSTRING ; zero id
 ; macros are written to process 64-bit register inputs. yet, sometimes conversion to 32-bit part is convinent.
 iterate <reg,rlow>, ax,al, cx,cl, dx,dl, bx,bl, sp,spl, bp,bpl, si,sil, di,dil
 define reg32.r#reg? e#reg
-;define reg16low.r#reg? reg
-;define reg8low.r#reg? rlow
-;define reg8hi.r#reg? rlow
+define reg16low.r#reg? reg
+define reg8low.r#reg? rlow
+define reg8hi.r#reg? rlow
 end iterate
 repeat 8, i:8
 define reg32.r#i? r#i#d
-;define reg16low.r#i? r#i#w
-;define reg8low.r#i? r#i#l
-;define reg8hi.r#i? r#i#h
+define reg16low.r#i? r#i#w
+define reg8low.r#i? r#i#l
+define reg8hi.r#i? r#i#h
 end repeat
 
 

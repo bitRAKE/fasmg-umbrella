@@ -7,7 +7,12 @@
 ;	$	matches the end of the input string
 ;	.	matches any single character
 ;	*	matches zero or more occurrences of the previous character
-;	c	matches any literal character c
+;	+	matches one or more occurrences of the previous character
+;    {other}	matches any literal character
+;
+; TODO:
+;	+ escape codes for special characters
+;	+ case insensitive mode
 RegEx__Glob:
 namespace RegEx__Glob
 ; RSI: pattern to match
