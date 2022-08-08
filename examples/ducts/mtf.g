@@ -15,26 +15,26 @@ fill:	mov [NAMED.list + reg], reg8low.reg
 end macro
 
 
-macro Encode
+macro Encode reg:RSI
 	local move,done,scan
-	lodsb
+	mov al,[reg]
 	or ecx,-1
 scan:	inc ecx
 	cmp [NAMED.list+rcx],al
 	jnz scan
-	mov [rsi-1],cl		; store index of byte found
+	mov [reg],cl		; store index of byte found
 	jrcxz done
 move:	mov ah,[NAMED.list+rcx-1]
 	mov [NAMED.list+rcx],ah
 	loop move
 	mov [NAMED.list],al
-done:
+done:	inc reg
 end macro
 
 
-macro Decode
+macro Decode reg:RSI
 	local move,done
-	movzx ecx,byte [rsi]
+	movzx ecx,byte [reg]
 	mov al,[NAMED.list+rcx]
 	jrcxz done
 move:
@@ -42,8 +42,8 @@ move:
 	mov [NAMED.list+rcx],ah
 	loop move
 	mov [NAMED.list],al
-done:	mov [rsi],al		; store byte found at index
-	lodsb ; add rsi,1
+done:	mov [reg],al		; store byte found at index
+	inc reg
 end macro
 
 end namespace ; NAMED
