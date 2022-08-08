@@ -160,24 +160,23 @@ duct: entry $
 	cmp [.buf.busy],0
 	jz .done
 	mov rsi,[.buf.head]
-
-@0:
 	cmp [.options],'e'
-	jnz @1F
-	.mtf.Encode
-	jmp @2F
+	jnz @2F
 @1:
+	.mtf.Encode
+	cmp [.buf.tail],rsi
+	jnz @1B
+	jmp @3F
+@2:
 	.mtf.Decode
-
-@2:	cmp [.buf.tail],rsi
-	jnz @0B
-
+	cmp [.buf.tail],rsi
+	jnz @2B
+@3:
 	.buf.StreamOut
 	jmp .block_process
 .done:
 	.buf.Destroy
 
 ;-------------------------------------------------------------------------------
-
 	ExitProcess 0
 	int3
