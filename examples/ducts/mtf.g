@@ -9,29 +9,25 @@ list rb 256
 macro Init reg:RAX
 	local fill
 	xor reg32.reg, reg32.reg
-	lea rdi,[NAMED.list]
-fill:	mov [rdi + reg], reg8low.reg
+fill:	mov [NAMED.list + reg], reg8low.reg
 	inc reg8low.reg
 	jnz fill
 end macro
 
 
 macro Encode
-	local move,done
+	local move,done,scan
 	lodsb
 	or ecx,-1
-	push rdi
-	repnz scasb
-	pop rdi
-	not ecx
-	dec ecx
+scan:	inc ecx
+	cmp [NAMED.list+rcx],al
+	jnz scan
 	mov [rsi-1],cl		; store index of byte found
 	jrcxz done
-move:
-	mov ah,[rdi+rcx-1]
-	mov [rdi+rcx],ah
+move:	mov ah,[NAMED.list+rcx-1]
+	mov [NAMED.list+rcx],ah
 	loop move
-	mov [rdi],al
+	mov [NAMED.list],al
 done:
 end macro
 
@@ -39,15 +35,14 @@ end macro
 macro Decode
 	local move,done
 	movzx ecx,byte [rsi]
-	mov al,[rdi+rcx]
+	mov al,[NAMED.list+rcx]
 	jrcxz done
 move:
-	mov ah,[rdi+rcx-1]
-	mov [rdi+rcx],ah
+	mov ah,[NAMED.list+rcx-1]
+	mov [NAMED.list+rcx],ah
 	loop move
-	mov [rdi],al
-done:
-	mov [rsi],al		; store byte found at index
+	mov [NAMED.list],al
+done:	mov [rsi],al		; store byte found at index
 	lodsb ; add rsi,1
 end macro
 

@@ -29,11 +29,14 @@ virtual at RBP-.frame
 end virtual
 end macro
 
+; display data parse was attempted on
 duct.usage_unknown:
 	duct.FRAME
 	.buf.Create 1 shl 12 ; 4k buffer
+	GetCommandLineW
+	xchg r8,rax
 	wsprintfW [.buf.head],\
-		<_W 10,27,'[31mInvalid:',9,27,'[7m%s',27,'[m',10>,rbx
+		<_W 10,27,'[31mInvalid:',9,27,'[7m%s',27,'[m',10>,r8
 	xchg r8,rax ; characters
 	WriteConsoleW [.hErr],[.buf.head],r8,ADDR .P6,0
 	.buf.Destroy
@@ -83,7 +86,6 @@ duct: entry $
 ; process commandline:
 	GetCommandLineW
 	xchg rsi,rax
-	mov rbx,rsi ; for .usage_unknown
 	and qword [.options],0
 	xor eax,eax
 	xor ecx,ecx
@@ -150,7 +152,6 @@ duct: entry $
 .opt_okay:
 
 ;-------------------------------------------------------------------------------
-;int3
 
 	.buf.Create 1 shl 16 ; 64k buffer
 	.mtf.Init
