@@ -1,11 +1,12 @@
+; static heap buffer
 
 struc(NAMED) Buffer
 local size
 namespace NAMED
 
-head	dq ?
-tail	dq ?
-busy	dq ?
+head	dq ?	; start address
+tail	dq ?	; to simplify bounds checking of addresses
+busy	dq ?	; active stream bytes
 
 macro Create _size*
 	size equ _size
@@ -22,6 +23,9 @@ end macro
 
 macro StreamIn
 	ReadFile [.hIn],[NAMED.head],size,ADDR NAMED.busy,0
+	mov rax,[NAMED.head]
+	add rax,[NAMED.busy]
+	mov [NAMED.tail],rax
 end macro
 
 

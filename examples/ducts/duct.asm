@@ -1,5 +1,5 @@
 ; forced redirection duct template
-;	+ STDIN and STDOUT must be file handles
+;	+ STDIN and STDOUT must be file|pipe handles
 ;	+ messages are sent to STDERR
 ;
 format PE64 CONSOLE 6.2 at 0x1234_56780000
@@ -29,6 +29,14 @@ virtual at RBP-.frame
 end virtual
 end macro
 
+duct.usage_unknown:
+	duct.FRAME
+	.buf.Create 1 shl 12 ; 4k buffer
+	wsprintfW [.buf.head],\
+		<_W 10,27,'[31mInvalid:',9,27,'[7m%s',27,'[m',10>,rbx
+	xchg r8,rax ; characters
+	WriteConsoleW [.hErr],[.buf.head],r8,ADDR .P6,0
+	.buf.Destroy
 duct.usage:
 	duct.FRAME
 	lea rdx,<db 10,\
@@ -74,50 +82,75 @@ duct: entry $
 ;-------------------------------------------------------------------------------
 ; process commandline:
 	GetCommandLineW
-	xchg rdi,rax
-	xor eax,eax
-	repnz scasw
+	xchg rsi,rax
+	mov rbx,rsi ; for .usage_unknown
 	and qword [.options],0
-@@:	sub rdi,2
-	cmp word [rdi],'d'
-	jz .option_decode
-	cmp word [rdi],'D'
-	jz .option_decode
-	cmp word [rdi],'e'
-	jz .option_encode
-	cmp word [rdi],'E'
-	jz .option_encode
+	xor eax,eax
+	xor ecx,ecx
+	jmp .find_param
 
-	cmp word [rdi],' '
+.quote: ; quoted arguments are skipped, no escape processing
+	lodsw
+	test eax,eax
+	jz .usage_unknown ; unmatched quote error
+	cmp eax,'"'
+	jnz .quote
+	inc ecx ; skip count
+.find_param:
+	lodsw
+	test eax,eax
+	jz .find_end
+	cmp eax,'"'
+	jz .quote
+	cmp eax,' '
 	ja .not_space ; ASSUME: all control characters are whitespace!
-	cmp [.options],0
-	jz @B
+	jrcxz .skip_EXE ; leading space on non-quoted EXE (unlikely)
 	mov [.options + 1],' '
-	jmp @B
+	jmp .find_param
+.skip_EXE:
+	lodsw
+	test eax,eax
+	jz .usage_unknown ; invalid commandline error
+	cmp eax,' '
+	jbe .skip_EXE
+.count_EXE:
+	inc ecx ; skip count
 .not_space:
-	cmp word [rdi],'"' ; who quotes an option?
-	jz @B
-	cmp word [.options],' d'
+	jrcxz .count_EXE ; one time
+	cmp [.options + 1],' '
+	jnz .find_param ; skip EXE name
+
+	cmp [.options],0 ; extra characters after options error
+	jnz .usage_unknown
+	iterate <OPT,	BRANCH>,\
+		'd',	.option_decode,\
+		'D',	.option_decode,\
+		'e',	.option_encode,\
+		'E',	.option_encode,\
+
+		cmp eax,OPT
+		jz BRANCH
+	end iterate
+	jmp .usage_unknown
+.find_end:
+	cmp word [.options],'d '
 	jz .opt_okay
-	cmp word [.options],' e'
+	cmp word [.options],'e '
 	jz .opt_okay
-	jmp .usage
+	jmp .usage_unknown
 
 .option_encode:
-	cmp [.options],0
-	jnz .usage
 	mov [.options],'e'
-	jmp @B
+	jmp .find_param
 
 .option_decode:
-	cmp [.options],0
-	jnz .usage
 	mov [.options],'d'
-	jmp @B
+	jmp .find_param
 
 .opt_okay:
 
 ;-------------------------------------------------------------------------------
+;int3
 
 	.buf.Create 1 shl 16 ; 64k buffer
 	.mtf.Init

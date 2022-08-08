@@ -57,4 +57,5 @@ Windows API sets
 
 TOOLS:
 ---
+- [WinAPI Search by Dennis A. Babkin](https://dennisbabkin.com/winapisearch/)
 - [Api Set Viewer v0.8 (C)2019 by Pavel Yosifovich](https://github.com/zodiacon/ApiSetView)

@@ -1,3 +1,6 @@
+; Move-to-Front Transform
+; https://wikipedia.org/wiki/Move-to-front_transform
+
 struc(NAMED) MTF
 namespace NAMED
 
@@ -16,33 +19,36 @@ end macro
 macro Encode
 	local move,done
 	lodsb
-	mov cl,0xFF
+	or ecx,-1
 	push rdi
 	repnz scasb
+	pop rdi
 	not ecx
-	mov [rsi-1],cl
+	dec ecx
+	mov [rsi-1],cl		; store index of byte found
+	jrcxz done
 move:
-	cmp [rsp],rdi
-	jz done
-	mov ch,[rdi-1]
-	mov [rdi],ch
-	dec rdi
-	jmp move
+	mov ah,[rdi+rcx-1]
+	mov [rdi+rcx],ah
+	loop move
+	mov [rdi],al
 done:
-	mov [rdi],cl
-	pop rdi ; add rsp,8 ; value didn't change
 end macro
 
 
 macro Decode
-	push rdi
-	lea rdi,[NAMED.list]
-	repnz scasb
-	pop rdi
-	xchg eax,ecx
-
-	stosb
-	rep movsb
+	local move,done
+	movzx ecx,byte [rsi]
+	mov al,[rdi+rcx]
+	jrcxz done
+move:
+	mov ah,[rdi+rcx-1]
+	mov [rdi+rcx],ah
+	loop move
+	mov [rdi],al
+done:
+	mov [rsi],al		; store byte found at index
+	lodsb ; add rsi,1
 end macro
 
 end namespace ; NAMED
