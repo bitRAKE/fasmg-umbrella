@@ -59,3 +59,9 @@ TOOLS:
 ---
 - [WinAPI Search by Dennis A. Babkin](https://dennisbabkin.com/winapisearch/)
 - [Api Set Viewer v0.8 (C)2019 by Pavel Yosifovich](https://github.com/zodiacon/ApiSetView)
+
+![Lines of code][1] ![GitHub repo size][2] ![GitHub code size in bytes][3]
+
+[1]: https://img.shields.io/tokei/lines/github/bitRAKE/fasmg-umbrella?style=for-the-badge
+[2]: https://img.shields.io/github/languages/code-size/bitRAKE/fasmg-umbrella?style=for-the-badge
+[3]: https://img.shields.io/github/repo-size/bitRAKE/fasmg-umbrella?style=for-the-badge
