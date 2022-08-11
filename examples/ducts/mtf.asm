@@ -23,7 +23,7 @@ virtual at RBP-.frame
 	.hIn		dq ?
 	.hOut		dq ?
 	.hErr		dq ?
-	.options	rb 8
+	.options	rb 8 ; configuration space
 
 	.buf	Buffer
 	.mtf	MTF
@@ -47,7 +47,7 @@ duct.usage_unknown:
 duct.usage:
 	duct.FRAME
 	lea rdx,<db 10,\
-		"Usage: duct.exe {options} < [input] > [output]",10,\
+		"Usage: duct.mtf.exe {options} < [input] > [output]",10,\
 		9,	'd',9,	'decode',10,\
 		9,	'e',9,	'encode',10>
 	WriteFile [.hErr],rdx,.bytes,0,0
@@ -86,28 +86,33 @@ duct: entry $
 	cmp eax,FILE_TYPE_PIPE
 	jnz .usage
 @@:
-;-------------------------------------------------------------------------------
-; process commandline:
-	GetCommandLineW
+;--------------------------------------------------------------------------
+; Process commandline: Assume that options are NOT quoted/escaped. Convert
+; from variable option input to well defined internal state. OS strips the
+; pipe/redirection, so everything after EXE name is option.
+
+; ERROR: Might fail if EXE name has an escaped '"' character - do not fix.
+
+	GetCommandLineW ; wide because OS already has it ready
 	xchg rsi,rax
 	and qword [.options],0
 	xor eax,eax
 	xor ecx,ecx
 	jmp .find_param
 
-.quote: ; quoted arguments are skipped, no escape processing
+.quoted: ; quoted arguments are skipped, no escape processing
 	lodsw
 	test eax,eax
 	jz .usage_unknown ; unmatched quote error
 	cmp eax,'"'
-	jnz .quote
+	jnz .quoted
 	inc ecx ; skip count
 .find_param:
 	lodsw
 	test eax,eax
 	jz .find_end
 	cmp eax,'"'
-	jz .quote
+	jz .quoted
 	cmp eax,' '
 	ja .not_space ; ASSUME: all control characters are whitespace!
 	jrcxz .skip_EXE ; leading space on non-quoted EXE (unlikely)
