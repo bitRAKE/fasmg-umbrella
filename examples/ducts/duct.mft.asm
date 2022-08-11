@@ -6,6 +6,10 @@ format PE64 CONSOLE 6.2 at 0x1234_56780000
 define UMBRELLA_LIBRARY "OneCoreUAP_downlevel" ; _downlevel is used for wsprintf?
 include 'umbrella.inc.g'
 
+; test pipe, redirection, and algorithm all at once:
+;	duct.mft.exe e < %FILE% | duct.mft.exe d > temp.tmp
+;	fc /B %FILE% temp.tmp
+;	del temp.tmp
 
 include 'buffer.g'
 include 'mtf.g'
