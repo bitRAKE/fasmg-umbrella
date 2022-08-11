@@ -31,7 +31,7 @@ Main:
 	lea rdx,<_W 27,'[31mCommand-line:',27,'[7m',9>
 	WriteConsoleW [.hStdOut],rdx,(.bytes shr 1),ADDR .kitten,0
 
-; replace GetCommandlineW, Windows XP through Windows 11:
+; replace GetCommandLineW, Windows XP through Windows 11:
 
 	; use TEB to get ProcessEnvironmentBlock (PEB)
 	mov rax,[gs:0x60]
