@@ -23,7 +23,7 @@ include 'cpu\ext\rdtscp.inc' ; CPUID Fn8000_0001_EDX[RDTSCP] = 1
 
 
 ; random buffer needs to be filled outside of dispatcher thread
-include 'xoshiro256.inc';,define xoshiro256.state _Thread.xo_ctx
+include '..\xoshiro256.inc';,define xoshiro256.state _Thread.xo_ctx
 
 STACK 0,0 ; effects thread creation stack
 HEAP 0,0
@@ -225,12 +225,12 @@ DialogProcW.WM_COMMAND.METHOD:
 
 
 struct ThreadData
-	pBytes		dq ?
-	dCount		dq ?
+	pBytes		dq ?	; bytes direct dispatcher branching
+	dCount		dq ?	; thread advances this prior to each dispatch
 ends
 
 collect BSS.64
-	g_AuxData	ThreadData
+	g_AuxData	ThreadData ; pointer sent to thread, write access is thread exclusive
 	align 64
 end collect
 
@@ -300,5 +300,5 @@ dialog mainDialog,'Dispatch Tester:',0,0,256,32,\
 enddialog
 
 resdata manifest
-	file 'manifest.xml'
+	file '..\manifest.xml'
 endres

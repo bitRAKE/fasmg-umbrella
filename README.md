@@ -62,6 +62,8 @@ TOOLS:
 
 ![Lines of code][1] ![GitHub repo size][2] ![GitHub code size in bytes][3]
 
+![](https://tokei.rs/b1/github/bitRAKE/fasmg-umbrella)
+
 [1]: https://img.shields.io/tokei/lines/github/bitRAKE/fasmg-umbrella?style=for-the-badge
 [2]: https://img.shields.io/github/languages/code-size/bitRAKE/fasmg-umbrella?style=for-the-badge
 [3]: https://img.shields.io/github/repo-size/bitRAKE/fasmg-umbrella?style=for-the-badge
