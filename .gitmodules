@@ -1,0 +1,3 @@
+[submodule "fasmg"]
+	path = fasmg
+	url = https://github.com/tgrysztar/fasmg.git
