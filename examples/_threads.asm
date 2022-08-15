@@ -1,9 +1,8 @@
 ; threading test template
 
 format PE64 CONSOLE 6.2 at 0x1234_56780000
-; _downlevel is used for wsprintfW
-define UMBRELLA_LIBRARY "OneCoreUAP_downlevel"
-include 'umbrella.inc.g'
+define UMBRELLA_LIBRARY "OneCoreUAP_downlevel" ; _downlevel is used for wsprintf?
+include 'umbrella.g'
 
 include 'cpu\ext\avx2.inc'
 ; RDTSCP forces all older instructions to retire before reading the time-stamp counter.

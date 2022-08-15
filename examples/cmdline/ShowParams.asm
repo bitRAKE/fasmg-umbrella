@@ -1,7 +1,7 @@
 format PE64 CONSOLE 6.2 at 0x1234_56780000
 ; _downlevel is used for wsprintfW, otherwise icu.dll needs to be used
 define UMBRELLA_LIBRARY "OneCoreUAP_downlevel"
-include 'umbrella.inc.g'
+include 'umbrella.g'
 
 struct UNICODE_STRING
 	Length		dw ?	; USHORT, bytes

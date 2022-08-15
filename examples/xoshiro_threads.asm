@@ -4,7 +4,7 @@
 format PE64 CONSOLE 6.2 at 0x1234_56780000
 ; _downlevel is used for wsprintfW
 define UMBRELLA_LIBRARY "OneCoreUAP_downlevel"
-include 'umbrella.inc.g'
+include 'umbrella.g'
 
 include 'cpu\ext\avx2.inc'
 ;include 'cpu\ext\bmi2.inc'
@@ -15,7 +15,7 @@ include 'cpu\ext\rdtscp.inc' ; CPUID Fn8000_0001_EDX[RDTSCP] = 1
 
 
 ; use thread state for random context
-include 'xoshiro256.inc',define xoshiro256.state _Thread.xo_ctx
+include 'xoshiro256.g',define xoshiro256.state _Thread.xo_ctx
 
 
 STACK 0,0 ; effects thread creation stack

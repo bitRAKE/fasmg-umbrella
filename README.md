@@ -1,6 +1,7 @@
 # fasmg-umbrella
 Umbrella libraries for modern windows development (using [fasmg](https://github.com/tgrysztar/fasmg)).
 
+
 The umbrella libraries try to increase consistency in windows development, thru target selection via a single library:
 
 	Name Suffix:
@@ -10,6 +11,8 @@ The umbrella libraries try to increase consistency in windows development, thru 
 			Win11 app development platform, WinUI 3+
 		windowscoreheadless*
 			Win10+ containers, Nano Server
+		mincore*
+			IoT
 
 	Name Postfix:
 		*UAP

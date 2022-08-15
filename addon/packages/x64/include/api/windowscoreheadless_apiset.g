@@ -1,5 +1,4 @@
-include "import64_apiset.inc.g"
-
+include "import64_apiset.g"
 libraries \
 "AUTHZ",\
 "CRYPT32",\

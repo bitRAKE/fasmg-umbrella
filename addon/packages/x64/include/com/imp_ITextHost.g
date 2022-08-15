@@ -1,7 +1,7 @@
 
 ; ITextHost2 interface for use with CreateTextServices
 
-include 'TextServ.inc.g'
+include 'TextServ.g'
 define xITextHost2
 namespace xITextHost2
 

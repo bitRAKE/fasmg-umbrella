@@ -1,5 +1,4 @@
-include "import64_apiset.inc.g"
-
+include "import64_apiset.g"
 libraries \
 "CRYPT32",\
 "CoreMessaging",\
@@ -20,6 +19,7 @@ libraries \
 "OLEAUT32",\
 "POWRPROF",\
 "PROPSYS",\
+"PSAPI",\
 "PerceptionDevice",\
 "RPCRT4",\
 "RoMetadata",\
@@ -1301,6 +1301,16 @@ PSCreateMemoryPropertyStore,\
 PSCreatePropertyStoreFromObject,\
 VariantToGUID,\
 VariantToPropVariant
+
+import "PSAPI",\
+GetModuleBaseNameA,\
+GetModuleBaseNameW,\
+GetModuleFileNameExA,\
+GetModuleFileNameExW,\
+GetModuleInformation,\
+GetProcessMemoryInfo,\
+QueryWorkingSet,\
+QueryWorkingSetEx
 
 import "PerceptionDevice",\
 PerceptionDeviceCreateFactory,\

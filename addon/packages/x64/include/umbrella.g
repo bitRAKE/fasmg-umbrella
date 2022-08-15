@@ -324,9 +324,9 @@ postpone
 
 	; build import table
 	match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
-		include 'api\OneCoreUAP.inc.g'
+		include 'api\OneCoreUAP.g'
 	else
-		eval "include 'api\",UMBRELLA_LIBRARY,".inc.g'"
+		eval "include 'api\",UMBRELLA_LIBRARY,".g'"
 	end match
 
 	; Assume user wants 32-bit addressing if they specifying a low base,

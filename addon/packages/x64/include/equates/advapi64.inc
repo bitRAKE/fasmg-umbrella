@@ -67,7 +67,7 @@ struct TOKEN_ELEVATION
 ends
 
 
-if 0
+if 0 ; TODO:
 // Token information class structures
 struct TOKEN_USER
     SID_AND_ATTRIBUTES User;

@@ -12,7 +12,7 @@
 ; Force a low base address as to not restrict any creative code techniques.
 
 format PE64 GUI 6.2 at 0x1_0000
-include 'umbrella.inc.g'
+include 'umbrella.g'
 
 include 'cpu\ext\avx2.inc'
 include 'cpu\ext\bmi2.inc'

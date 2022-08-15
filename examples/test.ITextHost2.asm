@@ -19,11 +19,11 @@ format PE64 CONSOLE 6.2 at 0x1_0000
 ; default, broadest coverage, but might not work on earier windows depending on api use
 ;	define UMBRELLA_LIBRARY "OneCoreUAP"
 
-include 'umbrella.inc.g'
+include 'umbrella.g'
 include 'cpu\ext\avx2.inc'
 
-include 'com\IUnknown.inc.g'
-include 'com\imp_ITextHost.inc.g'
+include 'com\IUnknown.g'
+include 'com\imp_ITextHost.g'
 
 InterfaceListQuery:
 	virtual at RBP-.frame

@@ -1,6 +1,6 @@
 format PE64 CONSOLE 6.2 at 0x1_0000
 define UMBRELLA_LIBRARY "windowscoreheadless"
-include 'umbrella.inc.g'
+include 'umbrella.g'
 
 collect CONST.1
 	digit_table db '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'

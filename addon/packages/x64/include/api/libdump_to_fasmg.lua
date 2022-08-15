@@ -59,8 +59,8 @@ for n in pairs(func) do table.insert(a, n) end
 table.sort(a)
 
 -- create iterators for API use:
-out = "; " .. fileName .. [[ WinRT / UWP API Set
-include "macro/import64_apiset.fincg"
+out = [[
+include "import64_apiset.g"
 libraries \
 ]]
 for i,j in pairs(a) do
