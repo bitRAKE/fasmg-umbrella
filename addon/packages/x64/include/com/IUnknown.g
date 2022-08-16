@@ -80,7 +80,9 @@ struc(id) interface? iid,funcs&
 end struc
 
 
-; combaseapi.inc.g
+
+
+; combaseapi.g
 
 COINITBASE_MULTITHREADED	:= 0
 
@@ -139,7 +141,9 @@ SD_ACCESSRESTRICTIONS	:= 3	; Machine wide access limits
 
 ; common HRESULT values:
 ; https://docs.microsoft.com/en-us/windows/win32/seccrypto/common-hresult-values
-S_OK		= 0x00000000	; Operation successful
+S_OK		:= 0x00000000	;
+S_FALSE		:= 0x00000001	;
+
 E_NOTIMPL	= 0x80004001	; Not implemented
 E_NOINTERFACE	= 0x80004002	; No such interface supported
 E_POINTER	= 0x80004003	; Pointer that is not valid

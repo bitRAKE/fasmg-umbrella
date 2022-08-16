@@ -2,8 +2,6 @@
 ; TODO: null string hack, LEA use, describe placeholders
 ; TODO: if the zero ID string is null and no other strings then ignore
 
-define RSTRING 1
-
 virtual at 0
 	RSTRING.buffer::
 end virtual
@@ -39,16 +37,15 @@ struc RSTRING values&
 			O = 0
 			while O < $
 				load ri:2 from O
-				ri = ri shl 1
-				if ri = xi
-					load r:ri from O+2
+				if ri+ri = xi
+					load r:xi from O+2
 					if r = x
 						found = 1
 						. = sid
 						break
 					end if
 				end if
-				O = O + ri + 2
+				O = O + ri + ri + 2
 				sid = sid + 1
 			end while
 			if ~ found
@@ -62,6 +59,8 @@ end struc
 
 macro resource_RSTRINGS folder*,language:LANG_NEUTRAL
 	local table,bytes,O0,O1,tid,sid,ri,rx
+	purge resource_RSTRINGS
+	restruc RSTRINGS
 	virtual RSTRING.buffer
 		bytes := $-$$
 	end virtual
@@ -79,10 +78,10 @@ macro resource_RSTRINGS folder*,language:LANG_NEUTRAL
 
 			if sid and 0xF = 0 \
 			| O1 = bytes
-				load rx:O1-O0 from RSTRING.buffer:O0
-				repeat 1,tid:(sid+15)shr 4
+				repeat 1, tid:(sid+15) shr 4, K:O1-O0
+				load rx:K from RSTRING.buffer:O0
 				table.tid dd RVA table.tid.base,O1-O0,0,0
-				table.tid.base db rx
+				table.tid.base: emit K:rx
 				end repeat
 				O0 = O1
 			end if
@@ -96,6 +95,10 @@ macro resource_RSTRINGS folder*,language:LANG_NEUTRAL
 		match any,temp
 		resource any
 		end match
+
+		repeat 1, A:sid,B:($-RSTRING.where)
+			display 10,9,`A,' resource strings (',`B,' bytes)'
+		end repeat
 	else ; gracefully ignore, maybe wip
 		display "warning: resource_RSTRINGS w/o RSTRINGS defined.",10
 	end if

@@ -5,3 +5,4 @@ fasmg examples\xoshiro_threads.asm
 fasmg examples\glob_test\glob_test.asm
 fasmg examples\ducts\mtf.asm
 fasmg examples\cmdline\ShowParams.asm
+fasmg examples\TaskDialog\TaskDlgSamples.asm

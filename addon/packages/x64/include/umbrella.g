@@ -1,13 +1,13 @@
 ; windows OneCore/UWP api support
 ;	+ no TCHAR or API renaming - use A or W directly
 
-include 'format/format.inc'
+include 'format\format.inc'
 
-include 'encoding/utf8.inc'
+include 'encoding\utf8.inc'
 
-include '../../utility/@@.inc'
-include 'macro/struct.inc'
-include 'macro/resource.inc'
+include '..\..\utility\@@.inc'
+include 'macro\struct.inc'
+include 'macro\resource.inc'
 
 Struct.CheckAlignment = 1
 
@@ -16,23 +16,24 @@ Struct.CheckAlignment = 1
 struc? TCHAR args:?&
 	. du args
 end struc
-
 macro TCHAR args:?&
 	du args
 end macro
-
 sizeof.TCHAR = 2
 
 
-include 'equates/kernel64.inc'
-include 'equates/user64.inc'
-include 'equates/gdi64.inc'
-include 'equates/comctl64.inc'
-include 'equates/comdlg64.inc'
-include 'equates/shell64.inc'
-include 'equates/advapi64.inc'
-include 'equates/wsock32.inc'
+include 'equates\kernel64.inc'
+include 'equates\user64.inc'
+include 'equates\gdi64.inc'
+include 'equates\comctl64.inc'
+include 'equates\comdlg64.inc'
+include 'equates\shell64.inc'
+include 'equates\advapi64.inc'
+include 'equates\wsock32.inc'
 
+
+include 'macro\rstrings.inc'
+dummy RSTRING ; zero id
 
 include 'macro\collect.inc'
 
@@ -47,9 +48,6 @@ repeat 1,I:1 shl (7-%)
 	end collect
 end repeat
 end repeat
-
-include 'macro\rstrings.inc'
-dummy RSTRING ; zero id
 
 
 ;S_FALSE := 1 ; because TRUE/FALSE is so 1900
@@ -171,6 +169,15 @@ iterate reg, rcx,rdx,r8,r9,rax,r10,r11
 			else
 				mov [.P#index],arg
 			end if
+		else if @src.type = 'mem'
+			match =DWORD? any,arg
+				mov reg32.reg,arg
+				if index > 4
+					mov [.P#index],reg
+				end if
+			else
+				display 10,'MEMORY! Implement more types'
+			end match
 		else if @src.type = 'imm'
 			if arg = 0
 				if index < 5
