@@ -168,11 +168,11 @@ resource manifests,\
 	1,LANG_ENGLISH+SUBLANG_DEFAULT,manifest
 
 icon main_icon,\
-	icon_m48,'resource\dip_chip_48x48.ico',\
-	icon_m32,'resource\dip_chip_32x32.ico',\
-	icon_m24,'resource\dip_chip_24x24.ico',\
-	icon_m16,'resource\dip_chip_16x16.ico'
+	icon_m48,'..\..\resource\dip_chip_48x48.ico',\
+	icon_m32,'..\..\resource\dip_chip_32x32.ico',\
+	icon_m24,'..\..\resource\dip_chip_24x24.ico',\
+	icon_m16,'..\..\resource\dip_chip_16x16.ico'
 
 resdata manifest
-	file 'manifest.xml'
+	file '..\..\resource\manifest.xml'
 endres
