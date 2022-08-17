@@ -30,11 +30,10 @@ Some things to note:
 - Backward compatiblity is not a goal of umbrella libraries.
 
 
-EXAMPLES:
-
-	In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment.
-
-	File naming makes a distinction between several types of source code: `.asm` are main project files, `.inc` generates code at inclusion, and `.g` files create abstractions (no code generation at inclusion).
+Examples:
+---
+- In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment.
+- File naming makes a distinction between several types of source code: `.asm` are main project files, `.inc` generates code at inclusion, and `.g` files create abstractions (no code generation at inclusion).
 
 
 QUESTION & ANSWER:
