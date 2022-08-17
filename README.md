@@ -1,7 +1,5 @@
 # fasmg-umbrella
-
 ---
-
 Umbrella libraries for modern windows development (using [fasmg](https://github.com/tgrysztar/fasmg)).
 
 
@@ -42,17 +40,18 @@ Examples:
 
 Question & Answer:
 ---
-*Q:* If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
+Q: If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
 
-*A:* The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
+A: The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
 ---
-*Q:* Something.
+Q: Something.
 
-*A:* Something else.
+A: Something else.
 
 ---
 
 REFERENCES:
+---
 Windows umbrella libraries
 - <https://docs.microsoft.com/en-us/windows/win32/apiindex/windows-umbrella-libraries>
 
