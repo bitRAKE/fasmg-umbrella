@@ -38,11 +38,14 @@ Examples:
 
 Question & Answer:
 ---
-Q. If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
-A. The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
+*Q:* If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
+
+*A:* The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
+
 ---
-Q. Something.
-A. Something else.
+*Q:* Something.
+
+*A:* Something else.
 
 
 REFERENCES:
