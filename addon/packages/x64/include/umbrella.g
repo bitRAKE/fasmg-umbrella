@@ -2,6 +2,7 @@
 ;	+ no TCHAR or API renaming - use A or W directly
 
 include 'format\format.inc'
+define __ImageBase PE.IMAGE_BASE ; HINSTANCE constant
 
 include 'encoding\utf8.inc'
 
@@ -31,6 +32,19 @@ include 'equates\shell64.inc'
 include 'equates\advapi64.inc'
 include 'equates\wsock32.inc'
 
+; superfluous renaming
+iterate <NAME_OUT,	NAME_IN>,\
+	WNDCLASSEXW,	WNDCLASSEX
+
+	struc NAME_OUT any&
+		. NAME_IN any
+	end struc
+end iterate
+
+UNICODE := 1
+include 'equates\WinUser.g'
+
+
 
 include 'macro\rstrings.inc'
 dummy RSTRING ; zero id
@@ -50,8 +64,17 @@ end repeat
 end repeat
 
 
-;S_FALSE := 1 ; because TRUE/FALSE is so 1900
-;S_OK := 0
+macro push? line&
+	iterate item,line
+		push item
+	end iterate
+end macro
+macro rpop? line&
+	iterate item,line
+		indx %%-%+1
+		pop item
+	end iterate
+end macro
 
 
 ; macros are written to process 64-bit register inputs. yet, sometimes conversion to 32-bit part is convinent.

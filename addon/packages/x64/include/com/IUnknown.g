@@ -159,6 +159,19 @@ E_INVALIDARG	= 0x80070057	; One or more arguments are not valid
 IUnknown	interface	00000000-0000-0000-C000-000000000046,\
 	QueryInterface,AddRef,Release
 
+IClassFactory	interface	00000001-0000-0000-C000-000000000046,\
+	EXTENDS__IUnknown,\
+	CreateInstance,LockServer
+
 IDispatch	interface	00020400-0000-0000-C000-000000000046,\
 	EXTENDS__IUnknown,\
 	GetTypeInfoCount,GetTypeInfo,GetIDsOfNames,Invoke
+
+AsyncIUnknown	interface	000E0000-0000-0000-C000-000000000046,\
+	EXTENDS__IUnknown,\
+	Begin_QueryInterface,\
+	Finish_QueryInterface,\
+	Begin_AddRef,\
+	Finish_AddRef,\
+	Begin_Release,\
+	Finish_Release

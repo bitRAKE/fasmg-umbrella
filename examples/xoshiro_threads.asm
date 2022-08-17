@@ -15,7 +15,7 @@ include 'cpu\ext\rdtscp.inc' ; CPUID Fn8000_0001_EDX[RDTSCP] = 1
 
 
 ; use thread state for random context
-include 'xoshiro256.g',define xoshiro256.state _Thread.xo_ctx
+include '..\algo\random\xoshiro256.g', define xoshiro256.state _Thread.xo_ctx
 
 
 STACK 0,0 ; effects thread creation stack
