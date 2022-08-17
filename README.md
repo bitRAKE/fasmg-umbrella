@@ -36,13 +36,13 @@ Examples:
 - File naming makes a distinction between several types of source code: `.asm` are main project files, `.inc` generates code at inclusion, and `.g` files create abstractions (no code generation at inclusion).
 
 
-QUESTION & ANSWER:
+Question & Answer:
 ---
-	Q. If {APISET} just forwards to {DLL}, why can't I use all the
-	   functions exported by {DLL}?
-	A. The target windows versions of {APISET} don't have a uniform
-	   interface to all the functions in {DLL}. Fine-grained exclusion
-	   of targets is outside the scope of umbrella libraries.
+Q. If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
+A. The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
+---
+Q. Something.
+A. Something else.
 
 
 REFERENCES:
