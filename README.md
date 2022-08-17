@@ -1,4 +1,7 @@
 # fasmg-umbrella
+
+---
+
 Umbrella libraries for modern windows development (using [fasmg](https://github.com/tgrysztar/fasmg)).
 
 
@@ -35,21 +38,21 @@ Examples:
 - In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment.
 - File naming makes a distinction between several types of source code: `.asm` are main project files, `.inc` generates code at inclusion, and `.g` files create abstractions (no code generation at inclusion).
 
+---
 
 Question & Answer:
 ---
 *Q:* If {APISET} just forwards to {DLL}, why can't I use all the functions exported by {DLL}?
 
 *A:* The target windows versions of {APISET} don't have a uniform interface to all the functions in {DLL}. Fine-grained exclusion of targets is outside the scope of umbrella libraries.
-
 ---
 *Q:* Something.
 
 *A:* Something else.
 
+---
 
 REFERENCES:
----
 Windows umbrella libraries
 - <https://docs.microsoft.com/en-us/windows/win32/apiindex/windows-umbrella-libraries>
 
