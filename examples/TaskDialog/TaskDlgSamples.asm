@@ -156,7 +156,7 @@ directory \
 resource icons,\
 	1,LANG_NEUTRAL,icon_m48,\
 	2,LANG_NEUTRAL,icon_m32,\
-	3,LANG_NEUTRAL,icon_m24,\
+	3,LANG_NEUTRAL,icon_m24,\ 
 	4,LANG_NEUTRAL,icon_m16
 
 resource group_icons,\
@@ -173,6 +173,4 @@ icon main_icon,\
 	icon_m24,'..\..\resource\dip_chip_24x24.ico',\
 	icon_m16,'..\..\resource\dip_chip_16x16.ico'
 
-resdata manifest
-	file '..\..\resource\manifest.xml'
-endres
+include 'resource\manifest.inc'
