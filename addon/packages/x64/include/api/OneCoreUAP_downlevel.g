@@ -1,36 +1,4 @@
-include "import64_apiset.g"
-libraries \
-"ADVAPI32",\
-"APPHELP",\
-"COMCTL32",\
-"COMDLG32",\
-"D3D10",\
-"D3D9",\
-"GDI32",\
-"KERNEL32",\
-"MSI",\
-"NEWDEV",\
-"OLE32",\
-"OLEACC",\
-"OLEAUT32",\
-"OLEDLG",\
-"RESUTILS",\
-"SECUR32",\
-"SHELL32",\
-"SHLWAPI",\
-"USER32",\
-"UXTHEME",\
-"VERSION",\
-"WINMM",\
-"WINSPOOL",\
-"WTSAPI32",\
-"d3dx10_47",\
-"pdh",\
-"psapi",\
-"rstrtmgr",\
-"setupapi"
-
-import "ADVAPI32",\
+__IMPORTS equ "ADVAPI32",\
 WriteEncryptedFileRaw,\
 UpdateTraceW,\
 UpdateTraceA,\
@@ -647,7 +615,7 @@ AccessCheck,\
 AbortSystemShutdownW,\
 AbortSystemShutdownA
 
-import "APPHELP",\
+__IMPORTS equ "APPHELP",\
 SE_WINRT_HookObject,\
 SE_WINRT_AddHook,\
 SE_ShimDPF,\
@@ -657,7 +625,7 @@ SE_COM_AddServer,\
 SE_COM_AddHook,\
 ApphelpCheckShellObject
 
-import "COMCTL32",\
+__IMPORTS equ "COMCTL32",\
 TaskDialogIndirect,\
 PropertySheetW,\
 PropertySheetA,\
@@ -704,7 +672,7 @@ CreatePropertySheetPageW,\
 DestroyPropertySheetPage,\
 CreatePropertySheetPageA
 
-import "COMDLG32",\
+__IMPORTS equ "COMDLG32",\
 ReplaceTextW,\
 ReplaceTextA,\
 PrintDlgW,\
@@ -725,20 +693,20 @@ ChooseFontA,\
 ChooseColorW,\
 ChooseColorA
 
-import "D3D10",\
+__IMPORTS equ "D3D10",\
 D3D10CreateEffectFromMemory,\
 D3D10CreateDeviceAndSwapChain,\
 D3D10CreateDevice,\
 D3D10CompileShader
 
-import "D3D9",\
+__IMPORTS equ "D3D9",\
 Direct3DCreate9Ex,\
 Direct3DCreate9,\
 D3DPERF_SetMarker,\
 D3DPERF_EndEvent,\
 D3DPERF_BeginEvent
 
-import "GDI32",\
+__IMPORTS equ "GDI32",\
 UnrealizeObject,\
 TranslateCharsetInfo,\
 TextOutW,\
@@ -960,7 +928,7 @@ Arc,\
 AddFontMemResourceEx,\
 AbortDoc
 
-import "KERNEL32",\
+__IMPORTS equ "KERNEL32",\
 ZombifyActCtx,\
 WTSGetActiveConsoleSessionId,\
 WriteTapemark,\
@@ -2164,7 +2132,7 @@ _llseek,\
 _lcreat,\
 _lclose
 
-import "MSI",\
+__IMPORTS equ "MSI",\
 MsiViewFetch,\
 MsiViewExecute,\
 MsiVerifyPackageW,\
@@ -2206,7 +2174,7 @@ MsiCloseHandle,\
 MsiApplyPatchW,\
 MsiApplyMultiplePatchesW
 
-import "NEWDEV",\
+__IMPORTS equ "NEWDEV",\
 UpdateDriverForPlugAndPlayDevicesW,\
 UpdateDriverForPlugAndPlayDevicesA,\
 DiUninstallDriverW,\
@@ -2214,7 +2182,7 @@ DiUninstallDevice,\
 DiInstallDriverW,\
 DiInstallDevice
 
-import "OLE32",\
+__IMPORTS equ "OLE32",\
 WriteFmtUserTypeStg,\
 WriteClassStm,\
 WriteClassStg,\
@@ -2593,7 +2561,7 @@ CleanROTForApartment,\
 CheckInitDde,\
 BindMoniker
 
-import "OLEACC",\
+__IMPORTS equ "OLEACC",\
 WindowFromAccessibleObject,\
 PropMgrClient_LookupProp,\
 ObjectFromLresult,\
@@ -2607,7 +2575,7 @@ AccessibleObjectFromPoint,\
 AccessibleObjectFromEvent,\
 AccessibleChildren
 
-import "OLEAUT32",\
+__IMPORTS equ "OLEAUT32",\
 SafeArrayReleaseDescriptor,\
 SafeArrayReleaseData,\
 BSTR_UserFree64,\
@@ -2627,7 +2595,7 @@ SafeArrayAddRef,\
 VARIANT_UserFree64,\
 LPSAFEARRAY_UserSize64
 
-import "OLEDLG",\
+__IMPORTS equ "OLEDLG",\
 OleUIUpdateLinksW,\
 OleUIUpdateLinksA,\
 OleUIPasteSpecialW,\
@@ -2649,7 +2617,7 @@ OleUIBusyA,\
 OleUIAddVerbMenuW,\
 OleUIAddVerbMenuA
 
-import "RESUTILS",\
+__IMPORTS equ "RESUTILS",\
 ResUtilVerifyPropertyTable,\
 ResUtilPropertyListFromParameterBlock,\
 ResUtilGetResourceName,\
@@ -2661,7 +2629,7 @@ ResUtilEnumResourcesEx,\
 ClusterIsPathOnSharedVolume,\
 ClusterGetVolumePathName
 
-import "SECUR32",\
+__IMPORTS equ "SECUR32",\
 VerifySignature,\
 UnsealMessage,\
 SspiZeroAuthIdentity,\
@@ -2752,7 +2720,7 @@ AcquireCredentialsHandleW,\
 AcquireCredentialsHandleA,\
 AcceptSecurityContext
 
-import "SHELL32",\
+__IMPORTS equ "SHELL32",\
 SHShowManageLibraryUI,\
 SHSetLocalizedName,\
 SHSetKnownFolderPath,\
@@ -2842,7 +2810,7 @@ ExtractIconW,\
 ExtractIconExW,\
 ExtractIconA
 
-import "SHLWAPI",\
+__IMPORTS equ "SHLWAPI",\
 UrlUnescapeW,\
 UrlUnescapeA,\
 UrlIsW,\
@@ -3109,7 +3077,7 @@ AssocQueryStringByKeyW,\
 AssocQueryStringA,\
 AssocQueryKeyW
 
-import "USER32",\
+__IMPORTS equ "USER32",\
 wvsprintfW,\
 wvsprintfA,\
 wsprintfW,\
@@ -3729,7 +3697,7 @@ AdjustWindowRect,\
 AddClipboardFormatListener,\
 ActivateKeyboardLayout
 
-import "UXTHEME",\
+__IMPORTS equ "UXTHEME",\
 SetWindowThemeAttribute,\
 SetWindowTheme,\
 OpenThemeDataEx,\
@@ -3774,7 +3742,7 @@ BufferedPaintInit,\
 BufferedPaintClear,\
 BeginBufferedPaint
 
-import "VERSION",\
+__IMPORTS equ "VERSION",\
 VerQueryValueW,\
 VerQueryValueA,\
 VerFindFileW,\
@@ -3786,14 +3754,14 @@ GetFileVersionInfoSizeA,\
 GetFileVersionInfoExW,\
 GetFileVersionInfoA
 
-import "WINMM",\
+__IMPORTS equ "WINMM",\
 timeGetTime,\
 timeGetSystemTime,\
 timeGetDevCaps,\
 timeEndPeriod,\
 timeBeginPeriod
 
-import "WINSPOOL",\
+__IMPORTS equ "WINSPOOL",\
 XcvDataW,\
 WritePrinter,\
 StartDocPrinterW,\
@@ -3836,7 +3804,7 @@ AddPrinterConnection2W,\
 AddPrinterA,\
 AbortPrinter
 
-import "WTSAPI32",\
+__IMPORTS equ "WTSAPI32",\
 WTSVirtualChannelQuery,\
 WTSVirtualChannelOpenEx,\
 WTSVirtualChannelOpen,\
@@ -3854,14 +3822,14 @@ WTSEnumerateProcessesW,\
 WTSEnumerateProcessesExW,\
 WTSDisconnectSession
 
-import "d3dx10_47",\
+__IMPORTS equ "d3dx10_47",\
 D3DX10SaveTextureToFileA,\
 D3DX10LoadTextureFromTexture,\
 D3DX10CreateTextureFromFileA,\
 D3DX10CreateShaderResourceViewFromFileA,\
 D3DX10CreateEffectFromFileA
 
-import "pdh",\
+__IMPORTS equ "pdh",\
 PdhValidatePathW,\
 PdhUpdateLogW,\
 PdhRemoveCounter,\
@@ -3880,7 +3848,7 @@ PdhCloseLog,\
 PdhAddEnglishCounterW,\
 PdhAddCounterW
 
-import "psapi",\
+__IMPORTS equ "psapi",\
 QueryWorkingSetEx,\
 QueryWorkingSet,\
 InitializeProcessForWsWatch,\
@@ -3909,7 +3877,7 @@ EnumPageFilesA,\
 EnumDeviceDrivers,\
 EmptyWorkingSet
 
-import "rstrtmgr",\
+__IMPORTS equ "rstrtmgr",\
 RmStartSession,\
 RmShutdown,\
 RmRestart,\
@@ -3917,7 +3885,7 @@ RmRegisterResources,\
 RmGetList,\
 RmEndSession
 
-import "setupapi",\
+__IMPORTS equ "setupapi",\
 SetupUninstallOEMInfW,\
 SetupTermDefaultQueueCallback,\
 SetupScanFileQueueW,\
@@ -4263,3 +4231,4 @@ CM_Add_ID_ExW,\
 CM_Add_ID_ExA,\
 CM_Add_Empty_Log_Conf_Ex,\
 CM_Add_Empty_Log_Conf
+

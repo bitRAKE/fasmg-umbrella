@@ -59,22 +59,12 @@ for n in pairs(func) do table.insert(a, n) end
 table.sort(a)
 
 -- create iterators for API use:
-out = [[
-include "import64_apiset.g"
-libraries \
-]]
+out = ""
 for i,j in pairs(a) do
-  out = out .. "\"" .. j .. "\",\\\n"
-  --break
-end
-out = string.sub(out,1,-4) .. "\n"
-
-for i,j in pairs(a) do
-  out = out .. "\nimport \"" .. j .. "\",\\\n"
+  out = out .. "__IMPORTS equ \"" .. j .. "\",\\\n"
   for n,m in pairs(func[j]) do
     out = out .. m .. ",\\\n"
   end
-  out = string.sub(out,1,-4) .. "\n"
-  --break
+  out = string.sub(out,1,-4) .. "\n\n"
 end
 io.write(out)

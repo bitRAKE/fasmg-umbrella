@@ -352,12 +352,12 @@ postpone
 			db ?
 		end if
 
-	; build import table
 	match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
 		include 'api\OneCoreUAP.g'
 	else
 		eval "include 'api\",UMBRELLA_LIBRARY,".g'"
 	end match
+	include 'api\__import64.g' ; build import table
 
 	; Assume user wants 32-bit addressing if they specifying a low base,
 	; don't output fixups to force loader to do what is implied.
