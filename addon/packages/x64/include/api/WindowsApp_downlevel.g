@@ -1,4 +1,4 @@
-__IMPORTS equ "CRYPT32",\
+PE.__IMPORTS equ "CRYPT32",\
 CertAddCertificateContextToStore,\
 CertAddCertificateLinkToStore,\
 CertAddCRLContextToStore,\
@@ -149,10 +149,10 @@ PFXImportCertStore,\
 PFXIsPFXBlob,\
 PFXVerifyPassword
 
-__IMPORTS equ "CoreMessaging",\
+PE.__IMPORTS equ "CoreMessaging",\
 CreateDispatcherQueueController
 
-__IMPORTS equ "D3DCOMPILER_47",\
+PE.__IMPORTS equ "D3DCOMPILER_47",\
 D3DCompile,\
 D3DCompile2,\
 D3DCompileFromFile,\
@@ -179,15 +179,15 @@ D3DSetBlobPart,\
 D3DStripShader,\
 D3DWriteBlobToFile
 
-__IMPORTS equ "DNSAPI",\
+PE.__IMPORTS equ "DNSAPI",\
 DnsFree,\
 DnsQuery_W,\
 DnsRecordListFree
 
-__IMPORTS equ "DWrite",\
+PE.__IMPORTS equ "DWrite",\
 DWriteCreateFactory
 
-__IMPORTS equ "DiagnosticDataQuery",\
+PE.__IMPORTS equ "DiagnosticDataQuery",\
 DdqCancelDiagnosticRecordOperation,\
 DdqCloseSession,\
 DdqCreateSession,\
@@ -223,7 +223,7 @@ DdqGetTranscriptConfiguration,\
 DdqIsDiagnosticRecordSampledIn,\
 DdqSetTranscriptConfiguration
 
-__IMPORTS equ "ESENT",\
+PE.__IMPORTS equ "ESENT",\
 JetAddColumnW,\
 JetAttachDatabase2W,\
 JetBackupInstanceW,\
@@ -304,7 +304,7 @@ JetTerm2,\
 JetUnregisterCallback,\
 JetUpdate2
 
-__IMPORTS equ "HID",\
+PE.__IMPORTS equ "HID",\
 HidP_GetScaledUsageValue,\
 HidP_GetSpecificValueCaps,\
 HidP_GetUsages,\
@@ -312,7 +312,7 @@ HidP_GetUsageValue,\
 HidP_GetUsageValueArray,\
 HidP_MaxUsageListLength
 
-__IMPORTS equ "IPHLPAPI",\
+PE.__IMPORTS equ "IPHLPAPI",\
 CancelMibChangeNotify2,\
 FreeMibTable,\
 GetAdaptersAddresses,\
@@ -345,7 +345,7 @@ NotifyStableUnicastIpAddressTable,\
 NotifyUnicastIpAddressChange,\
 SendARP
 
-__IMPORTS equ "MF",\
+PE.__IMPORTS equ "MF",\
 MFCreateAggregateSource,\
 MFCreateASFContentInfo,\
 MFCreateASFIndexer,\
@@ -363,7 +363,7 @@ MFGetService,\
 MFGetSystemId,\
 MFLoadSignedLibrary
 
-__IMPORTS equ "MFPlat",\
+PE.__IMPORTS equ "MFPlat",\
 MFAllocateSerialWorkQueue,\
 MFCancelWorkItem,\
 MFCombineSamples,\
@@ -425,14 +425,14 @@ MFUnlockWorkQueue,\
 MFUnwrapMediaType,\
 MFWrapMediaType
 
-__IMPORTS equ "MFReadWrite",\
+PE.__IMPORTS equ "MFReadWrite",\
 MFCreateSinkWriterFromMediaSink,\
 MFCreateSinkWriterFromURL,\
 MFCreateSourceReaderFromByteStream,\
 MFCreateSourceReaderFromMediaSource,\
 MFCreateSourceReaderFromURL
 
-__IMPORTS equ "MFSENSORGROUP",\
+PE.__IMPORTS equ "MFSENSORGROUP",\
 MFCreateCameraControlMonitor,\
 MFCreateCameraOcclusionStateMonitor,\
 MFCreateSensorGroup,\
@@ -440,12 +440,12 @@ MFCreateSensorStream,\
 MFCreateVirtualCamera,\
 MFIsVirtualCameraTypeSupported
 
-__IMPORTS equ "MPR",\
+PE.__IMPORTS equ "MPR",\
 WNetAddConnection2A,\
 WNetCancelConnection2A,\
 WNetUseConnectionA
 
-__IMPORTS equ "MSAJApi",\
+PE.__IMPORTS equ "MSAJApi",\
 alljoyn_aboutdata_create,\
 alljoyn_aboutdata_create_empty,\
 alljoyn_aboutdata_create_full,\
@@ -993,12 +993,12 @@ AllJoynReceiveFromBus,\
 AllJoynSendToBus,\
 QCC_StatusText
 
-__IMPORTS equ "MSWSOCK",\
+PE.__IMPORTS equ "MSWSOCK",\
 AcceptEx,\
 GetAcceptExSockaddrs,\
 TransmitFile
 
-__IMPORTS equ "OLEAUT32",\
+PE.__IMPORTS equ "OLEAUT32",\
 VARIANT_UserFree64,\
 BSTR_UserFree64,\
 LPSAFEARRAY_UserFree64,\
@@ -1012,11 +1012,11 @@ VARIANT_UserUnmarshal64,\
 VARIANT_UserSize64,\
 VARIANT_UserMarshal64
 
-__IMPORTS equ "POWRPROF",\
+PE.__IMPORTS equ "POWRPROF",\
 PowerEnumerate,\
 PowerReadFriendlyName
 
-__IMPORTS equ "PROPSYS",\
+PE.__IMPORTS equ "PROPSYS",\
 InitPropVariantFromCLSID,\
 InitPropVariantFromFileTime,\
 InitVariantFromBuffer,\
@@ -1034,11 +1034,11 @@ PSCreatePropertyStoreFromObject,\
 VariantToGUID,\
 VariantToPropVariant
 
-__IMPORTS equ "PerceptionDevice",\
+PE.__IMPORTS equ "PerceptionDevice",\
 PerceptionDeviceCreateFactory,\
 PerceptionDeviceSetCreateFactoryOverride
 
-__IMPORTS equ "RPCRT4",\
+PE.__IMPORTS equ "RPCRT4",\
 CreateProxyFromTypeInfo,\
 CreateStubFromTypeInfo,\
 CStdStubBuffer_AddRef,\
@@ -1309,10 +1309,10 @@ UuidIsNil,\
 UuidToStringA,\
 UuidToStringW
 
-__IMPORTS equ "RoMetadata",\
+PE.__IMPORTS equ "RoMetadata",\
 MetaDataGetDispenser
 
-__IMPORTS equ "SspiCli",\
+PE.__IMPORTS equ "SspiCli",\
 AcceptSecurityContext,\
 AcquireCredentialsHandleW,\
 ApplyControlToken,\
@@ -1343,7 +1343,7 @@ SspiEncodeStringsAsAuthIdentity,\
 SspiEncryptAuthIdentityEx,\
 SspiFreeAuthIdentity
 
-__IMPORTS equ "UIAutomationCore",\
+PE.__IMPORTS equ "UIAutomationCore",\
 UiaHasServerSideProvider,\
 UiaIAccessibleFromProvider,\
 UiaProviderForNonClient,\
@@ -1352,10 +1352,10 @@ UiaRaiseActiveTextPositionChangedEvent,\
 UiaRaiseAsyncContentLoadedEvent,\
 UiaRaiseNotificationEvent
 
-__IMPORTS equ "USERENV",\
+PE.__IMPORTS equ "USERENV",\
 DeriveAppContainerSidFromAppContainerName
 
-__IMPORTS equ "WINHTTP",\
+PE.__IMPORTS equ "WINHTTP",\
 WinHttpAddRequestHeaders,\
 WinHttpAddRequestHeadersEx,\
 WinHttpCheckPlatform,\
@@ -1404,10 +1404,10 @@ WinHttpWebSocketShutdown,\
 WinHttpWriteData,\
 WinHttpWriteProxySettings
 
-__IMPORTS equ "WINTRUST",\
+PE.__IMPORTS equ "WINTRUST",\
 WinVerifyTrust
 
-__IMPORTS equ "WS2_32",\
+PE.__IMPORTS equ "WS2_32",\
 freeaddrinfo,\
 FreeAddrInfoEx,\
 FreeAddrInfoExW,\
@@ -1476,16 +1476,16 @@ WSAEnumNameSpaceProvidersA,\
 WSAEnumNameSpaceProvidersExA,\
 WSAEnumNameSpaceProvidersExW
 
-__IMPORTS equ "Windows.AI.MachineLearning",\
+PE.__IMPORTS equ "Windows.AI.MachineLearning",\
 MLCreateOperatorRegistry
 
-__IMPORTS equ "Windows.Data.Pdf",\
+PE.__IMPORTS equ "Windows.Data.Pdf",\
 PdfCreateRenderer
 
-__IMPORTS equ "Windows.Networking",\
+PE.__IMPORTS equ "Windows.Networking",\
 SetSocketMediaStreamingMode
 
-__IMPORTS equ "WindowsCodecs",\
+PE.__IMPORTS equ "WindowsCodecs",\
 WICConvertBitmapSource,\
 WICCreateBitmapFromSection,\
 WICCreateBitmapFromSectionEx,\
@@ -1496,7 +1496,7 @@ WICMapShortNameToGuid,\
 WICMatchMetadataContent,\
 WICSerializeMetadataContent
 
-__IMPORTS equ "XINPUTUAP",\
+PE.__IMPORTS equ "XINPUTUAP",\
 XInputEnable,\
 XInputGetAudioDeviceIds,\
 XInputGetBatteryInformation,\
@@ -1505,7 +1505,7 @@ XInputGetKeystroke,\
 XInputGetState,\
 XInputSetState
 
-__IMPORTS equ "XmlLite",\
+PE.__IMPORTS equ "XmlLite",\
 CreateXmlReader,\
 CreateXmlReaderInputWithEncodingCodePage,\
 CreateXmlReaderInputWithEncodingName,\
@@ -1513,7 +1513,7 @@ CreateXmlWriter,\
 CreateXmlWriterOutputWithEncodingCodePage,\
 CreateXmlWriterOutputWithEncodingName
 
-__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-0",\
 ClosePackageInfo,\
 GetApplicationUserModelId,\
 GetCurrentApplicationUserModelId,\
@@ -1535,7 +1535,7 @@ PackageFullNameFromId,\
 PackageIdFromFullName,\
 PackageNameAndPublisherIdFromFamilyName
 
-__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-1",\
 FindPackagesByPackageFamily,\
 FormatApplicationUserModelId,\
 GetApplicationUserModelIdFromToken,\
@@ -1552,7 +1552,7 @@ VerifyPackageFullName,\
 VerifyPackageId,\
 VerifyPackageRelativeApplicationId
 
-__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-2",\
 AppPolicyGetClrCompat,\
 AppPolicyGetCreateFileAccess,\
 AppPolicyGetLifecycleManagement,\
@@ -1562,14 +1562,14 @@ AppPolicyGetShowDeveloperDiagnostic,\
 AppPolicyGetThreadInitializationType,\
 AppPolicyGetWindowingModel
 
-__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-3",\
+PE.__IMPORTS equ "api-ms-win-appmodel-runtime-l1-1-3",\
 GetCurrentPackageInfo2,\
 GetCurrentPackagePath2,\
 GetPackageInfo2,\
 GetPackagePathByFullName2,\
 GetStagedPackagePathByFullName2
 
-__IMPORTS equ "api-ms-win-core-atoms-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-atoms-l1-1-0",\
 AddAtomA,\
 AddAtomW,\
 DeleteAtom,\
@@ -1578,7 +1578,7 @@ FindAtomW,\
 GetAtomNameA,\
 GetAtomNameW
 
-__IMPORTS equ "api-ms-win-core-com-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-com-l1-1-0",\
 CLSIDFromProgID,\
 CLSIDFromString,\
 CoAddRefServerProcess,\
@@ -1633,10 +1633,10 @@ StringFromCLSID,\
 StringFromGUID2,\
 StringFromIID
 
-__IMPORTS equ "api-ms-win-core-com-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-com-l1-1-1",\
 RoGetAgileReference
 
-__IMPORTS equ "api-ms-win-core-com-l2-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-com-l2-1-1",\
 CreateILockBytesOnHGlobal,\
 FmtIdToPropStgName,\
 GetConvertStg,\
@@ -1659,7 +1659,7 @@ StgSetTimes,\
 WriteClassStg,\
 WriteClassStm
 
-__IMPORTS equ "api-ms-win-core-com-midlproxystub-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-com-midlproxystub-l1-1-0",\
 CStdAsyncStubBuffer_AddRef,\
 CStdAsyncStubBuffer_Connect,\
 CStdAsyncStubBuffer_Disconnect,\
@@ -1734,7 +1734,7 @@ ObjectStublessClient7,\
 ObjectStublessClient8,\
 ObjectStublessClient9
 
-__IMPORTS equ "api-ms-win-core-comm-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-comm-l1-1-0",\
 ClearCommBreak,\
 ClearCommError,\
 EscapeCommFunction,\
@@ -1754,13 +1754,13 @@ SetupComm,\
 TransmitCommChar,\
 WaitCommEvent
 
-__IMPORTS equ "api-ms-win-core-comm-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-comm-l1-1-1",\
 OpenCommPort
 
-__IMPORTS equ "api-ms-win-core-comm-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-comm-l1-1-2",\
 GetCommPorts
 
-__IMPORTS equ "api-ms-win-core-console-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-console-l1-1-0",\
 AllocConsole,\
 GetConsoleCP,\
 GetConsoleMode,\
@@ -1775,13 +1775,13 @@ SetConsoleMode,\
 WriteConsoleA,\
 WriteConsoleW
 
-__IMPORTS equ "api-ms-win-core-console-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-console-l1-2-0",\
 AttachConsole,\
 FreeConsole,\
 PeekConsoleInputA,\
 PeekConsoleInputW
 
-__IMPORTS equ "api-ms-win-core-console-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-console-l2-1-0",\
 CreateConsoleScreenBuffer,\
 FillConsoleOutputAttribute,\
 FillConsoleOutputCharacterA,\
@@ -1816,7 +1816,7 @@ WriteConsoleOutputCharacterA,\
 WriteConsoleOutputCharacterW,\
 WriteConsoleOutputW
 
-__IMPORTS equ "api-ms-win-core-console-l2-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-console-l2-2-0",\
 GetConsoleOriginalTitleA,\
 GetConsoleOriginalTitleW,\
 GetConsoleTitleA,\
@@ -1824,7 +1824,7 @@ GetConsoleTitleW,\
 SetConsoleTitleA,\
 SetConsoleTitleW
 
-__IMPORTS equ "api-ms-win-core-console-l3-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-console-l3-2-0",\
 AddConsoleAliasA,\
 AddConsoleAliasW,\
 ExpungeConsoleCommandHistoryA,\
@@ -1858,46 +1858,46 @@ SetConsoleNumberOfCommandsA,\
 SetConsoleNumberOfCommandsW,\
 SetCurrentConsoleFontEx
 
-__IMPORTS equ "api-ms-win-core-datetime-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-datetime-l1-1-0",\
 GetDateFormatA,\
 GetDateFormatW,\
 GetTimeFormatA,\
 GetTimeFormatW
 
-__IMPORTS equ "api-ms-win-core-datetime-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-datetime-l1-1-1",\
 GetDateFormatEx,\
 GetTimeFormatEx
 
-__IMPORTS equ "api-ms-win-core-datetime-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-datetime-l1-1-2",\
 GetDurationFormatEx
 
-__IMPORTS equ "api-ms-win-core-debug-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-debug-l1-1-0",\
 DebugBreak,\
 IsDebuggerPresent,\
 OutputDebugStringA,\
 OutputDebugStringW
 
-__IMPORTS equ "api-ms-win-core-debug-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-debug-l1-1-1",\
 CheckRemoteDebuggerPresent,\
 ContinueDebugEvent,\
 DebugActiveProcess,\
 DebugActiveProcessStop,\
 WaitForDebugEvent
 
-__IMPORTS equ "api-ms-win-core-delayload-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-delayload-l1-1-0",\
 DelayLoadFailureHook
 
-__IMPORTS equ "api-ms-win-core-delayload-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-delayload-l1-1-1",\
 ResolveDelayLoadedAPI,\
 ResolveDelayLoadsFromDll
 
-__IMPORTS equ "api-ms-win-core-enclave-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-enclave-l1-1-0",\
 CreateEnclave,\
 InitializeEnclave,\
 IsEnclaveTypeSupported,\
 LoadEnclaveData
 
-__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-0",\
 GetErrorMode,\
 GetLastError,\
 RaiseException,\
@@ -1906,61 +1906,61 @@ SetLastError,\
 SetUnhandledExceptionFilter,\
 UnhandledExceptionFilter
 
-__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-1",\
 AddVectoredExceptionHandler,\
 RemoveVectoredExceptionHandler
 
-__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-2",\
 RaiseFailFastException
 
-__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-3",\
+PE.__IMPORTS equ "api-ms-win-core-errorhandling-l1-1-3",\
 FatalAppExitA,\
 FatalAppExitW,\
 GetThreadErrorMode,\
 SetThreadErrorMode
 
-__IMPORTS equ "api-ms-win-core-featurestaging-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-featurestaging-l1-1-0",\
 GetFeatureEnabledState,\
 RecordFeatureError,\
 RecordFeatureUsage,\
 SubscribeFeatureStateChangeNotification,\
 UnsubscribeFeatureStateChangeNotification
 
-__IMPORTS equ "api-ms-win-core-featurestaging-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-featurestaging-l1-1-1",\
 GetFeatureVariant
 
-__IMPORTS equ "api-ms-win-core-fibers-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-fibers-l1-1-0",\
 FlsAlloc,\
 FlsFree,\
 FlsGetValue,\
 FlsSetValue
 
-__IMPORTS equ "api-ms-win-core-fibers-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-fibers-l1-1-1",\
 IsThreadAFiber
 
-__IMPORTS equ "api-ms-win-core-fibers-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-fibers-l2-1-0",\
 ConvertFiberToThread,\
 DeleteFiber,\
 SwitchToFiber
 
-__IMPORTS equ "api-ms-win-core-fibers-l2-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-fibers-l2-1-1",\
 ConvertThreadToFiberEx,\
 CreateFiberEx
 
-__IMPORTS equ "api-ms-win-core-file-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-ansi-l1-1-0",\
 DeleteVolumeMountPointA,\
 FindFirstVolumeA,\
 FindNextVolumeA,\
 GetLogicalDriveStringsA,\
 GetVolumePathNameA
 
-__IMPORTS equ "api-ms-win-core-file-ansi-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-ansi-l2-1-0",\
 CopyFileExA,\
 CreateDirectoryExA,\
 MoveFileWithProgressA,\
 ReplaceFileA
 
-__IMPORTS equ "api-ms-win-core-file-fromapp-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-fromapp-l1-1-0",\
 CopyFileFromAppW,\
 CreateDirectoryFromAppW,\
 CreateFile2FromAppW,\
@@ -1973,7 +1973,7 @@ RemoveDirectoryFromAppW,\
 ReplaceFileFromAppW,\
 SetFileAttributesFromAppW
 
-__IMPORTS equ "api-ms-win-core-file-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-l1-1-0",\
 CompareFileTime,\
 CreateDirectoryA,\
 CreateDirectoryW,\
@@ -2048,19 +2048,19 @@ WriteFile,\
 WriteFileEx,\
 WriteFileGather
 
-__IMPORTS equ "api-ms-win-core-file-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-l1-2-0",\
 CreateFile2,\
 GetTempPathW,\
 GetVolumeNameForVolumeMountPointW,\
 GetVolumePathNamesForVolumeNameW
 
-__IMPORTS equ "api-ms-win-core-file-l1-2-2",\
+PE.__IMPORTS equ "api-ms-win-core-file-l1-2-2",\
 AreFileApisANSI,\
 GetTempFileNameA,\
 GetTempPathA,\
 GetVolumeInformationA
 
-__IMPORTS equ "api-ms-win-core-file-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-file-l2-1-0",\
 CopyFile2,\
 CopyFileExW,\
 CreateDirectoryExW,\
@@ -2073,10 +2073,10 @@ ReadDirectoryChangesW,\
 ReOpenFile,\
 ReplaceFileW
 
-__IMPORTS equ "api-ms-win-core-file-l2-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-file-l2-1-2",\
 CopyFileW
 
-__IMPORTS equ "api-ms-win-core-firmware-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-firmware-l1-1-0",\
 GetFirmwareEnvironmentVariableA,\
 GetFirmwareEnvironmentVariableExA,\
 GetFirmwareEnvironmentVariableExW,\
@@ -2086,14 +2086,14 @@ SetFirmwareEnvironmentVariableExA,\
 SetFirmwareEnvironmentVariableExW,\
 SetFirmwareEnvironmentVariableW
 
-__IMPORTS equ "api-ms-win-core-handle-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-handle-l1-1-0",\
 CloseHandle,\
 CompareObjectHandles,\
 DuplicateHandle,\
 GetHandleInformation,\
 SetHandleInformation
 
-__IMPORTS equ "api-ms-win-core-heap-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-heap-l1-1-0",\
 GetProcessHeap,\
 GetProcessHeaps,\
 HeapAlloc,\
@@ -2110,30 +2110,30 @@ HeapUnlock,\
 HeapValidate,\
 HeapWalk
 
-__IMPORTS equ "api-ms-win-core-heap-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-heap-l2-1-0",\
 GlobalAlloc,\
 GlobalFree,\
 LocalAlloc,\
 LocalFree,\
 LocalReAlloc
 
-__IMPORTS equ "api-ms-win-core-heap-obsolete-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-heap-obsolete-l1-1-0",\
 GlobalLock,\
 GlobalReAlloc,\
 GlobalSize,\
 GlobalUnlock
 
-__IMPORTS equ "api-ms-win-core-interlocked-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-interlocked-l1-1-0",\
 InitializeSListHead,\
 InterlockedFlushSList,\
 InterlockedPopEntrySList,\
 InterlockedPushEntrySList,\
 QueryDepthSList
 
-__IMPORTS equ "api-ms-win-core-interlocked-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-interlocked-l1-2-0",\
 InterlockedPushListSListEx
 
-__IMPORTS equ "api-ms-win-core-io-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-io-l1-1-0",\
 CancelIoEx,\
 CreateIoCompletionPort,\
 DeviceIoControl,\
@@ -2142,20 +2142,20 @@ GetQueuedCompletionStatus,\
 GetQueuedCompletionStatusEx,\
 PostQueuedCompletionStatus
 
-__IMPORTS equ "api-ms-win-core-io-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-io-l1-1-1",\
 CancelIo,\
 GetOverlappedResultEx
 
-__IMPORTS equ "api-ms-win-core-job-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-job-l2-1-0",\
 AssignProcessToJobObject,\
 CreateJobObjectW,\
 SetInformationJobObject
 
-__IMPORTS equ "api-ms-win-core-kernel32-legacy-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-kernel32-legacy-ansi-l1-1-0",\
 SetDllDirectoryA,\
 SetVolumeLabelA
 
-__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-0",\
 CopyFileA,\
 CreateFileMappingA,\
 CreateNamedPipeA,\
@@ -2176,23 +2176,23 @@ SetFileCompletionNotificationModes,\
 SetVolumeLabelW,\
 UnregisterWait
 
-__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-1",\
 SetDllDirectoryW,\
 VerifyVersionInfoW
 
-__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-2",\
 OpenFileMappingA,\
 Process32First,\
 Process32Next,\
 VerifyVersionInfoA
 
-__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-5",\
+PE.__IMPORTS equ "api-ms-win-core-kernel32-legacy-l1-1-5",\
 SetThreadExecutionState
 
-__IMPORTS equ "api-ms-win-core-largeinteger-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-largeinteger-l1-1-0",\
 MulDiv
 
-__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-0",\
 AddDllDirectory,\
 DisableThreadLibraryCalls,\
 FindResourceExW,\
@@ -2217,22 +2217,22 @@ RemoveDllDirectory,\
 SetDefaultDllDirectories,\
 SizeofResource
 
-__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-1",\
 FindResourceW,\
 LoadLibraryA,\
 LoadLibraryW
 
-__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-2",\
+PE.__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-2",\
 EnumResourceNamesW
 
-__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-3",\
+PE.__IMPORTS equ "api-ms-win-core-libraryloader-l1-2-3",\
 EnumResourceNamesA
 
-__IMPORTS equ "api-ms-win-core-libraryloader-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-libraryloader-l2-1-0",\
 LoadPackagedLibrary,\
 QueryOptionalDelayLoadedAPI
 
-__IMPORTS equ "api-ms-win-core-localization-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-localization-ansi-l1-1-0",\
 EnumUILanguagesA,\
 FoldStringA,\
 GetCalendarInfoA,\
@@ -2240,7 +2240,7 @@ GetStringTypeExA,\
 SetCalendarInfoA,\
 SetLocaleInfoA
 
-__IMPORTS equ "api-ms-win-core-localization-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-localization-l1-2-0",\
 ConvertDefaultLocale,\
 EnumSystemGeoID,\
 EnumSystemLocalesA,\
@@ -2300,17 +2300,17 @@ SetThreadUILanguage,\
 VerLanguageNameA,\
 VerLanguageNameW
 
-__IMPORTS equ "api-ms-win-core-localization-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-core-localization-l1-2-1",\
 EnumSystemLocalesEx
 
-__IMPORTS equ "api-ms-win-core-localization-l1-2-2",\
+PE.__IMPORTS equ "api-ms-win-core-localization-l1-2-2",\
 GetSystemDefaultLocaleName,\
 LCIDToLocaleName
 
-__IMPORTS equ "api-ms-win-core-localization-l1-2-3",\
+PE.__IMPORTS equ "api-ms-win-core-localization-l1-2-3",\
 GetUserDefaultGeoName
 
-__IMPORTS equ "api-ms-win-core-localization-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-localization-l2-1-0",\
 EnumCalendarInfoExEx,\
 EnumCalendarInfoW,\
 EnumDateFormatsExEx,\
@@ -2320,14 +2320,14 @@ GetCurrencyFormatEx,\
 GetCurrencyFormatW,\
 GetNumberFormatEx
 
-__IMPORTS equ "api-ms-win-core-localization-obsolete-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-localization-obsolete-l1-2-0",\
 CompareStringA,\
 EnumUILanguagesW,\
 GetStringTypeA,\
 GetSystemDefaultUILanguage,\
 GetUserDefaultUILanguage
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-0",\
 CreateFileMappingW,\
 FlushViewOfFile,\
 MapViewOfFile,\
@@ -2345,7 +2345,7 @@ VirtualQuery,\
 VirtualQueryEx,\
 WriteProcessMemory
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-1",\
 CreateFileMappingFromApp,\
 GetLargePageMinimum,\
 GetProcessWorkingSetSizeEx,\
@@ -2357,37 +2357,37 @@ UnmapViewOfFileEx,\
 VirtualLock,\
 VirtualUnlock
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-2",\
 DiscardVirtualMemory,\
 OfferVirtualMemory,\
 ReclaimVirtualMemory
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-3",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-3",\
 OpenFileMappingFromApp,\
 SetProcessValidCallTargets,\
 VirtualAllocFromApp,\
 VirtualProtectFromApp
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-5",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-5",\
 UnmapViewOfFile2,\
 VirtualUnlockEx
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-6",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-6",\
 MapViewOfFile3FromApp,\
 VirtualAlloc2FromApp
 
-__IMPORTS equ "api-ms-win-core-memory-l1-1-7",\
+PE.__IMPORTS equ "api-ms-win-core-memory-l1-1-7",\
 SetProcessValidCallTargetsForMappedView
 
-__IMPORTS equ "api-ms-win-core-namedpipe-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-namedpipe-ansi-l1-1-0",\
 GetNamedPipeClientComputerNameA,\
 GetNamedPipeHandleStateA,\
 WaitNamedPipeA
 
-__IMPORTS equ "api-ms-win-core-namedpipe-ansi-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-namedpipe-ansi-l1-1-1",\
 CallNamedPipeA
 
-__IMPORTS equ "api-ms-win-core-namedpipe-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-namedpipe-l1-1-0",\
 ConnectNamedPipe,\
 CreateNamedPipeW,\
 CreatePipe,\
@@ -2399,19 +2399,19 @@ SetNamedPipeHandleState,\
 TransactNamedPipe,\
 WaitNamedPipeW
 
-__IMPORTS equ "api-ms-win-core-namedpipe-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-core-namedpipe-l1-2-1",\
 GetNamedPipeHandleStateW,\
 GetNamedPipeInfo
 
-__IMPORTS equ "api-ms-win-core-namedpipe-l1-2-2",\
+PE.__IMPORTS equ "api-ms-win-core-namedpipe-l1-2-2",\
 CallNamedPipeW
 
-__IMPORTS equ "api-ms-win-core-namespace-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-namespace-ansi-l1-1-0",\
 CreateBoundaryDescriptorA,\
 CreatePrivateNamespaceA,\
 OpenPrivateNamespaceA
 
-__IMPORTS equ "api-ms-win-core-namespace-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-namespace-l1-1-0",\
 AddSIDToBoundaryDescriptor,\
 ClosePrivateNamespace,\
 CreateBoundaryDescriptorW,\
@@ -2419,14 +2419,14 @@ CreatePrivateNamespaceW,\
 DeleteBoundaryDescriptor,\
 OpenPrivateNamespaceW
 
-__IMPORTS equ "api-ms-win-core-normalization-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-normalization-l1-1-0",\
 GetStringScripts,\
 IdnToNameprepUnicode,\
 IsNormalizedString,\
 NormalizeString,\
 VerifyScripts
 
-__IMPORTS equ "api-ms-win-core-path-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-path-l1-1-0",\
 PathAllocCanonicalize,\
 PathAllocCombine,\
 PathCchAddBackslash,\
@@ -2450,20 +2450,20 @@ PathCchStripPrefix,\
 PathCchStripToRoot,\
 PathIsUNCEx
 
-__IMPORTS equ "api-ms-win-core-privateprofile-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-privateprofile-l1-1-0",\
 GetPrivateProfileIntA,\
 GetPrivateProfileStringA,\
 GetPrivateProfileStringW,\
 WritePrivateProfileStringA,\
 WritePrivateProfileStringW
 
-__IMPORTS equ "api-ms-win-core-privateprofile-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-privateprofile-l1-1-1",\
 GetPrivateProfileSectionA
 
-__IMPORTS equ "api-ms-win-core-processenvironment-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processenvironment-ansi-l1-1-0",\
 SetEnvironmentStringsA
 
-__IMPORTS equ "api-ms-win-core-processenvironment-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processenvironment-l1-1-0",\
 ExpandEnvironmentStringsA,\
 ExpandEnvironmentStringsW,\
 FreeEnvironmentStringsA,\
@@ -2486,10 +2486,10 @@ SetEnvironmentVariableW,\
 SetStdHandle,\
 SetStdHandleEx
 
-__IMPORTS equ "api-ms-win-core-processenvironment-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-processenvironment-l1-2-0",\
 SearchPathA
 
-__IMPORTS equ "api-ms-win-core-processsnapshot-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processsnapshot-l1-1-0",\
 PssCaptureSnapshot,\
 PssDuplicateSnapshot,\
 PssFreeSnapshot,\
@@ -2501,7 +2501,7 @@ PssWalkMarkerSeekToBeginning,\
 PssWalkMarkerSetPosition,\
 PssWalkSnapshot
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-0",\
 CreateProcessA,\
 CreateProcessAsUserW,\
 CreateProcessW,\
@@ -2552,7 +2552,7 @@ TlsGetValue,\
 TlsSetValue,\
 UpdateProcThreadAttribute
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-1",\
 FlushInstructionCache,\
 GetCurrentProcessorNumber,\
 GetCurrentProcessorNumberEx,\
@@ -2568,13 +2568,13 @@ SetProcessMitigationPolicy,\
 SetThreadContext,\
 SetThreadIdealProcessorEx
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-2",\
 GetProcessPriorityBoost,\
 GetSystemTimes,\
 SetProcessPriorityBoost,\
 SetThreadInformation
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-3",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-3",\
 CreateProcessAsUserA,\
 GetProcessDefaultCpuSets,\
 GetProcessInformation,\
@@ -2587,35 +2587,35 @@ SetThreadDescription,\
 SetThreadIdealProcessor,\
 SetThreadSelectedCpuSets
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-5",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-5",\
 QueueUserAPC2
 
-__IMPORTS equ "api-ms-win-core-processthreads-l1-1-6",\
+PE.__IMPORTS equ "api-ms-win-core-processthreads-l1-1-6",\
 GetProcessDefaultCpuSetMasks,\
 GetThreadSelectedCpuSetMasks,\
 SetProcessDefaultCpuSetMasks,\
 SetThreadSelectedCpuSetMasks
 
-__IMPORTS equ "api-ms-win-core-processtopology-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processtopology-l1-1-0",\
 GetThreadGroupAffinity,\
 SetThreadGroupAffinity
 
-__IMPORTS equ "api-ms-win-core-processtopology-obsolete-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-processtopology-obsolete-l1-1-0",\
 GetProcessAffinityMask,\
 GetProcessIoCounters,\
 SetProcessAffinityMask,\
 SetThreadAffinityMask
 
-__IMPORTS equ "api-ms-win-core-profile-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-profile-l1-1-0",\
 QueryPerformanceCounter,\
 QueryPerformanceFrequency
 
-__IMPORTS equ "api-ms-win-core-psapi-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-psapi-ansi-l1-1-0",\
 K32GetModuleBaseNameA,\
 K32GetModuleFileNameExA,\
 QueryFullProcessImageNameA
 
-__IMPORTS equ "api-ms-win-core-psapi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-psapi-l1-1-0",\
 K32EnumProcesses,\
 K32GetModuleBaseNameW,\
 K32GetModuleFileNameExW,\
@@ -2625,25 +2625,25 @@ K32QueryWorkingSet,\
 K32QueryWorkingSetEx,\
 QueryFullProcessImageNameW
 
-__IMPORTS equ "api-ms-win-core-psm-appnotify-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-psm-appnotify-l1-1-0",\
 RegisterAppStateChangeNotification,\
 UnregisterAppStateChangeNotification
 
-__IMPORTS equ "api-ms-win-core-realtime-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-realtime-l1-1-0",\
 QueryThreadCycleTime,\
 QueryUnbiasedInterruptTime
 
-__IMPORTS equ "api-ms-win-core-realtime-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-realtime-l1-1-1",\
 QueryInterruptTime,\
 QueryInterruptTimePrecise,\
 QueryUnbiasedInterruptTimePrecise
 
-__IMPORTS equ "api-ms-win-core-realtime-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-realtime-l1-1-2",\
 ConvertAuxiliaryCounterToPerformanceCounter,\
 ConvertPerformanceCounterToAuxiliaryCounter,\
 QueryAuxiliaryCounterFrequency
 
-__IMPORTS equ "api-ms-win-core-registry-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-registry-l1-1-0",\
 RegCloseKey,\
 RegCopyTreeW,\
 RegCreateKeyExA,\
@@ -2688,17 +2688,17 @@ RegSetValueExW,\
 RegUnLoadKeyA,\
 RegUnLoadKeyW
 
-__IMPORTS equ "api-ms-win-core-registry-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-registry-l1-1-1",\
 RegDeleteKeyValueA,\
 RegDeleteKeyValueW,\
 RegSetKeyValueA,\
 RegSetKeyValueW
 
-__IMPORTS equ "api-ms-win-core-registry-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-registry-l1-1-2",\
 RegQueryMultipleValuesA,\
 RegQueryMultipleValuesW
 
-__IMPORTS equ "api-ms-win-core-registry-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-registry-l2-1-0",\
 RegConnectRegistryA,\
 RegConnectRegistryW,\
 RegCopyTreeA,\
@@ -2727,7 +2727,7 @@ RegSaveKeyW,\
 RegSetValueA,\
 RegSetValueW
 
-__IMPORTS equ "api-ms-win-core-rtlsupport-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-rtlsupport-l1-1-0",\
 RtlAddFunctionTable,\
 RtlCaptureContext,\
 RtlCaptureStackBackTrace,\
@@ -2742,14 +2742,14 @@ RtlUnwind,\
 RtlUnwindEx,\
 RtlVirtualUnwind
 
-__IMPORTS equ "api-ms-win-core-shutdown-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-shutdown-l1-1-0",\
 InitiateSystemShutdownExW
 
-__IMPORTS equ "api-ms-win-core-slapi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-slapi-l1-1-0",\
 SLQueryLicenseValueFromApp,\
 SLQueryLicenseValueFromApp2
 
-__IMPORTS equ "api-ms-win-core-string-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-string-l1-1-0",\
 CompareStringEx,\
 CompareStringOrdinal,\
 CompareStringW,\
@@ -2759,13 +2759,13 @@ GetStringTypeW,\
 MultiByteToWideChar,\
 WideCharToMultiByte
 
-__IMPORTS equ "api-ms-win-core-string-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-string-l2-1-0",\
 CharLowerBuffW,\
 CharLowerW,\
 CharNextW,\
 CharUpperW
 
-__IMPORTS equ "api-ms-win-core-string-obsolete-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-string-obsolete-l1-1-0",\
 lstrcatW,\
 lstrcmpA,\
 lstrcmpiA,\
@@ -2776,16 +2776,16 @@ lstrcpyW,\
 lstrlenA,\
 lstrlenW
 
-__IMPORTS equ "api-ms-win-core-string-obsolete-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-string-obsolete-l1-1-1",\
 lstrcatA,\
 lstrcpyA
 
-__IMPORTS equ "api-ms-win-core-stringansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-stringansi-l1-1-0",\
 CharLowerA,\
 CharNextA,\
 CharNextExA
 
-__IMPORTS equ "api-ms-win-core-synch-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-synch-ansi-l1-1-0",\
 CreateSemaphoreA,\
 CreateSemaphoreExA,\
 CreateWaitableTimerA,\
@@ -2793,7 +2793,7 @@ CreateWaitableTimerExA,\
 OpenMutexA,\
 OpenWaitableTimerA
 
-__IMPORTS equ "api-ms-win-core-synch-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-synch-l1-1-0",\
 AcquireSRWLockExclusive,\
 AcquireSRWLockShared,\
 CancelWaitableTimer,\
@@ -2836,7 +2836,7 @@ WaitForMultipleObjectsEx,\
 WaitForSingleObject,\
 WaitForSingleObjectEx
 
-__IMPORTS equ "api-ms-win-core-synch-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-synch-l1-2-0",\
 DeleteSynchronizationBarrier,\
 EnterSynchronizationBarrier,\
 InitializeConditionVariable,\
@@ -2855,12 +2855,12 @@ WakeByAddressAll,\
 WakeByAddressSingle,\
 WakeConditionVariable
 
-__IMPORTS equ "api-ms-win-core-synch-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-core-synch-l1-2-1",\
 CreateSemaphoreW,\
 CreateWaitableTimerW,\
 WaitForMultipleObjects
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-1-0",\
 GetComputerNameExA,\
 GetComputerNameExW,\
 GetLocalTime,\
@@ -2884,7 +2884,7 @@ GetWindowsDirectoryW,\
 GlobalMemoryStatusEx,\
 SetLocalTime
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-0",\
 EnumSystemFirmwareTables,\
 GetNativeSystemInfo,\
 GetProductInfo,\
@@ -2893,22 +2893,22 @@ GetSystemTimePreciseAsFileTime,\
 SetSystemTime,\
 VerSetConditionMask
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-1",\
 GetPhysicallyInstalledSystemMemory
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-3",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-3",\
 GetIntegratedDisplaySize
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-5",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-5",\
 GetSystemLeapSecondInformation
 
-__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-6",\
+PE.__IMPORTS equ "api-ms-win-core-sysinfo-l1-2-6",\
 IsUserCetAvailableInEnvironment
 
-__IMPORTS equ "api-ms-win-core-systemtopology-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-systemtopology-l1-1-0",\
 GetNumaHighestNodeNumber
 
-__IMPORTS equ "api-ms-win-core-threadpool-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-core-threadpool-l1-2-0",\
 CallbackMayRunLong,\
 CancelThreadpoolIo,\
 CloseThreadpool,\
@@ -2947,7 +2947,7 @@ WaitForThreadpoolTimerCallbacks,\
 WaitForThreadpoolWaitCallbacks,\
 WaitForThreadpoolWorkCallbacks
 
-__IMPORTS equ "api-ms-win-core-threadpool-legacy-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-threadpool-legacy-l1-1-0",\
 ChangeTimerQueueTimer,\
 CreateTimerQueue,\
 CreateTimerQueueTimer,\
@@ -2956,7 +2956,7 @@ DeleteTimerQueueTimer,\
 QueueUserWorkItem,\
 UnregisterWaitEx
 
-__IMPORTS equ "api-ms-win-core-timezone-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-timezone-l1-1-0",\
 EnumDynamicTimeZoneInformation,\
 FileTimeToSystemTime,\
 GetDynamicTimeZoneInformation,\
@@ -2971,54 +2971,54 @@ SystemTimeToTzSpecificLocalTimeEx,\
 TzSpecificLocalTimeToSystemTime,\
 TzSpecificLocalTimeToSystemTimeEx
 
-__IMPORTS equ "api-ms-win-core-timezone-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-timezone-l1-1-1",\
 LocalFileTimeToLocalSystemTime,\
 LocalSystemTimeToLocalFileTime
 
-__IMPORTS equ "api-ms-win-core-toolhelp-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-toolhelp-l1-1-0",\
 CreateToolhelp32Snapshot,\
 Process32FirstW,\
 Process32NextW,\
 Thread32First,\
 Thread32Next
 
-__IMPORTS equ "api-ms-win-core-url-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-url-l1-1-0",\
 GetAcceptLanguagesA,\
 GetAcceptLanguagesW
 
-__IMPORTS equ "api-ms-win-core-util-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-util-l1-1-0",\
 Beep,\
 DecodePointer,\
 DecodeSystemPointer,\
 EncodePointer,\
 EncodeSystemPointer
 
-__IMPORTS equ "api-ms-win-core-version-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-version-l1-1-0",\
 GetFileVersionInfoExW,\
 GetFileVersionInfoSizeExW,\
 VerQueryValueW
 
-__IMPORTS equ "api-ms-win-core-version-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-version-l1-1-1",\
 GetFileVersionInfoW
 
-__IMPORTS equ "api-ms-win-core-versionansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-versionansi-l1-1-0",\
 GetFileVersionInfoExA,\
 GetFileVersionInfoSizeExA,\
 VerQueryValueA
 
-__IMPORTS equ "api-ms-win-core-versionansi-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-versionansi-l1-1-1",\
 GetFileVersionInfoA
 
-__IMPORTS equ "api-ms-win-core-windowsceip-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-windowsceip-l1-1-0",\
 CeipIsOptedIn
 
-__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-0",\
 WerRegisterFile,\
 WerRegisterMemoryBlock,\
 WerUnregisterFile,\
 WerUnregisterMemoryBlock
 
-__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-1",\
 WerRegisterAdditionalProcess,\
 WerRegisterCustomMetadata,\
 WerRegisterExcludedMemoryBlock,\
@@ -3026,11 +3026,11 @@ WerUnregisterAdditionalProcess,\
 WerUnregisterCustomMetadata,\
 WerUnregisterExcludedMemoryBlock
 
-__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-windowserrorreporting-l1-1-2",\
 WerRegisterAppLocalDump,\
 WerUnregisterAppLocalDump
 
-__IMPORTS equ "api-ms-win-core-winrt-error-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-error-l1-1-0",\
 GetRestrictedErrorInfo,\
 RoCaptureErrorContext,\
 RoFailFastWithErrorContext,\
@@ -3042,7 +3042,7 @@ RoTransformError,\
 RoTransformErrorW,\
 SetRestrictedErrorInfo
 
-__IMPORTS equ "api-ms-win-core-winrt-error-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-error-l1-1-1",\
 IsErrorPropagationEnabled,\
 RoClearError,\
 RoGetMatchingRestrictedErrorInfo,\
@@ -3050,7 +3050,7 @@ RoOriginateLanguageException,\
 RoReportFailedDelegate,\
 RoReportUnhandledError
 
-__IMPORTS equ "api-ms-win-core-winrt-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-l1-1-0",\
 RoActivateInstance,\
 RoGetActivationFactory,\
 RoGetApartmentIdentifier,\
@@ -3061,19 +3061,19 @@ RoRevokeActivationFactories,\
 RoUninitialize,\
 RoUnregisterForApartmentShutdown
 
-__IMPORTS equ "api-ms-win-core-winrt-registration-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-registration-l1-1-0",\
 RoGetActivatableClassRegistration,\
 RoGetServerActivatableClasses
 
-__IMPORTS equ "api-ms-win-core-winrt-robuffer-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-robuffer-l1-1-0",\
 RoGetBufferMarshaler
 
-__IMPORTS equ "api-ms-win-core-winrt-roparameterizediid-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-roparameterizediid-l1-1-0",\
 RoFreeParameterizedTypeExtra,\
 RoGetParameterizedTypeInstanceIID,\
 RoParameterizedTypeExtraGetTypeSignature
 
-__IMPORTS equ "api-ms-win-core-winrt-string-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-winrt-string-l1-1-0",\
 HSTRING_UserFree,\
 HSTRING_UserFree64,\
 HSTRING_UserMarshal,\
@@ -3101,23 +3101,23 @@ WindowsSubstringWithSpecifiedLength,\
 WindowsTrimStringEnd,\
 WindowsTrimStringStart
 
-__IMPORTS equ "api-ms-win-core-wow64-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-wow64-l1-1-0",\
 IsWow64Process
 
-__IMPORTS equ "api-ms-win-core-wow64-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-core-wow64-l1-1-1",\
 IsWow64Process2
 
-__IMPORTS equ "api-ms-win-core-xstate-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-core-xstate-l2-1-0",\
 GetEnabledXStateFeatures,\
 GetXStateFeaturesMask,\
 InitializeContext,\
 LocateXStateFeature
 
-__IMPORTS equ "api-ms-win-core-xstate-l2-1-2",\
+PE.__IMPORTS equ "api-ms-win-core-xstate-l2-1-2",\
 EnableProcessOptionalXStateFeatures,\
 GetThreadEnabledXStateFeatures
 
-__IMPORTS equ "api-ms-win-devices-config-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-devices-config-l1-1-1",\
 CM_Get_Device_ID_List_SizeW,\
 CM_Get_Device_ID_ListW,\
 CM_Get_Device_IDW,\
@@ -3132,15 +3132,15 @@ CM_MapCrToWin32Err,\
 CM_Register_Notification,\
 CM_Unregister_Notification
 
-__IMPORTS equ "api-ms-win-devices-config-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-devices-config-l1-1-2",\
 CM_Get_Device_Interface_List_SizeA,\
 CM_Get_Device_Interface_ListA
 
-__IMPORTS equ "api-ms-win-devices-query-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-devices-query-l1-1-0",\
 DevCloseObjectQuery,\
 DevCreateObjectQuery
 
-__IMPORTS equ "api-ms-win-eventing-classicprovider-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-classicprovider-l1-1-0",\
 GetTraceEnableFlags,\
 GetTraceEnableLevel,\
 GetTraceLoggerHandle,\
@@ -3148,19 +3148,19 @@ RegisterTraceGuidsW,\
 TraceMessage,\
 UnregisterTraceGuids
 
-__IMPORTS equ "api-ms-win-eventing-consumer-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-consumer-l1-1-0",\
 CloseTrace,\
 OpenTraceW,\
 ProcessTrace
 
-__IMPORTS equ "api-ms-win-eventing-controller-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-controller-l1-1-0",\
 ControlTraceW,\
 EnableTraceEx2,\
 EnumerateTraceGuidsEx,\
 StartTraceW,\
 StopTraceW
 
-__IMPORTS equ "api-ms-win-eventing-legacy-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-legacy-l1-1-0",\
 ControlTraceA,\
 EnableTrace,\
 EnableTraceEx,\
@@ -3169,10 +3169,10 @@ OpenTraceA,\
 QueryTraceW,\
 StartTraceA
 
-__IMPORTS equ "api-ms-win-eventing-obsolete-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-obsolete-l1-1-0",\
 RegisterTraceGuidsA
 
-__IMPORTS equ "api-ms-win-eventing-provider-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventing-provider-l1-1-0",\
 EventActivityIdControl,\
 EventEnabled,\
 EventProviderEnabled,\
@@ -3184,20 +3184,20 @@ EventWriteEx,\
 EventWriteString,\
 EventWriteTransfer
 
-__IMPORTS equ "api-ms-win-eventlog-legacy-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-eventlog-legacy-l1-1-0",\
 DeregisterEventSource,\
 RegisterEventSourceW,\
 ReportEventW
 
-__IMPORTS equ "api-ms-win-gaming-deviceinformation-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-gaming-deviceinformation-l1-1-0",\
 GetGamingDeviceModelInformation
 
-__IMPORTS equ "api-ms-win-gaming-expandedresources-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-gaming-expandedresources-l1-1-0",\
 GetExpandedResourceExclusiveCpuCount,\
 HasExpandedResources,\
 ReleaseExclusiveCpuSets
 
-__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-0",\
 ProcessPendingGameUI,\
 ShowChangeFriendRelationshipUI,\
 ShowGameInviteUI,\
@@ -3206,11 +3206,11 @@ ShowProfileCardUI,\
 ShowTitleAchievementsUI,\
 TryCancelPendingGameUI
 
-__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-1",\
 CheckGamingPrivilegeSilently,\
 CheckGamingPrivilegeWithUI
 
-__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-2",\
+PE.__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-2",\
 CheckGamingPrivilegeSilentlyForUser,\
 CheckGamingPrivilegeWithUIForUser,\
 ShowChangeFriendRelationshipUIForUser,\
@@ -3219,11 +3219,11 @@ ShowPlayerPickerUIForUser,\
 ShowProfileCardUIForUser,\
 ShowTitleAchievementsUIForUser
 
-__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-3",\
+PE.__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-3",\
 ShowGameInviteUIWithContext,\
 ShowGameInviteUIWithContextForUser
 
-__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-4",\
+PE.__IMPORTS equ "api-ms-win-gaming-tcui-l1-1-4",\
 ShowCustomizeUserProfileUI,\
 ShowCustomizeUserProfileUIForUser,\
 ShowFindFriendsUI,\
@@ -3233,13 +3233,13 @@ ShowGameInfoUIForUser,\
 ShowUserSettingsUI,\
 ShowUserSettingsUIForUser
 
-__IMPORTS equ "api-ms-win-mm-time-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-mm-time-l1-1-0",\
 timeBeginPeriod,\
 timeEndPeriod,\
 timeGetDevCaps,\
 timeGetTime
 
-__IMPORTS equ "api-ms-win-ntuser-sysparams-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-ntuser-sysparams-l1-1-0",\
 EnumDisplayDevicesW,\
 EnumDisplayMonitors,\
 EnumDisplaySettingsExW,\
@@ -3247,33 +3247,33 @@ GetMonitorInfoW,\
 GetSystemMetrics,\
 SystemParametersInfoW
 
-__IMPORTS equ "api-ms-win-power-base-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-power-base-l1-1-0",\
 CallNtPowerInformation
 
-__IMPORTS equ "api-ms-win-power-setting-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-power-setting-l1-1-0",\
 PowerGetActiveScheme,\
 PowerReadACValue,\
 PowerSettingRegisterNotification,\
 PowerSettingUnregisterNotification
 
-__IMPORTS equ "api-ms-win-ro-typeresolution-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-ro-typeresolution-l1-1-0",\
 RoGetMetaDataFile,\
 RoParseTypeName,\
 RoResolveNamespace
 
-__IMPORTS equ "api-ms-win-ro-typeresolution-l1-1-1",\
+PE.__IMPORTS equ "api-ms-win-ro-typeresolution-l1-1-1",\
 RoCreateNonAgilePropertySet,\
 RoCreatePropertySetSerializer,\
 RoIsApiContractMajorVersionPresent,\
 RoIsApiContractPresent
 
-__IMPORTS equ "api-ms-win-security-appcontainer-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-appcontainer-l1-1-0",\
 GetAppContainerNamedObjectPath
 
-__IMPORTS equ "api-ms-win-security-base-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-base-ansi-l1-1-0",\
 SetFileSecurityA
 
-__IMPORTS equ "api-ms-win-security-base-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-base-l1-1-0",\
 AddAccessAllowedAce,\
 AddAccessAllowedAceEx,\
 AddAce,\
@@ -3330,19 +3330,19 @@ SetSecurityDescriptorRMControl,\
 SetSecurityDescriptorSacl,\
 SetTokenInformation
 
-__IMPORTS equ "api-ms-win-security-base-l1-2-0",\
+PE.__IMPORTS equ "api-ms-win-security-base-l1-2-0",\
 CheckTokenMembershipEx
 
-__IMPORTS equ "api-ms-win-security-base-l1-2-1",\
+PE.__IMPORTS equ "api-ms-win-security-base-l1-2-1",\
 CveEventWrite
 
-__IMPORTS equ "api-ms-win-security-base-l1-2-2",\
+PE.__IMPORTS equ "api-ms-win-security-base-l1-2-2",\
 DeriveCapabilitySidsFromName
 
-__IMPORTS equ "api-ms-win-security-cpwl-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-cpwl-l1-1-0",\
 CreateProcessWithLogonW
 
-__IMPORTS equ "api-ms-win-security-cryptoapi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-cryptoapi-l1-1-0",\
 CryptAcquireContextA,\
 CryptAcquireContextW,\
 CryptCreateHash,\
@@ -3375,37 +3375,37 @@ CryptSignHashW,\
 CryptVerifySignatureA,\
 CryptVerifySignatureW
 
-__IMPORTS equ "api-ms-win-security-isolatedcontainer-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-isolatedcontainer-l1-1-0",\
 IsProcessInIsolatedContainer
 
-__IMPORTS equ "api-ms-win-security-lsalookup-ansi-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-lsalookup-ansi-l2-1-0",\
 LookupAccountNameA,\
 LookupAccountSidA,\
 LookupPrivilegeDisplayNameA,\
 LookupPrivilegeNameA,\
 LookupPrivilegeValueA
 
-__IMPORTS equ "api-ms-win-security-lsalookup-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-lsalookup-l2-1-0",\
 LookupAccountNameW,\
 LookupAccountSidW,\
 LookupPrivilegeDisplayNameW,\
 LookupPrivilegeNameW,\
 LookupPrivilegeValueW
 
-__IMPORTS equ "api-ms-win-security-lsapolicy-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-lsapolicy-l1-1-0",\
 LsaClose,\
 LsaFreeMemory,\
 LsaLookupNames2,\
 LsaLookupSids,\
 LsaOpenPolicy
 
-__IMPORTS equ "api-ms-win-security-provider-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-provider-ansi-l1-1-0",\
 GetExplicitEntriesFromAclA,\
 GetNamedSecurityInfoA,\
 SetEntriesInAclA,\
 SetNamedSecurityInfoA
 
-__IMPORTS equ "api-ms-win-security-provider-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-provider-l1-1-0",\
 GetExplicitEntriesFromAclW,\
 GetNamedSecurityInfoW,\
 GetSecurityInfo,\
@@ -3413,40 +3413,40 @@ SetEntriesInAclW,\
 SetNamedSecurityInfoW,\
 SetSecurityInfo
 
-__IMPORTS equ "api-ms-win-security-sddl-ansi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-sddl-ansi-l1-1-0",\
 ConvertSidToStringSidA,\
 ConvertStringSidToSidA
 
-__IMPORTS equ "api-ms-win-security-sddl-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-sddl-l1-1-0",\
 ConvertSecurityDescriptorToStringSecurityDescriptorW,\
 ConvertSidToStringSidW,\
 ConvertStringSecurityDescriptorToSecurityDescriptorW,\
 ConvertStringSidToSidW
 
-__IMPORTS equ "api-ms-win-security-systemfunctions-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-security-systemfunctions-l1-1-0",\
 SystemFunction036
 
-__IMPORTS equ "api-ms-win-service-core-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-service-core-l1-1-0",\
 RegisterServiceCtrlHandlerExW
 
-__IMPORTS equ "api-ms-win-service-management-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-service-management-l1-1-0",\
 OpenSCManagerW
 
-__IMPORTS equ "api-ms-win-service-winsvc-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-service-winsvc-l1-1-0",\
 OpenSCManagerA,\
 RegisterServiceCtrlHandlerA,\
 RegisterServiceCtrlHandlerExA,\
 RegisterServiceCtrlHandlerW
 
-__IMPORTS equ "api-ms-win-shcore-obsolete-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-shcore-obsolete-l1-1-0",\
 CommandLineToArgvW
 
-__IMPORTS equ "api-ms-win-shcore-stream-winrt-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-shcore-stream-winrt-l1-1-0",\
 CreateRandomAccessStreamOnFile,\
 CreateRandomAccessStreamOverStream,\
 CreateStreamOverRandomAccessStream
 
-__IMPORTS equ "bcrypt",\
+PE.__IMPORTS equ "bcrypt",\
 BCryptCloseAlgorithmProvider,\
 BCryptCreateHash,\
 BCryptCreateMultiHash,\
@@ -3483,7 +3483,7 @@ BCryptSetProperty,\
 BCryptSignHash,\
 BCryptVerifySignature
 
-__IMPORTS equ "chakra",\
+PE.__IMPORTS equ "chakra",\
 JsAddRef,\
 JsBooleanToBool,\
 JsBoolToBoolean,\
@@ -3594,44 +3594,44 @@ JsStringToPointer,\
 JsValueToVariant,\
 JsVariantToValue
 
-__IMPORTS equ "d3d11",\
+PE.__IMPORTS equ "d3d11",\
 CreateDirect3D11DeviceFromDXGIDevice,\
 CreateDirect3D11SurfaceFromDXGISurface,\
 D3D11CreateDevice,\
 D3D11On12CreateDevice
 
-__IMPORTS equ "d3d12",\
+PE.__IMPORTS equ "d3d12",\
 D3D12CreateRootSignatureDeserializer,\
 D3D12CreateVersionedRootSignatureDeserializer,\
 D3D12EnableExperimentalFeatures,\
 D3D12SerializeRootSignature,\
 D3D12SerializeVersionedRootSignature
 
-__IMPORTS equ "deviceaccess",\
+PE.__IMPORTS equ "deviceaccess",\
 CreateDeviceAccessInstance
 
-__IMPORTS equ "dhcpcsvc",\
+PE.__IMPORTS equ "dhcpcsvc",\
 DhcpCApiCleanup,\
 DhcpCApiInitialize,\
 DhcpRequestParams
 
-__IMPORTS equ "dhcpcsvc6",\
+PE.__IMPORTS equ "dhcpcsvc6",\
 Dhcpv6CApiCleanup,\
 Dhcpv6CApiInitialize,\
 Dhcpv6RequestParams
 
-__IMPORTS equ "dxgi",\
+PE.__IMPORTS equ "dxgi",\
 CreateDXGIFactory1,\
 CreateDXGIFactory2
 
-__IMPORTS equ "ext-ms-win-core-iuri-l1-1-0",\
+PE.__IMPORTS equ "ext-ms-win-core-iuri-l1-1-0",\
 CreateUri,\
 CreateUriWithFragment
 
-__IMPORTS equ "ext-ms-win-dxcore-l1-1-0",\
+PE.__IMPORTS equ "ext-ms-win-dxcore-l1-1-0",\
 DXCoreCreateAdapterFactory
 
-__IMPORTS equ "ext-ms-win-networking-wlanapi-l1-1-0",\
+PE.__IMPORTS equ "ext-ms-win-networking-wlanapi-l1-1-0",\
 WlanCloseHandle,\
 WlanDeleteProfile,\
 WlanEnumInterfaces,\
@@ -3644,7 +3644,7 @@ WlanQueryInterface,\
 WlanReasonCodeToString,\
 WlanSetProfile
 
-__IMPORTS equ "ext-ms-win-resourcemanager-activitycoordinator-l1-1-0",\
+PE.__IMPORTS equ "ext-ms-win-resourcemanager-activitycoordinator-l1-1-0",\
 CreateActivityCoordinatorPolicy,\
 DestroyActivityCoordinatorPolicy,\
 GetActivityCoordinatorPolicyResourceCondition,\
@@ -3652,11 +3652,11 @@ SetActivityCoordinatorPolicyResourceCondition,\
 SubscribeActivityCoordinatorPolicy,\
 UnsubscribeActivityCoordinatorPolicy
 
-__IMPORTS equ "ext-ms-win-uiacore-l1-1-0",\
+PE.__IMPORTS equ "ext-ms-win-uiacore-l1-1-0",\
 UiaHostProviderFromHwnd,\
 UiaReturnRawElementProvider
 
-__IMPORTS equ "ext-ms-win-uiacore-l1-1-1",\
+PE.__IMPORTS equ "ext-ms-win-uiacore-l1-1-1",\
 UiaClientsAreListening,\
 UiaDisconnectProvider,\
 UiaGetReservedMixedAttributeValue,\
@@ -3665,14 +3665,14 @@ UiaRaiseAutomationEvent,\
 UiaRaiseAutomationPropertyChangedEvent,\
 UiaRaiseStructureChangedEvent
 
-__IMPORTS equ "ext-ms-win-uiacore-l1-1-2",\
+PE.__IMPORTS equ "ext-ms-win-uiacore-l1-1-2",\
 UiaDisconnectAllProviders,\
 UiaRaiseTextEditTextChangedEvent
 
-__IMPORTS equ "ext-ms-win-uiacore-l1-1-3",\
+PE.__IMPORTS equ "ext-ms-win-uiacore-l1-1-3",\
 UiaRaiseChangesEvent
 
-__IMPORTS equ "icu",\
+PE.__IMPORTS equ "icu",\
 u_austrcpy,\
 u_austrncpy,\
 u_catclose,\
@@ -4699,7 +4699,7 @@ utrans_transIncrementalUChars,\
 utrans_transUChars,\
 utrans_unregisterID
 
-__IMPORTS equ "inkobjcore",\
+PE.__IMPORTS equ "inkobjcore",\
 AddStroke,\
 AddWordsToWordList,\
 AdviseInkChange,\
@@ -4728,11 +4728,11 @@ SetGuide,\
 SetTextContext,\
 SetWordList
 
-__IMPORTS equ "mscms",\
+PE.__IMPORTS equ "mscms",\
 InstallColorProfileW,\
 InstallColorProfileA
 
-__IMPORTS equ "ncrypt",\
+PE.__IMPORTS equ "ncrypt",\
 NCryptCloseProtectionDescriptor,\
 NCryptCreateClaim,\
 NCryptCreatePersistedKey,\
@@ -4762,10 +4762,10 @@ NCryptUnprotectSecret,\
 NCryptVerifyClaim,\
 NCryptVerifySignature
 
-__IMPORTS equ "netutils",\
+PE.__IMPORTS equ "netutils",\
 NetApiBufferFree
 
-__IMPORTS equ "ntdll",\
+PE.__IMPORTS equ "ntdll",\
 RtlEthernetAddressToStringA,\
 RtlEthernetAddressToStringW,\
 RtlEthernetStringToAddressA,\
@@ -4787,14 +4787,14 @@ RtlIpv6StringToAddressExA,\
 RtlIpv6StringToAddressExW,\
 RtlIpv6StringToAddressW
 
-__IMPORTS equ "srvcli",\
+PE.__IMPORTS equ "srvcli",\
 NetShareEnum
 
-__IMPORTS equ "urlmon",\
+PE.__IMPORTS equ "urlmon",\
 UrlMkGetSessionOption,\
 UrlMkSetSessionOption
 
-__IMPORTS equ "webauthn",\
+PE.__IMPORTS equ "webauthn",\
 WebAuthNAuthenticatorGetAssertion,\
 WebAuthNAuthenticatorMakeCredential,\
 WebAuthNCancelCurrentOperation,\
@@ -4805,7 +4805,7 @@ WebAuthNGetErrorName,\
 WebAuthNGetW3CExceptionDOMError,\
 WebAuthNIsUserVerifyingPlatformAuthenticatorAvailable
 
-__IMPORTS equ "webservices",\
+PE.__IMPORTS equ "webservices",\
 WsAbandonCall,\
 WsAbandonMessage,\
 WsAbortChannel,\
@@ -4980,14 +4980,14 @@ WsWriteXmlBufferToBytes,\
 WsWriteXmlnsAttribute,\
 WsXmlStringEquals
 
-__IMPORTS equ "wkscli",\
+PE.__IMPORTS equ "wkscli",\
 NetGetJoinInformation,\
 NetUseAdd,\
 NetUseDel,\
 NetWkstaGetInfo,\
 NetWkstaUserGetInfo
 
-__IMPORTS equ "wlanapi",\
+PE.__IMPORTS equ "wlanapi",\
 WlanConnect,\
 WlanDisconnect,\
 WlanGetInterfaceCapability,\

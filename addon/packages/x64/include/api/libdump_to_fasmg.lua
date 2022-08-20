@@ -61,7 +61,7 @@ table.sort(a)
 -- create iterators for API use:
 out = ""
 for i,j in pairs(a) do
-  out = out .. "__IMPORTS equ \"" .. j .. "\",\\\n"
+  out = out .. "PE.__IMPORTS equ \"" .. j .. "\",\\\n"
   for n,m in pairs(func[j]) do
     out = out .. m .. ",\\\n"
   end

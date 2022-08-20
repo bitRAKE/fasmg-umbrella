@@ -33,6 +33,7 @@ end if
 ;			+ filename proxy resolved
 ;			+ used function reduction
 ;			+ reference type resolved
+;	+ ordinal merged with default becomes hint?
 
 section '.idata' import data readable ;writeable
 namespace PE

@@ -1,4 +1,4 @@
-__IMPORTS equ "api-ms-win-downlevel-advapi32-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-advapi32-l1-1-0",\
 AccessCheck,\
 AccessCheckAndAuditAlarmW,\
 AccessCheckByType,\
@@ -160,7 +160,7 @@ TraceMessage,\
 TraceMessageVa,\
 UnregisterTraceGuids
 
-__IMPORTS equ "api-ms-win-downlevel-advapi32-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-advapi32-l2-1-0",\
 ChangeServiceConfig2A,\
 ChangeServiceConfig2W,\
 ChangeServiceConfigA,\
@@ -250,11 +250,11 @@ StartTraceW,\
 StopTraceW,\
 TraceSetInformation
 
-__IMPORTS equ "api-ms-win-downlevel-normaliz-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-normaliz-l1-1-0",\
 IdnToAscii,\
 IdnToUnicode
 
-__IMPORTS equ "api-ms-win-downlevel-ole32-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-ole32-l1-1-0",\
 CLSIDFromProgID,\
 CLSIDFromString,\
 CoAddRefServerProcess,\
@@ -336,12 +336,12 @@ StringFromCLSID,\
 StringFromGUID2,\
 StringFromIID
 
-__IMPORTS equ "api-ms-win-downlevel-shell32-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-shell32-l1-1-0",\
 CommandLineToArgvW,\
 GetCurrentProcessExplicitAppUserModelID,\
 SetCurrentProcessExplicitAppUserModelID
 
-__IMPORTS equ "api-ms-win-downlevel-shlwapi-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-shlwapi-l1-1-0",\
 GetAcceptLanguagesW,\
 HashData,\
 IsCharSpaceA,\
@@ -514,7 +514,7 @@ UrlIsW,\
 UrlUnescapeA,\
 UrlUnescapeW
 
-__IMPORTS equ "api-ms-win-downlevel-shlwapi-l2-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-shlwapi-l2-1-0",\
 IStream_Copy,\
 IStream_Read,\
 IStream_ReadStr,\
@@ -577,7 +577,7 @@ SHStrDupW,\
 SHUnicodeToAnsi,\
 SHUnicodeToUnicode
 
-__IMPORTS equ "api-ms-win-downlevel-user32-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-user32-l1-1-0",\
 CharLowerA,\
 CharLowerBuffA,\
 CharLowerBuffW,\
@@ -603,7 +603,7 @@ IsCharUpperW,\
 LoadStringA,\
 LoadStringW
 
-__IMPORTS equ "api-ms-win-downlevel-version-l1-1-0",\
+PE.__IMPORTS equ "api-ms-win-downlevel-version-l1-1-0",\
 GetFileVersionInfoExW,\
 GetFileVersionInfoSizeExW,\
 VerFindFileA,\
