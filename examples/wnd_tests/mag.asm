@@ -103,12 +103,11 @@ WinMain: ENTRY $
 	end virtual
 	enter .frame,0
 	GetDesktopWindow
-;	xor eax,eax
 	mov [.hWnd],rax
 	RegisterClassExW ADDR .wc ; ATOM
 	movzx ecx,ax
 	jrcxz .fatal
-	CreateWindowExW 0,rcx,0,WS_POPUP,rax,rdx,0,0,[.hWnd],0,[.wc.hInstance],rbp
+	CreateWindowExW 0,rcx,0,WS_POPUP,0,0,0,0,[.hWnd],0,[.wc.hInstance],rbp
 	mov [.hWnd],rax
 	test rax,rax
 	jz .fatal
