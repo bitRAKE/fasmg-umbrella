@@ -27,8 +27,8 @@ struc(NAMED) _SDL_Window
 NAMED dq ?
 namespace NAMED
 
-macro Create uft8*,X:SDL_WINDOWPOS_UNDEFINED,Y:SDL_WINDOWPOS_UNDEFINED,W*,H*,flags:0
-	SDL_CreateWindow utf8,X,Y,W,H,flags
+macro Create title_utf8*,X:SDL_WINDOWPOS_UNDEFINED,Y:SDL_WINDOWPOS_UNDEFINED,W*,H*,flags:0
+	SDL_CreateWindow title_utf8,X,Y,W,H,flags
 	mov [NAMED],rax
 	_SDL2_CC_CHECK_RETURN_ NZ,rax
 end macro
@@ -251,3 +251,36 @@ end macro
 
 end namespace ; NAMED
 end struc ; _SDL_Texture
+
+
+
+; https://wiki.libsdl.org/CategoryEvents
+struc(NAMED) _SDL_Event
+NAMED SDL_Event
+namespace NAMED
+
+macro Poll
+	SDL_PollEvent ADDR NAMED ; 1 or 0
+end macro
+
+macro Push
+	SDL_PushEvent ADDR NAMED
+	_SDL2_CC_CHECK_RETURN_ NS,eax ; 0/1 or -code
+end macro
+
+macro Peep count*,action*,min:SDL_FIRSTEVENT,max:SDL_LASTEVENT
+	SDL_PeepEvents ADDR NAMED,count,action,min,max
+	_SDL2_CC_CHECK_RETURN_ NS,eax ; + or -code
+end macro
+
+macro Wait
+	SDL_WaitEvent ADDR NAMED ; 1 or 0
+	_SDL2_CC_CHECK_RETURN_ NZ,eax ; 0 on error
+end macro
+
+macro WaitTimeout time
+	SDL_WaitEventTimeout ADDR NAMED,time ; 1 or 0 (error or timeout)
+end macro
+
+end namespace ; NAMED
+end struc ; _SDL_Event

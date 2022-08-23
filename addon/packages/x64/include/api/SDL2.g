@@ -838,6 +838,8 @@ SDL_wcsstr
 
 ; equates largely based on conversion by Tomasz Grysztar
 
+; TODO: correct all pointers
+
 struct SDL_Point
 	x		dd ?
 	y		dd ?
@@ -925,6 +927,17 @@ struct SDL_CommonEvent
 	timestamp	dd ?
 ends
 
+struct SDL_DisplayEvent
+	type		dd ?
+	timestamp	dd ?
+	_display	dd ?
+	event		db ?
+	padding1	db ?
+	padding2	db ?
+	padding3	db ?
+	data1		dd ?
+ends
+
 struct SDL_WindowEvent
 	type		dd ?
 	timestamp	dd ?
@@ -949,12 +962,21 @@ struct SDL_KeyboardEvent
 ends
 
 SDL_TEXTEDITINGEVENT_TEXT_SIZE = 32
-
 struct SDL_TextEditingEvent
 	type		dd ?
 	timestamp	dd ?
 	windowID	dd ?
 	text		rb SDL_TEXTEDITINGEVENT_TEXT_SIZE
+	start		dd ?
+	length		dd ?
+ends
+
+struct SDL_TextEditingExtEvent
+	type		dd ?
+	timestamp	dd ?
+	windowID	dd ?
+			dd ? ; *pointer padding*
+	text		dq ? ; #AMD64#
 	start		dd ?
 	length		dd ?
 ends
@@ -993,12 +1015,15 @@ struct SDL_MouseButtonEvent
 ends
 
 struct SDL_MouseWheelEvent
-       type		dd ?
-       timestamp	dd ?
-       windowID 	dd ?
-       which		dd ?
-       x		dd ?
-       y		dd ?
+	type		dd ?
+	timestamp	dd ?
+	windowID 	dd ?
+	which		dd ?
+	x		dd ?
+	y		dd ?
+	direction	dd ?
+	preciseX	dd ? ; float
+	preciseY	dd ? ; float
 ends
 
 struct SDL_JoyAxisEvent
@@ -1049,6 +1074,13 @@ struct SDL_JoyDeviceEvent
 	type		dd ?
 	timestamp	dd ?
 	which		dd ?
+ends
+
+struct SDL_JoyBatteryEvent
+	type		dd ?
+	timestamp	dd ?
+	which		dd ?
+	level		dd ?
 ends
 
 struct SDL_ControllerAxisEvent
@@ -1117,7 +1149,7 @@ ends
 struct SDL_DropEvent
 	type		dd ?
 	timestamp	dd ?
-	_file		dq ?
+	file_		dq ?
 	windowID	dd ?
 ends
 
@@ -1153,6 +1185,7 @@ struct SDL_Event
 	window		SDL_WindowEvent
 	key		SDL_KeyboardEvent
 	edit		SDL_TextEditingEvent
+	editExt		SDL_TextEditingExtEvent
 	text		SDL_TextInputEvent
 	motion		SDL_MouseMotionEvent
 	button		SDL_MouseButtonEvent
@@ -1162,9 +1195,14 @@ struct SDL_Event
 	jhat		SDL_JoyHatEvent
 	jbutton 	SDL_JoyButtonEvent
 	jdevice 	SDL_JoyDeviceEvent
+	jbattery	SDL_JoyBatteryEvent
 	caxis		SDL_ControllerAxisEvent
 	cbutton 	SDL_ControllerButtonEvent
 	cdevice 	SDL_ControllerDeviceEvent
+;	ctouchpad	SDL_ControllerTouchpadEvent
+;	csensor		SDL_ControllerSensorEvent
+;	adevice		SDL_AudioDeviceEvent
+;	sensor		SDL_SensorEvent
 	quit		SDL_QuitEvent
 	user		SDL_UserEvent
 	syswm		SDL_SysWMEvent
@@ -1175,6 +1213,12 @@ struct SDL_Event
 	padding 	rb 56
     ends
 ends
+
+SDL_QUERY	:= -1
+SDL_IGNORE	:= 0
+SDL_DISABLE	:= 0
+SDL_ENABLE	:= 1
+
 
 struct SDL_RWops
 	size	dd ?
