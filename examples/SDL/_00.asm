@@ -18,25 +18,21 @@ WinMain: ENTRY $
 	test eax,eax
 	js .SDL_fatal
 
-	.window.CreateWithRenderer 512, 512, 0, ADDR .render
+	.window.CreateWithRenderer 512, 512, ADDR .render
 	.render.SetColor 255, 0, 0, 255
 	.render.Clear
 	.render.Present
 
         SDL_Delay 5000
 
-	; end sub-systems
-        SDL_Quit
-
-	xor eax,eax
-	leave
-	retn
+        SDL_Quit ; end sub-systems
+	ExitProcess 0
+	int3
 
 .SDL_fatal:
 	SDL_GetError
 	xchg r8,rax
 	SDL_ShowSimpleMessageBox SDL_MESSAGEBOX_ERROR, <_A 'SDL Error'>, r8, 0
-
-	mov eax,1
-	leave
-	retn
+        SDL_Quit ; end sub-systems
+	ExitProcess 1
+	int3

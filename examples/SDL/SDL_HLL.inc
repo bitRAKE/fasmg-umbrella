@@ -20,7 +20,9 @@ end macro
 
 
 
+; https://wiki.libsdl.org/APIByCategory
 
+; https://wiki.libsdl.org/CategoryVideo
 struc(NAMED) _SDL_Window
 NAMED dq ?
 namespace NAMED
@@ -31,7 +33,7 @@ macro Create uft8*,X:SDL_WINDOWPOS_UNDEFINED,Y:SDL_WINDOWPOS_UNDEFINED,W*,H*,fla
 	_SDL2_CC_CHECK_RETURN_ NZ,rax
 end macro
 
-macro CreateWithRenderer W*,H*,flags:0,render*
+macro CreateWithRenderer W*,H*,render*,flags:0
 	SDL_CreateWindowAndRenderer W,H,flags,ADDR NAMED,render
 	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -1
 end macro
@@ -124,9 +126,7 @@ end struc ; _SDL_Window
 
 
 
-
-
-
+; https://wiki.libsdl.org/SDL_Renderer
 struc(NAMED) _SDL_Renderer
 NAMED dq ?
 namespace NAMED
@@ -148,3 +148,106 @@ end macro
 end namespace ; NAMED
 end struc ; _SDL_Renderer
 
+
+
+; https://wiki.libsdl.org/CategorySurface
+struc(NAMED) _SDL_Surface
+NAMED dq ?
+namespace NAMED
+
+macro CreateRGBA width*,height*,depth:32,\
+	rMASK:DWORD 0x000000FF, gMASK:DWORD 0x0000FF00,\
+	bMASK:DWORD 0x00FF0000, aMASK:DWORD 0xFF000000
+
+	SDL_CreateRGBSurface 0,width,height,depth,rMASK,gMASK,bMASK,aMASK
+	mov [NAMED],rax
+	_SDL2_CC_CHECK_RETURN_ NZ,rax ; zero on failure
+end macro
+
+macro LoadBMP pathname*
+	SDL_LoadBMP pathname
+	mov [NAMED],rax
+	_SDL2_CC_CHECK_RETURN_ NZ,rax ; zero on failure
+end macro
+macro SaveBMP pathname*
+	SDL_SaveBMP [NAMED],pathname
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+
+macro MUSTLOCK
+	SDL_MUSTLOCK [NAMED] ; SDL_bool
+end macro
+macro Lock
+	SDL_LockSurface [NAMED]
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+macro Unlock
+	SDL_UnlockSurface [NAMED] ; void
+end macro
+
+macro Free
+	SDL_FreeSurface [NAMED] ; void
+end macro
+
+end namespace ; NAMED
+end struc ; _SDL_Surface
+
+
+
+; https://wiki.libsdl.org/SDL_Texture
+struc(NAMED) _SDL_Texture RENDERER*
+NAMED dq ?
+namespace NAMED
+
+macro Create format*,access*,W*,H*
+	SDL_CreateTexture RENDERER,format,access,W,H
+	mov [NAMED],rax
+	_SDL2_CC_CHECK_RETURN_ NZ,rax ; zero on failure
+end macro
+
+macro FromSurface surface*
+	SDL_CreateTextureFromSurface RENDERER,surface
+	mov [NAMED],rax
+	_SDL2_CC_CHECK_RETURN_ NZ,rax ; zero on failure
+end macro
+
+macro Render source:0,destination:0
+	SDL_RenderCopy RENDERER,[NAMED],source,destination
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+
+macro Query format:0,access:0,W:0,H:0
+	SDL_QueryTexture [NAMED],format,access,W,H
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+
+macro Lock rect:0,pixels*,pitch*
+	SDL_LockTexture [NAMED],rect,pixels,pitch
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+macro Unlock
+	SDL_UnlockTexture [NAMED] ; void
+end macro
+
+macro Update rect:0,pixels*,pitch*
+	SDL_UpdateTexture [NAMED],rect,pixels,pitch
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+
+iterate FUNC, AlphaMod,BlendMode,ColorMod
+	macro Get#FUNC value
+		SDL_GetTexture#FUNC [NAMED],value
+		_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+	end macro
+	macro Set#FUNC value
+		SDL_SetTexture#FUNC [NAMED],value
+		_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+	end macro
+end iterate
+
+macro Destroy
+	SDL_DestroyTexture [NAMED] ; void
+end macro
+
+end namespace ; NAMED
+end struc ; _SDL_Texture
