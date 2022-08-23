@@ -145,6 +145,11 @@ macro SetColor _R8*,_G8*,_B8*,_A8*
 	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
 end macro
 
+macro Point X*,Y*
+	SDL_RenderDrawPoint [NAMED],X,Y
+	_SDL2_CC_CHECK_RETURN_ Z,eax ; 0 or -code
+end macro
+
 end namespace ; NAMED
 end struc ; _SDL_Renderer
 
