@@ -30,6 +30,15 @@ Some things to note:
 - Backward compatiblity is not a goal of umbrella libraries.
 
 
+Getting Started:
+---
+The only requirement is a supported windows version, and a command prompt with ```git``` along search path:
+```bash
+git clone --recursive https://github.com/bitRAKE/fasmg-umbrella
+cd fasmg-umbrella
+environment.cmd
+```
+
 Examples:
 ---
 - In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment.
