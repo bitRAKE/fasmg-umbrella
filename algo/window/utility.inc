@@ -3,10 +3,63 @@
 ;
 ;	~ assumptions of macro use:
 ;		+ stack is aligned with valid shadow at TOS
+;		(like calling Win64 ABI functions, before CALL instruction)
 ;
 ;	~ macro wrappers act as an adapter
 ;		+ provide default values
 ;		+ hide internal ABI
+
+
+macro UpdateWindowTransparency hWnd*, type*, value
+	push type
+	iterate INSTUCTION,	break,\			; opaque (i.e. off)
+		<mov	dword [rsp + 2], value	>,\	; LWA_COLORKEY
+		<mov	byte [rsp + 1], value	>	; LWA_ALPHA
+		indx 1+type
+		INSTUCTION
+		break
+	end iterate
+	push hWnd
+	call _UpdateWindowTransparency
+end macro
+if used _UpdateWindowTransparency
+_UpdateWindowTransparency:
+	virtual at RBP-.frame
+				rq 4
+				_align 16
+		.frame := $ - $$
+				rq 2
+		.hWnd		dq ?
+		.dwFlags	db ?	; 0, LWA_COLORKEY, LWA_ALPHA
+		.alpha		db ?
+		.crKey		dd ?
+				_align 8
+		.parm_bytes := $ - .hWnd
+		.style		dq ?
+	end virtual
+	enter	.frame,0
+	GetWindowLongPtrW [.hWnd], GWL_EXSTYLE
+	mov	[.style], rax
+
+	; clear layered bit to reset internal state
+	and	rax, not WS_EX_LAYERED
+	SetWindowLongPtrW [.hWnd], GWL_EXSTYLE, rax
+	test	[.dwFlags], -1
+	jz	.opaque_disabled
+
+	or	[.style], WS_EX_LAYERED
+	SetWindowLongPtrW [.hWnd], GWL_EXSTYLE, [.style]
+	movzx	r9, [.dwFlags]
+	movzx	r8, [.alpha]
+	mov	edx, [.crKey]
+	SetLayeredWindowAttributes [.hWnd], rdx, r8, r9
+.opaque_disabled:
+	RedrawWindow [.hWnd], 0, 0, RDW_ERASE or RDW_INVALIDATE or RDW_FRAME or RDW_ALLCHILDREN
+	leave
+	retn	.parm_bytes
+end if ; used _UpdateWindowTransparency
+
+
 
 macro CenterWindowPos hWnd*,hwndAfter*,width*,height*,flags:SWP_NOACTIVATE
 	push rbp,flags,height,width,hwndAfter,hWnd
