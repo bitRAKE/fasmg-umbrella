@@ -6,17 +6,28 @@
 ;	https://board.flatassembler.net/topic.php?t=21472
 ;
 ; I've made changes to extend the functionality of the UI. - bitRAKE
-;	- size / sizing dynamics
-;	- environment check
-;	- sync edit controls on change
-;	- psuedo-splitter dynamics
+;	+ size / sizing dynamics
+;	+ psuedo-splitter dynamics
+;	+ sync edit controls on change
+;	+ environment check
+;	- fix redraw flicker (almost)
+;	+ ESC to exit
+;	+ remove caption, allow movement with all boarders :-)
 ;
 ; TODO:
+;	- add context menu
 ;	- make all the buffers dynamic
-;	- fix redraw flicker
 ;	- double click to reset split
 ;	- drag-and-drop
 ;	- INCLUDE configure
+;	- alternate triggers for assembling
+;		- hotkey: [ALT] Enter
+;
+;
+; PROBLEMS:
+;	- generally crash/freeze, need a method to terminate fasmg processing
+;	- tabs selects all text of edit control, use Ctrl+Tab to enter a tab char
+;
 
 format PE GUI 4.0
 entry start
@@ -71,7 +82,7 @@ proc ResizeControls hwnd
 	push	edx
 	mov	edi,[rect.bottom] ; height
 	sub	edi,SPLIT_SIZE*2
-	invoke	MoveWindow,esi,SPLIT_SIZE,SPLIT_SIZE,edx,edi,1
+	invoke	MoveWindow,esi,SPLIT_SIZE,SPLIT_SIZE,edx,edi,FALSE
 
 	invoke	GetDlgItem,[hwnd],ID_HEXADECIMAL
 	pop	ecx
@@ -82,9 +93,9 @@ proc ResizeControls hwnd
 	mov	[split_rect.right],ecx
 	mov	[split_rect.bottom],edi
 	pop	edx
-	invoke	MoveWindow,eax,ecx,SPLIT_SIZE,edx,edi,1
+	invoke	MoveWindow,eax,ecx,SPLIT_SIZE,edx,edi,FALSE
 
-	invoke	InvalidateRect,[hwnd],0,TRUE
+	invoke	InvalidateRect,[hwnd],0,FALSE
         pop     edi esi ebx
         ret
 endp
@@ -123,12 +134,17 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	movsx	eax,word [lparam]
 	movsx	ecx,word [lparam+2]
         invoke	PtInRect,split_rect,eax,ecx
+
 	xchg	ecx,eax
 	jecxz	@F
 	bts	[split_flags],SPLIT_CAPTURING
 	jc	processed
 	invoke	SetCapture,[hwnd]
-    @@: jmp     processed
+	jmp     processed
+    @@:	invoke	PostMessage,[hwnd],WM_NCLBUTTONDOWN,2,[lparam] ; HTCAPTION
+	invoke	LoadCursor,0,IDC_HAND
+        invoke	SetCursor,eax
+	jmp     processed
 
     mmove:
 	bt	[split_flags],SPLIT_CAPTURING
@@ -136,11 +152,13 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	movsx	eax,word [lparam]
 	movsx	ecx,word [lparam+2]
         invoke	PtInRect,split_rect,eax,ecx
+	mov	edx,IDC_HAND
 	xchg	ecx,eax
 	jecxz	@F
-        invoke	LoadCursor,0,IDC_SIZEWE
+	mov	edx,IDC_SIZEWE
+    @@: invoke	LoadCursor,0,edx
         invoke	SetCursor,eax
-    @@: jmp     processed
+	jmp     processed
     mmove_update:
 	; calculate ratio with upper/lower bounds
         invoke	GetClientRect,[hwnd],ADDR rect
@@ -167,6 +185,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 
     nocap: ; WM_CAPTURECHANGED
 	btr	[split_flags],SPLIT_CAPTURING
+	invoke	InvalidateRect,[hwnd],0,TRUE
 	jmp	processed
 
 
@@ -179,7 +198,6 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         invoke  fasmg_GetVersion
 	invoke  wsprintf,std_buf,__version,eax
         invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,WM_SETTEXT,0,std_buf
-        invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,EM_SETSEL,1,2
 
         invoke  CreateFile,_StdOut_txt,GENERIC_READ or GENERIC_WRITE,FILE_SHARE_DELETE,\
                 0,CREATE_ALWAYS,FILE_ATTRIBUTE_TEMPORARY or FILE_FLAG_DELETE_ON_CLOSE,0
@@ -188,6 +206,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         invoke  CreateFile,_StdErr_txt,GENERIC_READ or GENERIC_WRITE,FILE_SHARE_DELETE,\
                 0,CREATE_ALWAYS,FILE_ATTRIBUTE_TEMPORARY or FILE_FLAG_DELETE_ON_CLOSE,0
         mov [hStdErr],eax
+
     size:
 	stdcall ResizeControls,[hwnd]
         jmp     processed
@@ -222,6 +241,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
     @@:	add	[ebx+RECT.top],ecx	; 3,4,5
     sizing_done:
         jmp     processed
+
 
     command:
         cmp     [wparam],IDCANCEL
@@ -334,7 +354,7 @@ endp
 
 section '.data' data readable writeable
 
-    SPLIT_SIZE		:= 8		; defines borders
+    SPLIT_SIZE		:= 8		; defines borders, should probably be based on some system metric
 
     SPLIT_CAPTURING	:= 0		; active movement
     split_flags 	dd ?
@@ -348,7 +368,9 @@ section '.data' data readable writeable
 
     _StdOut_txt: db "stdout.txt",0
     _StdErr_txt: db "stderr.txt",0
-    __version db '; flat assembler  version g.%s',13,10,\
+    __version db \
+	'; fasmg-powered mini assembler using,',13,10,\
+	'; flat assembler  version g.%s',13,10,\
 	13,10,\
 	"include 'cpu\x64.inc'",13,10,\
 	"include 'cpu\ext\avx2.inc'",13,10,\
@@ -389,7 +411,7 @@ section '.idata' import data readable writeable
          ExitProcess,'ExitProcess'
 
   import user,\
-	DefWindowProc,'DefWindowProcA',\
+	\;DefWindowProc,'DefWindowProcA',\
 	DialogBoxParam,'DialogBoxParamA',\
 	EndDialog,'EndDialog',\
 	GetClientRect,'GetClientRect',\
@@ -397,6 +419,7 @@ section '.idata' import data readable writeable
 	InvalidateRect,'InvalidateRect',\
 	LoadCursor,'LoadCursorA',\
 	MoveWindow,'MoveWindow',\
+	PostMessage,'PostMessageA',\
 	PtInRect,'PtInRect',\
 	ReleaseCapture,'ReleaseCapture',\
 	SendDlgItemMessage,'SendDlgItemMessageA',\
@@ -417,12 +440,12 @@ section '.rsrc' resource data readable
   resource dialogs,\
            IDR_CALCULATOR,LANG_ENGLISH+SUBLANG_DEFAULT,calculator_dialog
 
-  dialog calculator_dialog,'fasmg-powered mini assembler',0,0,400,300,\
-	WS_POPUP or WS_CAPTION or WS_SYSMENU or WS_VISIBLE or WS_THICKFRAME \
+  WS_EDIT_COMMON := WS_VISIBLE+WS_BORDER+WS_VSCROLL+WS_HSCROLL+ES_AUTOVSCROLL+ES_AUTOHSCROLL+ES_MULTILINE
+
+  dialog calculator_dialog,'',0,0,400,300,\
+	WS_POPUP or WS_VISIBLE or WS_THICKFRAME \
 	or DS_CENTER or DS_SETFONT or DS_MODALFRAME, 0, 0, 'Consolas', 12
     ; positioning here is overriden at init:
-    dialogitem 'EDIT','',ID_EXPRESSION,2,2,194,296,\
-	WS_VISIBLE+WS_BORDER+WS_TABSTOP+WS_VSCROLL+WS_HSCROLL+ES_AUTOHSCROLL+ES_MULTILINE+ES_WANTRETURN+ES_AUTOVSCROLL
-    dialogitem 'EDIT','',ID_HEXADECIMAL,202,2,194,296,\
-	WS_VISIBLE+WS_BORDER+WS_TABSTOP+WS_VSCROLL+WS_HSCROLL+ES_READONLY+ES_MULTILINE
+    dialogitem 'EDIT','',ID_EXPRESSION,0,0,0,0,WS_EDIT_COMMON or ES_WANTRETURN
+    dialogitem 'EDIT','',ID_HEXADECIMAL,0,0,0,0,WS_EDIT_COMMON or ES_READONLY
   enddialog
