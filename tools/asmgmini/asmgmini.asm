@@ -10,19 +10,22 @@
 ;	+ psuedo-splitter dynamics
 ;	+ sync edit controls on change
 ;	+ environment check
-;	- fix redraw flicker (almost)
 ;	+ ESC to exit
 ;	+ remove caption, allow movement with all boarders :-)
+;	- fix redraw flicker (almost)
+;	- add context menu
+;	- drag-and-drop
 ;
 ; TODO:
-;	- add context menu
-;	- make all the buffers dynamic
 ;	- double click to reset split
-;	- drag-and-drop
-;	- INCLUDE configure
 ;	- alternate triggers for assembling
 ;		- hotkey: [ALT] Enter
-;
+;	- INCLUDE configure
+;	- make all the buffers dynamic
+;	- output mode aware:
+;		- binary: line sync
+;		- display: no sync
+;		- error: error sync
 ;
 ; PROBLEMS:
 ;	- generally crash/freeze, need a method to terminate fasmg processing
@@ -103,12 +106,15 @@ endp
 proc CalculatorDialog hwnd,msg,wparam,lparam
 	locals
 		rect	RECT
+		pt	POINT
 	endl
         push    ebx esi edi
 ;        cmp     [msg],WM_WINDOWPOSCHANGED 
 ;        je      poschanged
         cmp     [msg],WM_COMMAND
         je      command
+        cmp     [msg],WM_RBUTTONUP
+        je      rb_up
 
         cmp     [msg],WM_LBUTTONDOWN
         je      lbdown
@@ -125,10 +131,38 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         je      size
         cmp     [msg],WM_CLOSE
         je      close
+
+	iterate message, WM_CTLCOLORDLG,WM_CTLCOLOREDIT,WM_CTLCOLORSTATIC ;,WM_CTLCOLORSCROLLBAR,WM_CTLCOLORLISTBOX,WM_CTLCOLORBTN
+		cmp     [msg],message
+		je      ctlcolor
+	end iterate
+
+        cmp     [msg],WM_DROPFILES
+        je      fdrop
         cmp     [msg],WM_INITDIALOG
         je      init
+
         xor     eax,eax
         jmp     finish
+
+
+    rb_up:
+	test	[wparam],MK_LBUTTON+MK_MBUTTON ;+MK_XBUTTON1+MK_XBUTTON2
+	jnz     processed ; avoid multi-button confusion
+	movsx	eax,word [lparam]
+	movsx	edx,word [lparam+2]
+	mov	[pt.x],eax
+	mov	[pt.y],edx
+	invoke ClientToScreen,[hwnd],ADDR pt
+	invoke TrackPopupMenuEx,[g_hSubMenu],TPM_RETURNCMD\
+		or TPM_CENTERALIGN or TPM_VCENTERALIGN,[pt.x],[pt.y],[hwnd],0
+	;invoke CheckMenuItem
+	cmp	eax,IDM_TRIGGER_NONE
+	cmp	eax,IDM_TRIGGER_ANY
+	cmp	eax,IDM_TRIGGER_HOT
+	cmp	eax,IDM_ALWAYS_TOP
+	jmp     processed
+
 
     lbdown:
 	movsx	eax,word [lparam]
@@ -165,7 +199,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	mov	eax,[rect.right] ; width
 	movsx	edx,word [lparam]
 	mov	ecx,eax
-	sar	eax,3
+	sar	eax,4 ; this can be tuned based on minimal window size, and desired appearance
 	cmp	edx,eax
 	cmovc	edx,eax
 	sub	eax,[rect.right]
@@ -185,9 +219,23 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 
     nocap: ; WM_CAPTURECHANGED
 	btr	[split_flags],SPLIT_CAPTURING
+	jnc	@F
 	invoke	InvalidateRect,[hwnd],0,TRUE
-	jmp	processed
+    @@:	jmp	processed
 
+    ctlcolor: ; hDC, hCtl
+;	invoke SetBkMode,[wparam],1 ; transparent
+	invoke SetBkColor,[wparam],$BFE3B4
+	invoke SetTextColor,[wparam],$222222
+	invoke CreateSolidBrush,$BFE3B4
+	jmp	finish
+
+    fdrop: ; hDrop, 0 ; add files to queue
+;	invoke DragQueryFileA,[wparam],0xFFFFFFFF,std_buf,1 ; count of files
+;	invoke DragQueryFileA,[wparam],ebx,0,0 ; file string length
+;	invoke DragQueryFileA,[wparam],ebx,std_buf,sizeof std_buf
+	invoke DragFinish,[wparam]
+	jmp	processed
 
     init:
 	invoke GetEnvironmentVariable,'INCLUDE',std_buf,1
@@ -205,6 +253,12 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 
         invoke  CreateFile,_StdErr_txt,GENERIC_READ or GENERIC_WRITE,FILE_SHARE_DELETE,\
                 0,CREATE_ALWAYS,FILE_ATTRIBUTE_TEMPORARY or FILE_FLAG_DELETE_ON_CLOSE,0
+
+	invoke LoadMenuIndirectA,ContextMenuTemplate
+	mov	[g_hMenu],eax
+	invoke	GetSubMenu,eax,0
+	mov	[g_hSubMenu],eax
+
         mov [hStdErr],eax
 
     size:
@@ -341,6 +395,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         jmp     processed
 	
     close:
+	invoke DestroyMenu,[g_hMenu]
         invoke CloseHandle,[hStdOut]
         invoke CloseHandle,[hStdErr]
         invoke  EndDialog,[hwnd],0
@@ -352,9 +407,62 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 endp
 
 
+struc(NAMED) menuex_template? helpid:0
+	local _level,first
+	align 4
+	label NAMED:-1
+	namespace NAMED
+	dd (first shl 16) or 1, helpid ; MENUEX_TEMPLATE_HEADER
+	_level = -1
+	macro item? text, id, flags:0, state:0, type:0
+		if _level = -1
+			first := $ - NAMED - 4
+			_level = 1
+		end if
+		; MENUEX_TEMPLATE_ITEM
+		match ,text id
+			dd MFT_SEPARATOR,0,0,0
+		else
+			dd type, state,	id
+			dw flags
+			du text,0
+			align 4
+		end match
+		if flags and MFR_END
+			_level = _level - 1
+		end if
+		if flags and MFR_POPUP
+			_level = _level + 1
+			dd 0 ; dwHelpId
+		end if
+		if _level = 0
+			purge item?
+			end namespace ; NAMED
+		end if
+	end macro ; item?
+end struc ; menuex_template?
+
 section '.data' data readable writeable
 
-    SPLIT_SIZE		:= 8		; defines borders, should probably be based on some system metric
+g_hHeap		dd ?
+g_hMenu		dd ?
+g_hSubMenu	dd ?
+
+IDM_TRIGGER_NONE	:= 0000h
+IDM_TRIGGER_ANY		:= 0010h
+IDM_TRIGGER_HOT		:= 0020h
+IDM_ALWAYS_TOP		:= 0030h
+
+?ContextMenuTemplate menuex_template
+	item 'dummy', 0, MFR_POPUP or MFR_END
+		item 'Any Trigger',	IDM_TRIGGER_ANY,,MFS_CHECKED
+		item 'Set Trigger',	IDM_TRIGGER_HOT
+		item 'No Trigger',	IDM_TRIGGER_NONE
+		item
+		item 'Always on Top',	IDM_ALWAYS_TOP, MFR_END, MFS_CHECKED
+
+
+    SPLIT_SIZE		:= 12		; defines borders, should probably be based on some system metric
 
     SPLIT_CAPTURING	:= 0		; active movement
     split_flags 	dd ?
@@ -371,10 +479,6 @@ section '.data' data readable writeable
     __version db \
 	'; fasmg-powered mini assembler using,',13,10,\
 	'; flat assembler  version g.%s',13,10,\
-	13,10,\
-	"include 'cpu\x64.inc'",13,10,\
-	"include 'cpu\ext\avx2.inc'",13,10,\
-	"use64",13,10,\
 	13,10
     __enverr db '; Warning: INCLUDE environment variable not defined.',13,10,0
 
@@ -392,45 +496,23 @@ section '.data' data readable writeable
     std_buf_bytes = 4096
     std_buf rb std_buf_bytes
 
+
 section '.idata' import data readable writeable
 
-  library kernel,'KERNEL32.DLL',\
-          user,'USER32.DLL',\
-          fasmg,'FASMG.DLL'
+  library	fasmg,'FASMG.DLL',\
+		gdi32,'GDI32.DLL',\
+		kernel32,'KERNEL32.DLL',\
+		shell32,'SHELL32.DLL',\
+		user32,'USER32.DLL'
 
-  import kernel,\
-         CloseHandle,'CloseHandle',\
-         CreateFile,'CreateFileA',\
-         GetEnvironmentVariable,'GetEnvironmentVariableA',\
-         GetModuleHandle,'GetModuleHandleA',\
-         ReadFile,'ReadFile',\
-         SetEndOfFile,'SetEndOfFile',\
-         SetFilePointer,'SetFilePointer',\
-         VirtualAlloc,'VirtualAlloc',\
-         VirtualFree,'VirtualFree',\
-         ExitProcess,'ExitProcess'
+	import fasmg,\
+		fasmg_GetVersion,'fasmg_GetVersion',\
+		fasmg_Assemble,'fasmg_Assemble'
 
-  import user,\
-	\;DefWindowProc,'DefWindowProcA',\
-	DialogBoxParam,'DialogBoxParamA',\
-	EndDialog,'EndDialog',\
-	GetClientRect,'GetClientRect',\
-	GetDlgItem,'GetDlgItem',\
-	InvalidateRect,'InvalidateRect',\
-	LoadCursor,'LoadCursorA',\
-	MoveWindow,'MoveWindow',\
-	PostMessage,'PostMessageA',\
-	PtInRect,'PtInRect',\
-	ReleaseCapture,'ReleaseCapture',\
-	SendDlgItemMessage,'SendDlgItemMessageA',\
-	SendMessage,'SendMessageA',\
-	SetCapture,'SetCapture',\
-	SetCursor,'SetCursor',\
-	wsprintf,'wsprintfA'
-
-  import fasmg,\
-         fasmg_GetVersion,'fasmg_GetVersion',\
-         fasmg_Assemble,'fasmg_Assemble'
+	include 'api\gdi32.inc'
+	include 'api\kernel32.inc'
+	include 'api\shell32.inc'
+	include 'api\user32.inc'
 
 
 section '.rsrc' resource data readable
@@ -440,11 +522,11 @@ section '.rsrc' resource data readable
   resource dialogs,\
            IDR_CALCULATOR,LANG_ENGLISH+SUBLANG_DEFAULT,calculator_dialog
 
-  WS_EDIT_COMMON := WS_VISIBLE+WS_BORDER+WS_VSCROLL+WS_HSCROLL+ES_AUTOVSCROLL+ES_AUTOHSCROLL+ES_MULTILINE
-
+  WS_EDIT_COMMON := WS_VISIBLE+WS_VSCROLL+WS_HSCROLL+ES_AUTOVSCROLL+ES_AUTOHSCROLL+ES_MULTILINE
   dialog calculator_dialog,'',0,0,400,300,\
-	WS_POPUP or WS_VISIBLE or WS_THICKFRAME \
-	or DS_CENTER or DS_SETFONT or DS_MODALFRAME, 0, 0, 'Consolas', 12
+	WS_POPUP or WS_VISIBLE or WS_THICKFRAME or DS_CENTER or DS_SETFONT,\
+	WS_EX_ACCEPTFILES or WS_EX_TOPMOST,\
+	0, 'Consolas', 12
     ; positioning here is overriden at init:
     dialogitem 'EDIT','',ID_EXPRESSION,0,0,0,0,WS_EDIT_COMMON or ES_WANTRETURN
     dialogitem 'EDIT','',ID_HEXADECIMAL,0,0,0,0,WS_EDIT_COMMON or ES_READONLY
