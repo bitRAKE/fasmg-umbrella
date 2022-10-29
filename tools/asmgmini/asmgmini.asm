@@ -30,7 +30,15 @@
 ; PROBLEMS:
 ;	- generally crash/freeze, need a method to terminate fasmg processing
 ;	- tabs selects all text of edit control, use Ctrl+Tab to enter a tab char
-;
+;	- it's possible to break the device context: window/menu decoration
+;	  ceases to function correctly -- fast sizing can do it. Win11
+
+; some global configuration
+WINDOW_LIMIT_WIDTH	:= 400
+WINDOW_LIMIT_HEIGHT	:= 250
+
+BORDER_SIZE		:= 12		; defines borders, perhaps base on some system metric?
+
 
 format PE GUI 4.0
 entry start
@@ -76,7 +84,7 @@ proc ResizeControls hwnd
 	invoke	GetDlgItem,[hwnd],ID_EXPRESSION
 	xchg	esi,eax
 	mov	eax,[rect.right] ; width
-	sub	eax,SPLIT_SIZE*3
+	sub	eax,BORDER_SIZE*3
 	push	eax
 	mul	[split_ratio]
 	add	eax,eax
@@ -84,19 +92,19 @@ proc ResizeControls hwnd
 	sub	[esp],edx
 	push	edx
 	mov	edi,[rect.bottom] ; height
-	sub	edi,SPLIT_SIZE*2
-	invoke	MoveWindow,esi,SPLIT_SIZE,SPLIT_SIZE,edx,edi,FALSE
+	sub	edi,BORDER_SIZE*2
+	invoke	MoveWindow,esi,BORDER_SIZE,BORDER_SIZE,edx,edi,FALSE
 
 	invoke	GetDlgItem,[hwnd],ID_HEXADECIMAL
 	pop	ecx
-	add	ecx,SPLIT_SIZE
+	add	ecx,BORDER_SIZE
 	mov	[split_rect.left],ecx
-	mov	[split_rect.top],SPLIT_SIZE
-	add	ecx,SPLIT_SIZE
+	mov	[split_rect.top],BORDER_SIZE
+	add	ecx,BORDER_SIZE
 	mov	[split_rect.right],ecx
 	mov	[split_rect.bottom],edi
 	pop	edx
-	invoke	MoveWindow,eax,ecx,SPLIT_SIZE,edx,edi,FALSE
+	invoke	MoveWindow,eax,ecx,BORDER_SIZE,edx,edi,FALSE
 
 	invoke	InvalidateRect,[hwnd],0,FALSE
         pop     edi esi ebx
@@ -277,7 +285,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         ; Note: to prevent the window from 'walking', limits must be applied
         ; to the edges being changed. (see WMSZ_* values)
 
-	sub	eax,400 ; width limit
+	sub	eax,WINDOW_LIMIT_WIDTH
 	jnc	sizing_height
 	mov	edi,1001_0010b
 	bt	edi,edx
@@ -286,7 +294,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	jmp	sizing_height
     @@:	add	[ebx+RECT.left],eax	; 1,4,7
     sizing_height:
-	sub	ecx,256 ; height limit
+	sub	ecx,WINDOW_LIMIT_HEIGHT
 	jnc	sizing_done
 	cmp	[wparam],6
 	jc	@F
@@ -407,6 +415,7 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 endp
 
 
+; MFT_SEPARATOR is the default
 struc(NAMED) menuex_template? helpid:0
 	local _level,first
 	align 4
@@ -448,21 +457,28 @@ g_hHeap		dd ?
 g_hMenu		dd ?
 g_hSubMenu	dd ?
 
-IDM_TRIGGER_NONE	:= 0000h
-IDM_TRIGGER_ANY		:= 0010h
-IDM_TRIGGER_HOT		:= 0020h
-IDM_ALWAYS_TOP		:= 0030h
+; looking forward, a single configuration file/dialog seems a better choice?
+IDM_WIDTH_FIXED		:= 0100h
+IDM_WIDTH_RATIO		:= 0110h
+
+IDM_TRIGGER_NONE	:= 0200h
+IDM_TRIGGER_ANY		:= 0210h
+IDM_TRIGGER_HOT		:= 0220h
+IDM_ALWAYS_TOP		:= 0230h
 
 ?ContextMenuTemplate menuex_template
 	item 'dummy', 0, MFR_POPUP or MFR_END
-		item 'Any Trigger',	IDM_TRIGGER_ANY,,MFS_CHECKED
-		item 'Set Trigger',	IDM_TRIGGER_HOT
-		item 'No Trigger',	IDM_TRIGGER_NONE
+		item 'Output Width',	0,MFR_POPUP
+			item 'Fixed',		IDM_WIDTH_FIXED
+			item 'Ratio',		IDM_WIDTH_RATIO,MFR_END,MFS_CHECKED
+		item 'Update Trigger',	0,MFR_POPUP
+			item 'Any Key',		IDM_TRIGGER_ANY,,MFS_CHECKED
+			item 'Set Key',		IDM_TRIGGER_HOT
+			item 'None',		IDM_TRIGGER_NONE,MFR_END
 		item
 		item 'Always on Top',	IDM_ALWAYS_TOP, MFR_END, MFS_CHECKED
 
 
-    SPLIT_SIZE		:= 12		; defines borders, should probably be based on some system metric
 
     SPLIT_CAPTURING	:= 0		; active movement
     split_flags 	dd ?
