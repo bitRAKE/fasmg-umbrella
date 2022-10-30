@@ -12,8 +12,9 @@
 ;	+ environment check
 ;	+ ESC to exit
 ;	+ remove caption, allow movement with all boarders :-)
+;	+ always on top option
+;	+ add context menu
 ;	- fix redraw flicker (almost)
-;	- add context menu
 ;	- drag-and-drop
 ;
 ; TODO:
@@ -37,7 +38,11 @@
 WINDOW_LIMIT_WIDTH	:= 400
 WINDOW_LIMIT_HEIGHT	:= 250
 
-BORDER_SIZE		:= 12		; defines borders, perhaps base on some system metric?
+BORDER_SIZE		:= 12	; defines borders, perhaps base on some system metric?
+
+assert WINDOW_LIMIT_WIDTH > BORDER_SIZE*3 + 2*32
+assert WINDOW_LIMIT_HEIGHT > BORDER_SIZE*2 + 32
+
 
 
 format PE GUI 4.0
@@ -74,13 +79,37 @@ section '.text' code readable executable
         invoke  ExitProcess,0
 
 
-proc ResizeControls hwnd
+proc ToggleExtendedStyle hwnd,style
+	invoke GetWindowLongA,[hwnd],GWL_EXSTYLE
+	xor eax,[style]
+	invoke SetWindowLongA,[hwnd],GWL_EXSTYLE,eax
+	ret
+endp
+
+
+macro ToggleCheckMenuItem hMenu,uID
+	local _set
+	xor eax,eax
+_set:	invoke CheckMenuItem,hMenu,uID,eax
+	xor eax,MF_CHECKED
+	jg _set
+end macro
+
+
+proc ResizeControls hwnd, bRepaint
 	locals
 		rect RECT
 	endl
         push    ebx esi edi
         invoke	GetClientRect,[hwnd],ADDR rect
 
+	bt	[split_flags],SPLIT_OUTPUT_FIXED
+	jnc	@F
+	mov	edx,[rect.right] ; width
+	sub	edx,[split_pixels]
+	div	[rect.right]
+	mov	[split_ratio],eax
+    @@:
 	invoke	GetDlgItem,[hwnd],ID_EXPRESSION
 	xchg	esi,eax
 	mov	eax,[rect.right] ; width
@@ -93,7 +122,7 @@ proc ResizeControls hwnd
 	push	edx
 	mov	edi,[rect.bottom] ; height
 	sub	edi,BORDER_SIZE*2
-	invoke	MoveWindow,esi,BORDER_SIZE,BORDER_SIZE,edx,edi,FALSE
+	invoke	MoveWindow,esi,BORDER_SIZE,BORDER_SIZE,edx,edi,FALSE ;[bRepaint]
 
 	invoke	GetDlgItem,[hwnd],ID_HEXADECIMAL
 	pop	ecx
@@ -104,12 +133,13 @@ proc ResizeControls hwnd
 	mov	[split_rect.right],ecx
 	mov	[split_rect.bottom],edi
 	pop	edx
-	invoke	MoveWindow,eax,ecx,BORDER_SIZE,edx,edi,FALSE
+	invoke	MoveWindow,eax,ecx,BORDER_SIZE,edx,edi,FALSE ;[bRepaint]
 
-	invoke	InvalidateRect,[hwnd],0,FALSE
+	invoke	InvalidateRect,[hwnd],0,[bRepaint]
         pop     edi esi ebx
         ret
 endp
+
 
 proc CalculatorDialog hwnd,msg,wparam,lparam
 	locals
@@ -117,8 +147,11 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 		pt	POINT
 	endl
         push    ebx esi edi
-;        cmp     [msg],WM_WINDOWPOSCHANGED 
-;        je      poschanged
+        cmp     [msg],WM_WINDOWPOSCHANGING 
+        je      poschanging
+        cmp     [msg],WM_WINDOWPOSCHANGED
+        je      poschanged
+ 
         cmp     [msg],WM_COMMAND
         je      command
         cmp     [msg],WM_RBUTTONUP
@@ -133,28 +166,72 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         cmp     [msg],WM_CAPTURECHANGED
         je      nocap
 
-        cmp     [msg],WM_SIZING
-        je      sizing
-        cmp     [msg],WM_SIZE
-        je      size
-        cmp     [msg],WM_CLOSE
-        je      close
-
 	iterate message, WM_CTLCOLORDLG,WM_CTLCOLOREDIT,WM_CTLCOLORSTATIC ;,WM_CTLCOLORSCROLLBAR,WM_CTLCOLORLISTBOX,WM_CTLCOLORBTN
 		cmp     [msg],message
-		je      ctlcolor
+		je      ctlcolor.message
 	end iterate
 
         cmp     [msg],WM_DROPFILES
         je      fdrop
+        cmp     [msg],WM_CLOSE
+        je      close
         cmp     [msg],WM_INITDIALOG
         je      init
 
-        xor     eax,eax
-        jmp     finish
+default_processing:
+	xor eax,eax
+	jmp finish
 
 
-    rb_up:
+	iterate <MESSAGE, 		BACK,	TEXT,	BRUSH>,\
+		WM_CTLCOLORDLG,		-1,	-1,	$7C8C94,\
+		WM_CTLCOLOREDIT,	$DCB59C,$344058,$DCB59C,\
+		WM_CTLCOLORSTATIC,	$BC7142,$140C07,$BC7142
+
+		ctlcolor.MESSAGE: ; hDC, hCtl
+			if BACK <> -1
+				invoke SetBkColor,[wparam], BACK
+			end if
+			if TEXT <> -1
+				invoke SetTextColor,[wparam], TEXT
+			end if
+			if BRUSH <> -1
+				invoke CreateSolidBrush, BRUSH
+				jmp finish
+			else
+				jmp	default_processing
+			end if
+	end iterate
+
+
+	poschanged:
+		mov     ebx,[lparam] ;*WINDOWPOS
+		test	[ebx+WINDOWPOS.flags],SWP_NOSIZE
+		jnz	default_processing
+		stdcall ResizeControls,[hwnd],TRUE
+		jmp     default_processing
+
+	poschanging:
+		mov     ebx,[lparam] ;*WINDOWPOS
+		test	[ebx+WINDOWPOS.flags],SWP_NOSIZE
+		jnz	default_processing
+		cmp	[ebx+WINDOWPOS.cy],WINDOW_LIMIT_HEIGHT
+		jc	poschanging_invalid
+		mov	esi,WINDOW_LIMIT_WIDTH
+		bt	[split_flags],SPLIT_OUTPUT_FIXED
+		jnc	@F
+		shr	esi,1
+		add	esi,[split_pixels]
+	@@:	cmp	[ebx+WINDOWPOS.cx],esi
+		jc	poschanging_invalid
+		jmp	default_processing
+
+	poschanging_invalid:
+		or [ebx+WINDOWPOS.flags],SWP_NOSIZE or SWP_NOMOVE
+		jmp processed
+
+
+rb_up:
 	test	[wparam],MK_LBUTTON+MK_MBUTTON ;+MK_XBUTTON1+MK_XBUTTON2
 	jnz     processed ; avoid multi-button confusion
 	movsx	eax,word [lparam]
@@ -164,19 +241,50 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	invoke ClientToScreen,[hwnd],ADDR pt
 	invoke TrackPopupMenuEx,[g_hSubMenu],TPM_RETURNCMD\
 		or TPM_CENTERALIGN or TPM_VCENTERALIGN,[pt.x],[pt.y],[hwnd],0
-	;invoke CheckMenuItem
-	cmp	eax,IDM_TRIGGER_NONE
-	cmp	eax,IDM_TRIGGER_ANY
-	cmp	eax,IDM_TRIGGER_HOT
-	cmp	eax,IDM_ALWAYS_TOP
-	jmp     processed
+	xchg	ecx,eax
+	jecxz	@F
+	iterate CMD, IDM_WIDTH_FIXED,IDM_WIDTH_RATIO,\
+		IDM_TRIGGER_NONE,IDM_TRIGGER_ANY,IDM_TRIGGER_HOT,\
+		IDM_ALWAYS_TOP,IDM_QUIT
+		cmp ecx,CMD
+		jz rb_up.CMD
+	end iterate
+@@:	jmp     processed
+
+	.IDM_WIDTH_FIXED:
+		bts	[split_flags],SPLIT_OUTPUT_FIXED
+		invoke	GetDlgItem,[hwnd],ID_HEXADECIMAL
+		invoke	GetClientRect,eax,ADDR rect
+		mov	eax,[rect.right] ; width
+		add	eax,(BORDER_SIZE*3) shr 1
+		mov	[split_pixels],eax
+		jmp     processed
+	.IDM_WIDTH_RATIO:
+		btr	[split_flags],SPLIT_OUTPUT_FIXED
+		jmp     processed
+	.IDM_TRIGGER_NONE:
+	.IDM_TRIGGER_ANY:
+	.IDM_TRIGGER_HOT:
+		jmp     processed
+	.IDM_ALWAYS_TOP:
+		stdcall ToggleExtendedStyle,[hwnd],WS_EX_TOPMOST
+		mov edx,HWND_TOPMOST
+		test eax,WS_EX_TOPMOST
+		jz @F
+		mov edx,HWND_NOTOPMOST
+	@@:	invoke SetWindowPos,[hwnd],edx,0,0,0,0,SWP_NOMOVE or SWP_NOSIZE
+		ToggleCheckMenuItem [g_hSubMenu],IDM_ALWAYS_TOP
+		jmp     processed
+	.IDM_QUIT:
+		invoke	PostMessage,[hwnd],WM_CLOSE,0,0
+		jmp     processed
 
 
-    lbdown:
+
+lbdown:
 	movsx	eax,word [lparam]
 	movsx	ecx,word [lparam+2]
         invoke	PtInRect,split_rect,eax,ecx
-
 	xchg	ecx,eax
 	jecxz	@F
 	bts	[split_flags],SPLIT_CAPTURING
@@ -184,28 +292,39 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	invoke	SetCapture,[hwnd]
 	jmp     processed
     @@:	invoke	PostMessage,[hwnd],WM_NCLBUTTONDOWN,2,[lparam] ; HTCAPTION
-	invoke	LoadCursor,0,IDC_HAND
+
+processed_IDC_HAND:
+	mov	eax,IDC_HAND
+processed_cursor:
+	invoke	LoadCursor,0,eax
         invoke	SetCursor,eax
 	jmp     processed
 
-    mmove:
+
+mmove:
 	bt	[split_flags],SPLIT_CAPTURING
 	jc	mmove_update
 	movsx	eax,word [lparam]
 	movsx	ecx,word [lparam+2]
         invoke	PtInRect,split_rect,eax,ecx
-	mov	edx,IDC_HAND
 	xchg	ecx,eax
-	jecxz	@F
-	mov	edx,IDC_SIZEWE
-    @@: invoke	LoadCursor,0,edx
-        invoke	SetCursor,eax
-	jmp     processed
+	jecxz	processed_IDC_HAND
+	mov	eax,IDC_SIZEWE
+	jmp     processed_cursor
+
     mmove_update:
-	; calculate ratio with upper/lower bounds
+	; update ratio and fixed size with upper/lower bounds
         invoke	GetClientRect,[hwnd],ADDR rect
 	mov	eax,[rect.right] ; width
-	movsx	edx,word [lparam]
+	movsx	edx,word [lparam] ; client-x
+	bt	[split_flags],SPLIT_OUTPUT_FIXED
+	jnc	@F
+	sub	edx,eax
+	neg	edx
+	; TODO: upper/lower bound
+	mov	[split_pixels],edx
+	jmp	mmove_update_finalize
+    @@:
 	mov	ecx,eax
 	sar	eax,4 ; this can be tuned based on minimal window size, and desired appearance
 	cmp	edx,eax
@@ -216,13 +335,15 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	cmovnc	edx,eax
 	div	ecx
 	mov	[split_ratio],eax
-	stdcall ResizeControls,[hwnd]
+    mmove_update_finalize:
+	stdcall ResizeControls,[hwnd],FALSE
         jmp     processed
 
     lbup:
 	btr	[split_flags],SPLIT_CAPTURING
 	jnc	processed
 	invoke	ReleaseCapture
+	invoke	InvalidateRect,[hwnd],0,TRUE
         jmp     processed
 
     nocap: ; WM_CAPTURECHANGED
@@ -231,12 +352,8 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 	invoke	InvalidateRect,[hwnd],0,TRUE
     @@:	jmp	processed
 
-    ctlcolor: ; hDC, hCtl
-;	invoke SetBkMode,[wparam],1 ; transparent
-	invoke SetBkColor,[wparam],$BFE3B4
-	invoke SetTextColor,[wparam],$222222
-	invoke CreateSolidBrush,$BFE3B4
-	jmp	finish
+
+
 
     fdrop: ; hDrop, 0 ; add files to queue
 ;	invoke DragQueryFileA,[wparam],0xFFFFFFFF,std_buf,1 ; count of files
@@ -261,56 +378,18 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 
         invoke  CreateFile,_StdErr_txt,GENERIC_READ or GENERIC_WRITE,FILE_SHARE_DELETE,\
                 0,CREATE_ALWAYS,FILE_ATTRIBUTE_TEMPORARY or FILE_FLAG_DELETE_ON_CLOSE,0
+        mov [hStdErr],eax
 
 	invoke LoadMenuIndirectA,ContextMenuTemplate
 	mov	[g_hMenu],eax
 	invoke	GetSubMenu,eax,0
 	mov	[g_hSubMenu],eax
 
-        mov [hStdErr],eax
-
-    size:
-	stdcall ResizeControls,[hwnd]
-        jmp     processed
-
-    sizing:
-        mov     ebx,[lparam]		;*RECT
-	mov	edx,[wparam]		; edge
-
-        mov     eax,[ebx+RECT.right]
-        mov     ecx,[ebx+RECT.bottom]
-        sub     eax,[ebx+RECT.left]	; width
-        sub     ecx,[ebx+RECT.top]	; height
-
-        ; Note: to prevent the window from 'walking', limits must be applied
-        ; to the edges being changed. (see WMSZ_* values)
-
-	sub	eax,WINDOW_LIMIT_WIDTH
-	jnc	sizing_height
-	mov	edi,1001_0010b
-	bt	edi,edx
-	jc	@F
-	sub	[ebx+RECT.right],eax	; 2,5,8
-	jmp	sizing_height
-    @@:	add	[ebx+RECT.left],eax	; 1,4,7
-    sizing_height:
-	sub	ecx,WINDOW_LIMIT_HEIGHT
-	jnc	sizing_done
-	cmp	[wparam],6
-	jc	@F
-	sub	[ebx+RECT.bottom],ecx	; 6,7,8
-	jmp	sizing_done
-    @@:	add	[ebx+RECT.top],ecx	; 3,4,5
-    sizing_done:
+	stdcall ResizeControls,[hwnd],TRUE
         jmp     processed
 
 
     command:
-        cmp     [wparam],IDCANCEL
-        je      close
-        cmp     [wparam],IDOK
-        je      processed
-
         cmp     [wparam],ID_EXPRESSION + EN_CHANGE shl 16
         jne     processed
 
@@ -346,9 +425,10 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         mov     [conv.address],eax
     convert_output:
 
-        mov     esi,[aout.address]
         mov     ecx,[aout.size]
-        jecxz   nobytes
+	test	ecx,ecx
+        jz	nobytes
+        mov     esi,[aout.address]
         mov     edi,[conv.address]
         lea     ebx,[esi+ecx-4]
      listing:
@@ -383,23 +463,22 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
         cmp     [aout.address],esi
         jz      nobytes
         invoke  SendDlgItemMessage,[hwnd],ID_HEXADECIMAL,WM_SETTEXT,0,[conv.address]
-        jmp     linescroll
-    nobytes:
-        invoke	SetFilePointer,[hStdOut],0,0,FILE_BEGIN
-        mov	[std_buf_read],0
-        invoke	ReadFile,[hStdOut],std_buf,std_buf_bytes,std_buf_read,0
-        jmp	bufout
-    error:
-        invoke	SetFilePointer,[hStdErr],0,0,FILE_BEGIN
-        mov	[std_buf_read],0
-        invoke	ReadFile,[hStdErr],std_buf,std_buf_bytes,std_buf_read,0
-    bufout:
-        mov	eax,[std_buf_read]
-        mov	byte[std_buf+eax],0
-        invoke  SendDlgItemMessage,[hwnd],ID_HEXADECIMAL,WM_SETTEXT,0,std_buf
     linescroll:
         invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,EM_GETFIRSTVISIBLELINE,0,0
         invoke  SendDlgItemMessage,[hwnd],ID_HEXADECIMAL,EM_LINESCROLL,0,eax
+        jmp     processed
+
+    error:
+	mov	esi,[hStdErr]
+	jmp	@F
+    nobytes:
+	mov	esi,[hStdOut]
+    @@: invoke	SetFilePointer,esi,0,0,FILE_BEGIN
+        mov	[std_buf_read],0
+        invoke	ReadFile,esi,std_buf,std_buf_bytes,std_buf_read,0
+        mov	eax,[std_buf_read]
+        mov	byte[std_buf+eax],0
+        invoke  SendDlgItemMessage,[hwnd],ID_HEXADECIMAL,WM_SETTEXT,0,std_buf
         jmp     processed
 	
     close:
@@ -415,7 +494,6 @@ proc CalculatorDialog hwnd,msg,wparam,lparam
 endp
 
 
-; MFT_SEPARATOR is the default
 struc(NAMED) menuex_template? helpid:0
 	local _level,first
 	align 4
@@ -466,6 +544,8 @@ IDM_TRIGGER_ANY		:= 0210h
 IDM_TRIGGER_HOT		:= 0220h
 IDM_ALWAYS_TOP		:= 0230h
 
+IDM_QUIT		:= 0F30h
+
 ?ContextMenuTemplate menuex_template
 	item 'dummy', 0, MFR_POPUP or MFR_END
 		item 'Output Width',	0,MFR_POPUP
@@ -476,15 +556,21 @@ IDM_ALWAYS_TOP		:= 0230h
 			item 'Set Key',		IDM_TRIGGER_HOT
 			item 'None',		IDM_TRIGGER_NONE,MFR_END
 		item
-		item 'Always on Top',	IDM_ALWAYS_TOP, MFR_END, MFS_CHECKED
+		item 'Always on Top',	IDM_ALWAYS_TOP, , MFS_CHECKED
+		item
+		item 'Quit', IDM_QUIT, MFR_END
 
 
 
-    SPLIT_CAPTURING	:= 0		; active movement
-    split_flags 	dd ?
+SPLIT_CAPTURING		:= 0		; active movement
+SPLIT_OUTPUT_FIXED	:= 1		; or ratioed
+split_flags	 	dd ?
 
-    split_ratio 	dd 0x8000_0000	; 1:1 ; scaled fraction
-    split_rect		RECT		; client coordinate of splitter area
+split_ratio 		dd 0x8000_0000	; 1:1 ; scaled fraction
+split_pixels		dd 127		; from right client edge
+split_rect		RECT		; client coordinate of splitter area
+
+
 
     hStdOut rd 1
     hStdErr rd 1
@@ -538,7 +624,7 @@ section '.rsrc' resource data readable
   resource dialogs,\
            IDR_CALCULATOR,LANG_ENGLISH+SUBLANG_DEFAULT,calculator_dialog
 
-  WS_EDIT_COMMON := WS_VISIBLE+WS_VSCROLL+WS_HSCROLL+ES_AUTOVSCROLL+ES_AUTOHSCROLL+ES_MULTILINE
+  WS_EDIT_COMMON := WS_VISIBLE+WS_BORDER+WS_VSCROLL+WS_HSCROLL+ES_AUTOVSCROLL+ES_AUTOHSCROLL+ES_MULTILINE
   dialog calculator_dialog,'',0,0,400,300,\
 	WS_POPUP or WS_VISIBLE or WS_THICKFRAME or DS_CENTER or DS_SETFONT,\
 	WS_EX_ACCEPTFILES or WS_EX_TOPMOST,\
