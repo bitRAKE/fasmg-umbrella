@@ -1,0 +1,1 @@
+Tools using ```fasmg.dll``` utilize the ```INCLUDE``` environment variable. The intended use is through the command line configured by ```..\environment.cmd``` - allowing include files to be found.
