@@ -2,6 +2,12 @@ postpone
 	assert __LINE__ = 2
 end postpone
 
+; language utilities:
+iterate UTIL, @@,align,xcalm
+	eval 'include "..\..\utility\',`UTIL,'.inc"'
+end iterate
+
+; processor specification:
 include 'cpu\x64.inc'
 iterate EXT, avx2,bmi2,fma
 	eval 'include "cpu\ext\',`EXT,'.inc"'

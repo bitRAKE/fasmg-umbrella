@@ -107,6 +107,7 @@ proc ResizeControls hwnd, bRepaint
 	jnc	@F
 	mov	edx,[rect.right] ; width
 	sub	edx,[split_pixels]
+	or	eax,-1
 	div	[rect.right]
 	mov	[split_ratio],eax
     @@:
@@ -223,12 +224,11 @@ default_processing:
 		shr	esi,1
 		add	esi,[split_pixels]
 	@@:	cmp	[ebx+WINDOWPOS.cx],esi
-		jc	poschanging_invalid
-		jmp	default_processing
+		jnc	default_processing
 
 	poschanging_invalid:
 		or [ebx+WINDOWPOS.flags],SWP_NOSIZE or SWP_NOMOVE
-		jmp processed
+		jmp     default_processing
 
 
 rb_up:
@@ -249,18 +249,24 @@ rb_up:
 		cmp ecx,CMD
 		jz rb_up.CMD
 	end iterate
+	cmp	ecx,IDM_EXAMPLE + 1
+	jc	@F
+	cmp	ecx,IDM_EXAMPLE + EXAMPLES + 1
+	jc	.IDM_EXAMPLE
 @@:	jmp     processed
 
 	.IDM_WIDTH_FIXED:
-		bts	[split_flags],SPLIT_OUTPUT_FIXED
-		invoke	GetDlgItem,[hwnd],ID_HEXADECIMAL
-		invoke	GetClientRect,eax,ADDR rect
+		invoke	GetClientRect,[hwnd],ADDR rect
 		mov	eax,[rect.right] ; width
-		add	eax,(BORDER_SIZE*3) shr 1
-		mov	[split_pixels],eax
-		jmp     processed
+		mov	ecx,eax
+		mul	[split_ratio]
+;		add	eax,eax
+		sub	ecx,edx
+		mov	[split_pixels],ecx
 	.IDM_WIDTH_RATIO:
-		btr	[split_flags],SPLIT_OUTPUT_FIXED
+		btc	[split_flags],SPLIT_OUTPUT_FIXED
+		ToggleCheckMenuItem [g_hSubMenu],IDM_WIDTH_FIXED
+		ToggleCheckMenuItem [g_hSubMenu],IDM_WIDTH_RATIO
 		jmp     processed
 	.IDM_TRIGGER_NONE:
 	.IDM_TRIGGER_ANY:
@@ -278,6 +284,12 @@ rb_up:
 	.IDM_QUIT:
 		invoke	PostMessage,[hwnd],WM_CLOSE,0,0
 		jmp     processed
+	.IDM_EXAMPLE:
+		movzx	ecx,cl
+		invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,WM_SETTEXT,0,[Examples + 4*ecx]
+		; update secondary window with existing code
+		mov     [wparam],ID_EXPRESSION + EN_CHANGE shl 16
+		jmp     command
 
 
 
@@ -542,26 +554,52 @@ IDM_WIDTH_RATIO		:= 0110h
 IDM_TRIGGER_NONE	:= 0200h
 IDM_TRIGGER_ANY		:= 0210h
 IDM_TRIGGER_HOT		:= 0220h
-IDM_ALWAYS_TOP		:= 0230h
 
+IDM_INVALIDATE		:= 0300h
+IDM_EXAMPLE		:= 0400h - 1 ; output 0-based numbering
+IDM_ALWAYS_TOP		:= 0500h
 IDM_QUIT		:= 0F30h
 
+EXAMPLES := 2
+
 ?ContextMenuTemplate menuex_template
-	item 'dummy', 0, MFR_POPUP or MFR_END
-		item 'Output Width',	0,MFR_POPUP
-			item 'Fixed',		IDM_WIDTH_FIXED
-			item 'Ratio',		IDM_WIDTH_RATIO,MFR_END,MFS_CHECKED
-		item 'Update Trigger',	0,MFR_POPUP
-			item 'Any Key',		IDM_TRIGGER_ANY,,MFS_CHECKED
-			item 'Set Key',		IDM_TRIGGER_HOT
-			item 'None',		IDM_TRIGGER_NONE,MFR_END
-		item
-		item 'Always on Top',	IDM_ALWAYS_TOP, , MFS_CHECKED
-		item
-		item 'Quit', IDM_QUIT, MFR_END
+item 'dummy', 0, MFR_POPUP or MFR_END
+	item 'Output Width',	0,MFR_POPUP
+		item 'Fixed',		IDM_WIDTH_FIXED
+		item 'Ratio',		IDM_WIDTH_RATIO,MFR_END,MFS_CHECKED
+	item 'Update Trigger',	0,MFR_POPUP
+		item 'Any Key',		IDM_TRIGGER_ANY,,MFS_CHECKED
+		item 'Set Key',		IDM_TRIGGER_HOT
+		item 'None',		IDM_TRIGGER_NONE,MFR_END
+	item
+	item 'Invalidate Window', IDM_INVALIDATE
+	item
+	item 'Always on Top', IDM_ALWAYS_TOP, , MFS_CHECKED
+	item
+	item 'Load Example',	0,MFR_POPUP
+		repeat EXAMPLES
+			if % = %%
+				item <'Example ',`%>,IDM_EXAMPLE+%,MFR_END
+			else
+				item <'Example ',`%>,IDM_EXAMPLE+%
+			end if
+		end repeat
+	item
+	item 'Quit', IDM_QUIT, MFR_END
+
+Examples:
+	repeat EXAMPLES
+		dd .%
+	end repeat
+	repeat EXAMPLES
+		.%:
+		eval 'file "example',`%,'.g"'
+		db 0
+	end repeat
 
 
 
+align 4
 SPLIT_CAPTURING		:= 0		; active movement
 SPLIT_OUTPUT_FIXED	:= 1		; or ratioed
 split_flags	 	dd ?
@@ -583,6 +621,8 @@ split_rect		RECT		; client coordinate of splitter area
 	'; flat assembler  version g.%s',13,10,\
 	13,10
     __enverr db '; Warning: INCLUDE environment variable not defined.',13,10,0
+
+
 
     error_string:
         db 0
