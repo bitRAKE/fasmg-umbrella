@@ -245,7 +245,7 @@ rb_up:
 	jecxz	@F
 	iterate CMD, IDM_WIDTH_FIXED,IDM_WIDTH_RATIO,\
 		IDM_TRIGGER_NONE,IDM_TRIGGER_ANY,IDM_TRIGGER_HOT,\
-		IDM_ALWAYS_TOP,IDM_QUIT
+		IDM_INVALIDATE,IDM_ALWAYS_TOP,IDM_QUIT
 		cmp ecx,CMD
 		jz rb_up.CMD
 	end iterate
@@ -272,6 +272,9 @@ rb_up:
 	.IDM_TRIGGER_ANY:
 	.IDM_TRIGGER_HOT:
 		jmp     processed
+	.IDM_INVALIDATE: ; debug feature; TODO: respond to key F5, too
+		stdcall ResizeControls,[hwnd],TRUE
+		jmp     command.EN_CHANGE
 	.IDM_ALWAYS_TOP:
 		stdcall ToggleExtendedStyle,[hwnd],WS_EX_TOPMOST
 		mov edx,HWND_TOPMOST
@@ -288,8 +291,7 @@ rb_up:
 		movzx	ecx,cl
 		invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,WM_SETTEXT,0,[Examples + 4*ecx]
 		; update secondary window with existing code
-		mov     [wparam],ID_EXPRESSION + EN_CHANGE shl 16
-		jmp     command
+		jmp     command.EN_CHANGE
 
 
 
@@ -404,7 +406,7 @@ mmove:
     command:
         cmp     [wparam],ID_EXPRESSION + EN_CHANGE shl 16
         jne     processed
-
+    .EN_CHANGE:
         invoke  SendDlgItemMessage,[hwnd],ID_EXPRESSION,WM_GETTEXT,\
 		EXPRESSION_MAX_LENGTH,expression_buffer
 
@@ -556,11 +558,9 @@ IDM_TRIGGER_ANY		:= 0210h
 IDM_TRIGGER_HOT		:= 0220h
 
 IDM_INVALIDATE		:= 0300h
-IDM_EXAMPLE		:= 0400h - 1 ; output 0-based numbering
+IDM_EXAMPLE		:= 0400h - 1 ; output 0-based numbering for table lookup
 IDM_ALWAYS_TOP		:= 0500h
 IDM_QUIT		:= 0F30h
-
-EXAMPLES := 2
 
 ?ContextMenuTemplate menuex_template
 item 'dummy', 0, MFR_POPUP or MFR_END
@@ -579,23 +579,33 @@ item 'dummy', 0, MFR_POPUP or MFR_END
 	item 'Load Example',	0,MFR_POPUP
 		repeat EXAMPLES
 			if % = %%
-				item <'Example ',`%>,IDM_EXAMPLE+%,MFR_END
+				item Examples.%.Text,IDM_EXAMPLE+%,MFR_END
 			else
-				item <'Example ',`%>,IDM_EXAMPLE+%
+				item Examples.%.Text,IDM_EXAMPLE+%
 			end if
 		end repeat
 	item
 	item 'Quit', IDM_QUIT, MFR_END
 
+; We want to use the file names to create user friendly display for examples,
+; and simplify inclusion of additional/alternate examples:
 Examples:
-	repeat EXAMPLES
-		dd .%
-	end repeat
-	repeat EXAMPLES
-		.%:
-		eval 'file "example',`%,'.g"'
-		db 0
-	end repeat
+iterate FNAME,\
+	'calculator',\
+	'x86 16-bit, Horizontal Slice',\
+	'x86 64-bit, Binomial',\
+	'x86 64-bit, Horner Method'
+
+	if % = 1
+		EXAMPLES := %%
+		repeat EXAMPLES
+			dd .%
+		end repeat
+	end if
+	.%: eval 'file "examples\',FNAME,'.g"'
+	db 0
+	.%.Text equ FNAME
+end iterate
 
 
 
@@ -604,7 +614,7 @@ SPLIT_CAPTURING		:= 0		; active movement
 SPLIT_OUTPUT_FIXED	:= 1		; or ratioed
 split_flags	 	dd ?
 
-split_ratio 		dd 0x8000_0000	; 1:1 ; scaled fraction
+split_ratio 		dd 0xC000_0000	; 1:1 ; scaled fraction
 split_pixels		dd 127		; from right client edge
 split_rect		RECT		; client coordinate of splitter area
 

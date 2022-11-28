@@ -1,3 +1,9 @@
+include 'cpu\x64.inc'
+iterate EXT, avx2,bmi2,fma
+	eval 'include "cpu\ext\',`EXT,'.inc"'
+end iterate
+use64
+
 	align 16
 @1:	vfmadd132pd ymm0, ymm2, ymm1
 @0:	vbroadcastsd ymm2, [rdx+rcx*8]
