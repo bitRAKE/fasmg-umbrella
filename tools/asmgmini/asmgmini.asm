@@ -614,7 +614,7 @@ SPLIT_CAPTURING		:= 0		; active movement
 SPLIT_OUTPUT_FIXED	:= 1		; or ratioed
 split_flags	 	dd ?
 
-split_ratio 		dd 0xC000_0000	; 1:1 ; scaled fraction
+split_ratio 		dd 0xC000_0000	; 3:4 ; scaled fraction
 split_pixels		dd 127		; from right client edge
 split_rect		RECT		; client coordinate of splitter area
 

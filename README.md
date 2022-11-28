@@ -66,7 +66,7 @@ OneCore
 - <https://docs.microsoft.com/en-us/windows-hardware/drivers/develop/building-for-onecore>
 
 WindowsApps
-- <https://docs.microsoft.com/en-us/windows/apps/windows-app-sdk/>
+- <https://docs.microsoft.com/en-us/windows/apps/windows-app-sdk/> (github [SDK][3], [UI][4])
 
 Universal Windows Platform (UWP)
 - <https://docs.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide>
@@ -86,3 +86,5 @@ TOOLS:
 
 [1]: https://img.shields.io/github/languages/code-size/bitRAKE/fasmg-umbrella?style=for-the-badge
 [2]: https://img.shields.io/github/repo-size/bitRAKE/fasmg-umbrella?style=for-the-badge
+[3]: https://github.com/microsoft/WindowsAppSDK
+[4]: https://github.com/microsoft/microsoft-ui-xaml/
