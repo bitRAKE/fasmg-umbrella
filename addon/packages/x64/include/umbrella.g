@@ -77,18 +77,35 @@ macro rpop? line&
 end macro
 
 
-; macros are written to process 64-bit register inputs. yet, sometimes conversion to 32-bit part is convinent.
-iterate <reg,rlow>, ax,al, cx,cl, dx,dl, bx,bl, sp,spl, bp,bpl, si,sil, di,dil
-define reg32.r#reg? e#reg
-define reg16low.r#reg? reg
-define reg8low.r#reg? rlow
-define reg8hi.r#reg? rlow
+; Macros are written to process 64-bit/32-bit register inputs. yet, sometimes
+; conversion to register parts is convenient.
+iterate <reg,	rhigh,	rlow>,\
+	ax,	ah,	al,\
+	cx,	ch,	cl,\
+	dx,	dh,	dl,\
+	bx,	bh,	bl,\
+	sp,	,	spl,\
+	bp,	,	bpl,\
+	si,	,	sil,\
+	di,	,	dil
+
+	define reg16low.e#reg?	reg
+	define reg8low.e#reg?	rlow
+
+	define reg32.r#reg?	e#reg
+	define reg16low.r#reg?	reg
+	define reg8low.r#reg?	rlow
+
+	match ,rhigh
+	else
+		define reg8high.r#reg?	rhigh
+		define reg8high.e#reg?	rhigh
+	end match
 end iterate
 repeat 8, i:8
-define reg32.r#i? r#i#d
-define reg16low.r#i? r#i#w
-define reg8low.r#i? r#i#l
-define reg8hi.r#i? r#i#h
+	define reg32.r#i? r#i#d
+	define reg16low.r#i? r#i#w
+	define reg8low.r#i? r#i#b
 end repeat
 
 
@@ -310,6 +327,14 @@ section '.text' code readable executable
 ;section '.rsrc' resource data readable
 ;include 'rsrc\rsrc.inc.g'
 
+
+; Base API needs to be primary in order that it may be over written by later APIs
+; user controls API ordering in this way.
+match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
+	include 'api\OneCoreUAP.g'
+else
+	eval "include 'api\",UMBRELLA_LIBRARY,".g'"
+end match
 postpone
 	; The following defines the section layout for the executable:
 
@@ -352,11 +377,6 @@ postpone
 			db ?
 		end if
 
-	match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
-		include 'api\OneCoreUAP.g'
-	else
-		eval "include 'api\",UMBRELLA_LIBRARY,".g'"
-	end match
 	include 'api\__import64.g' ; build import table
 
 	; Assume user wants 32-bit addressing if they specifying a low base,
