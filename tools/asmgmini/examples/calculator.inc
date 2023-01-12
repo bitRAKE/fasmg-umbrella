@@ -7,5 +7,5 @@ repeat 30
 		display `N,9,`T,13,10
 	end repeat
 	; 5% increase, rounded up
-	payment = (payment * 105)/100
+	payment = (payment * 105 + 99)/100
 end repeat

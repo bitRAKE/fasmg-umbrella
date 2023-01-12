@@ -602,7 +602,7 @@ iterate FNAME,\
 			dd .%
 		end repeat
 	end if
-	.%: eval 'file "examples\',FNAME,'.g"'
+	.%: eval 'file "examples\',FNAME,'.inc"'
 	db 0
 	.%.Text equ FNAME
 end iterate

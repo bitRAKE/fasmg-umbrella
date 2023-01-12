@@ -1,7 +1,4 @@
 include 'cpu\x64.inc'
-iterate EXT, avx2,bmi2,fma
-	eval 'include "cpu\ext\',`EXT,'.inc"'
-end iterate
 use64
 
 ; 39 bytes, EAX: n, ECX: k, recursive O(k)
@@ -30,4 +27,4 @@ Choose:	lea edx,[rcx*2]
 ; RDX: used
 ; RAX: Choose(EAX,ECX)
 
-db $-$$
+db $-$$ ; length of code
