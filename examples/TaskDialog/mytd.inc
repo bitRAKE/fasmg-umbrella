@@ -2,6 +2,7 @@
 ;	+ very low code overhead
 ;	+ supports multiple advanced TaskDialog configurations per stack frame
 ;	+ simple technique to access additional parameters in an isolated way
+;	+ requires RSTRING and collect macros
 
 struc(NAMED) MY_TD CONFIG,HANDLER:?
 namespace NAMED
@@ -35,7 +36,7 @@ macro Init ; 27 bytes ; don't change registers
 	rep movsd
 
 	; Local notification table pointer is passed to callback, meaning any
-	; message handler can access local other data from this pointer.
+	; message handler can access other local data from this pointer.
 	lea rcx,[NAMED.msg.OnCreate]
 	mov [NAMED.cfg.lpCallbackData],rcx
 	pop rcx rsi rdi
@@ -77,7 +78,7 @@ align 16,0xCC
 .S_OK:	xor eax,eax
 	retn
 
-.fatal:	int3 ; TODO: not nice
+.fatal:	int3 ; TODO: not nice, but never happens?
 
 
 
@@ -105,14 +106,14 @@ struc(NAMED) TD_BUTTONS line&
 	local total,gather
 	iterate <QUOTED,ID>, line
 		NAMED.% RSTRING QUOTED
+		gather equ ID,NAMED.%,0	; 64-bit only
+;		gather equ ID,NAMED.%	; 32-bit only
 		total = %%
-		gather equ dd ID,NAMED.%,0	; 64-bit only
-;		gather equ dd ID,NAMED.%	; 32-bit only
 	end iterate
 	collect CONST.4
 		label NAMED:total
 		irpv G,gather
-			G
+			dd G
 		end irpv
 	end collect
 end struc

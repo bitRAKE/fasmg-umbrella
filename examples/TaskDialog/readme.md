@@ -1,7 +1,7 @@
 
 #### TaskDialog - moving beyond the MessageBox.
 
-This an exploration of the [TaskDialog][1] addition to Windows UI programming, and patterns in [fasmg][2].
+This is an exploration of the [TaskDialog][1] addition to Windows UI programming, and patterns in [fasmg][2].
 
 [Kenny Kerr][3] put together the original sample program in C++ when Windows Vista was still in beta. I thought it was such a good idea that I've mirrored his effort in x86-64 assembly. Obviously, we don't need ATL/WTL or the wrapper he created - it's mostly just [SendMessage][4].
 
