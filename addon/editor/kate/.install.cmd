@@ -5,7 +5,7 @@
 	mkdir %DEST% 2>NUL
 	if exist %DEST%* (
 		REM copy *.xml files to expected location, overwrite
-		copy /Y *.xml %DEST%
+		xcopy /Q /I /Y "%~dp0*.xml" %DEST%\*
 	) else (
 		echo unable to create directory %DEST%
 	)
