@@ -1,6 +1,7 @@
-@(
-	REM compile each *.asm file with fasmg and delete resulting file
-	REM as we are only interested in the error output
+@REM	compile each *.asm file with fasmg and delete result
+@REM	as we are only interested in the possible error output
 
-	FOR
+@for %%G in ("%~dp0*.asm") do @(
+	@fasmg %%G "%~dp0file.tmp"
+	@del "%~dp0file.tmp"
 )
