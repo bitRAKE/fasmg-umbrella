@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  fasmg Syntax Highlighting Definition for KDE's KSyntaxHighlighting Framework
+
+  Primarily focused on providing as high a diversity as possible combined with
+  sufficient flexiblity that features can be removed/modified/extended.
+
+  NOTE:
+    - requires "x86.xml" ISA lists/rules
+    - progress/features indicated in the comments.
+-->
+<!DOCTYPE language SYSTEM "language.dtd"
+[   <!-- simple radix groups, need further decoration -->
+    <!ENTITY NBIN "[01][01_&apos;]*">
+    <!ENTITY NOCT "[0-7][0-7_&apos;]*">
+    <!ENTITY NDEC "[0-9][0-9_&apos;]*">
+    <!ENTITY NHEX "[0-9A-Fa-f_&apos;]">
+
+    <!ENTITY LABEL "[!0-9]+">
+]>
+<!-- TODO: change version number to match fasmg version. -->
+<language name="fasmg" version="1" kateversion="5.79" section="Assembler" extensions="*.asm;*.inc;" mimetype="text/x-fasmg" author="Rickey Bowers (bitRAKE@gmail.com)" license="MIT" priority="9">
+  <highlighting>
+    <list name="Preprocessors">
+      <item>calminstruction</item>
+      <item>local</item>
+      <item>arrange</item>
+      <item>assemble</item>
+      <item>transform</item>
+      <item>stringify</item>
+      <item>publish</item>
+      <item>take</item>
+      <item>compute</item>
+      <item>check</item>
+      <item>jyes</item>
+      <item>jno</item>
+      <item>jump</item>
+      <item>exit</item>
+      <item>match</item>
+      <item>call</item>
+
+      <item>if</item>
+      <item>else</item>
+      <item>rmatch</item>
+      <item>rawmatch</item>
+      <item>postpone</item>
+      <item>repeat</item>
+      <item>rept</item>
+      <item>struc</item>
+      <item>virtual</item>
+      <item>while</item>
+      <item>irp</item>
+      <item>irpv</item>
+      <item>iterate</item>
+      <item>macro</item>
+      <item>namespace</item>
+      <item>end</item>
+    </list>
+
+    <list name="DataTypes">
+      <!-- Multibyte Directives -->
+      <item>file</item> <item>emit</item> <item>dbx</item>
+      <!-- Initialized Data -->
+      <item>db</item>   <item>dw</item>   <item>dd</item>   <item>dp</item>
+      <item>dq</item>   <item>dt</item>   <item>ddq</item>  <item>dqq</item>
+      <item>ddqq</item>
+      <!-- Uninitialized Data -->
+      <item>rb</item>   <item>rw</item>   <item>rd</item>   <item>rp</item>
+      <item>rq</item>   <item>rt</item>   <item>rdq</item>  <item>rqq</item>
+      <item>rdqq</item>
+      <!-- Size Operands -->
+      <item>byte</item>     <item>word</item>   <item>dword</item>    <item>pword</item>
+      <item>fword</item>    <item>qword</item>  <item>tword</item>    <item>tbyte</item>
+      <item>dqword</item>   <item>xword</item>  <item>qqword</item>   <item>yword</item>
+      <item>dqqword</item>  <item>zword</item>
+    </list>
+
+    <list name="Keywords"><!-- instruction type directives -->
+      <item>load</item> 
+      <item>store</item> 
+      <item>label</item> 
+      <item>esc</item> 
+      <item>outscope</item> 
+      <item>purge</item> 
+      <item>restruc</item> 
+      <item>mvmacro</item> 
+      <item>mvstruc</item> 
+      <item>removecomments</item> 
+      <item>retaincomments</item> 
+      <item>combinelines</item> 
+      <item>isolatelines</item> 
+      <item>org</item> 
+      <item>section</item> 
+      <item>restartout</item> 
+      <item>format</item> 
+      <item>indx</item> 
+      <item>break</item> 
+      <item>display</item> 
+      <item>err</item> 
+      <item>include</item> 
+      <item>eval</item> 
+      <item>assert</item>
+    </list>
+
+    <list name="Operators"><!-- these cannot be the first word on a line -->
+      <item>not</item>
+      <item>mod</item>
+      <item>xor</item>
+      <item>and</item>
+      <item>or</item>
+      <item>shl</item>
+      <item>shr</item>
+      <item>bswap</item>
+      <item>bsf</item>
+      <item>bsr</item>
+      <item>string</item>
+      <item>float</item>
+      <item>trunc</item>
+      <item>sizeof</item>
+      <item>lengthof</item>
+      <item>elementsof</item>
+      <item>element</item>
+      <item>scale</item>
+      <item>metadata</item>
+      <item>elementof</item>
+      <item>scaleof</item>
+      <item>metadataof</item>
+      <item>element</item>
+      <item>equ</item>
+      <item>reequ</item>
+      <item>define</item>
+      <item>redefine</item>
+      <item>restore</item>
+      <item>relativeto</item>
+      <item>defined</item>
+      <item>used</item>
+      <item>definite</item>
+      <item>eqtype</item>
+      <item>eq</item>
+      <item>at</item>
+      <item>from</item>
+      <item>as</item>
+      <item>dup</item>
+    </list>
+
+    <list name="BuiltIns"><!-- export to x86 lists : instructions -->
+      <item>__time__</item>
+      <item>__source__</item>
+      <item>__file__</item>
+      <item>__line__</item>
+<!--
+      <item>.</item>
+      <item>?</item>
+      <item>$</item>
+      <item>$$</item>
+      <item>$@</item>
+      <item>$%</item>
+      <item>$%%</item>
+      <item>%t</item>
+      <item>%%</item>
+      <item>%</item>
+--> </list>
+
+    <list name="ControlFlows"><!-- export to x86 lists : control flow -->
+      <include>register##ISA x86</include>
+      <!--
+      <include>instr_base##ISA x86</include>
+      <include>instr_flag##ISA x86</include>
+      <include>instr_flow##ISA x86</include>
+      <include>instr_ext_mmx##ISA x86</include>
+      <include>instr_ext_sse##ISA x86</include>
+      <include>instr_ext_avx##ISA x86</include>
+      <include>instr_ext_rest##ISA x86</include>
+      -->
+    </list>
+
+    <!-- special comment flagging, casesensitive to not interfere with text -->
+    <list name="Informations">
+      <item>NOTE</item>
+      <item>TODO</item>
+    </list>
+    <list name="Warnings">
+      <item>FIXME</item>
+      <item>DEBUG</item>
+      <item>UNTESTED</item>
+    </list>
+    <list name="Alerts">
+      <item>ERROR</item>
+      <item>BROKEN</item>
+    </list>
+
+    <contexts>
+      <context name="Normal Text" attribute="Normal" lineEndContext="#stay">
+        <!-- TODO: create a parsing sub-contexts like bash does
+        <IncludeRules context="InternalBock"/>
+          - retaincomments/removecomments
+          - combinelines/isolatelines
+          - blocking: calminstruction, ...
+        -->
+        <!-- different classes of comments based on line position/content -->
+        <DetectChar char=";" context="CommentZero" lookAhead="true" column="0" />
+        <DetectChar char=";" context="CommentNext" lookAhead="true" firstNonSpace="true" />
+        <DetectChar char=";" context="CommentTail" lookAhead="true" />
+
+        <!-- TODO: force variable/operand ?{name} -->
+        <!-- TODO: labels, break line into zones: {label}?{variable}?{instruction}{operands}
+        <RegExpr context="LabelZero" attribute="Function" String="^&LABEL;:" column="0" />
+        <RegExpr context="LabelFirst" attribute="Function" String="&LABEL;:" firstNonSpace="true" />
+        -->
+
+        <!-- need to process numbers before single-quoted string -->
+        <!-- /core/source/expressions.inc:26, convert_number -->
+        <RegExpr attribute="DecVal" context="#stay" String="\$&NHEX;+\b" />
+        <RegExpr attribute="DecVal" context="#stay" String="\b0[Xx]&NHEX;+\b" />
+        <RegExpr attribute="DecVal" context="#stay" String="\b[0-9]&NHEX;*[Hh]\b" />
+        <RegExpr attribute="DecVal" context="#stay" String="\b&NOCT;[OoQq]\b" />
+        <RegExpr attribute="DecVal" context="#stay" String="\b&NBIN;[Bb]\b" />
+        <RegExpr attribute="DecVal" context="#stay" String="\b&NDEC;[DdFf]\b" />
+        <RegExpr attribute="DecVal" context="#stay"
+          String="\b&NDEC;(?:\.&NDEC;)?(?:[Ff]|(?:[Ee][-+]?&NDEC;))?\b" />
+
+        <!-- these will not spanning over a line break -->
+        <RangeDetect char="'" char1="'" attribute="String" context="#stay" />
+        <RangeDetect char="&quot;" char1="&quot;" attribute="SpecialString" context="#stay" />
+
+        <keyword String="Preprocessors" attribute="Preprocessor" context="#stay" />
+        <keyword String="ControlFlows" attribute="ControlFlow" context="#stay" />
+        <keyword String="DataTypes" attribute="DataType" context="#stay" />
+        <keyword String="Keywords" attribute="Keyword" context="#stay" />
+        <keyword String="BuiltIns" attribute="BuiltIn" context="#stay" />
+        <keyword String="Operators" attribute="Attribute" context="#stay" />
+        <AnyChar String="+-/*%!$?,|~#\[]=:()^`{}&amp;&lt;&gt;&quot;&apos;" attribute="Operator" context="#stay"/>
+      </context>
+
+      <context name="CommentLine">
+        <keyword String="Informations" insensitive='0' attribute="Information" context="#stay" />
+        <keyword String="Warnings" insensitive='0' attribute="Warning" context="#stay" />
+        <keyword String="Alerts" insensitive='0' attribute="Alert" context="#stay" />
+      </context>
+      <context name="CommentZero" attribute="Documentation" lineEndContext="#pop">
+        <IncludeRules context="CommentLine"/>
+      </context>
+      <context name="CommentNext" attribute="Annotation" lineEndContext="#pop">
+        <IncludeRules context="CommentLine"/>
+      </context>
+      <context name="CommentTail" attribute="Comment" lineEndContext="#pop">
+        <IncludeRules context="CommentLine"/>
+      </context>
+    </contexts>
+
+    <itemDatas><!-- Cover ALL the default styles with similarly named attribute: -->
+      <!-- Normal Text & Source Code -->
+      <itemData name="Normal"         defStyleNum="dsNormal" />
+      <itemData name="Keyword"        defStyleNum="dsKeyword" />
+      <itemData name="Function"       defStyleNum="dsFunction" />
+      <itemData name="Variable"       defStyleNum="dsVariable" />
+      <itemData name="ControlFlow"    defStyleNum="dsControlFlow" />
+      <itemData name="Operator"       defStyleNum="dsOperator" />
+      <itemData name="BuiltIn"        defStyleNum="dsBuiltIn" />
+      <itemData name="Extension"      defStyleNum="dsExtension" />
+      <itemData name="Preprocessor"   defStyleNum="dsPreprocessor" />
+      <itemData name="Attribute"      defStyleNum="dsAttribute" />
+      <!-- Numbers, Types & Constants -->
+      <itemData name="DataType"       defStyleNum="dsDataType" />
+      <itemData name="DecVal"         defStyleNum="dsDecVal" />
+      <itemData name="BaseN"          defStyleNum="dsBaseN" />
+      <itemData name="Float"          defStyleNum="dsFloat" />
+      <itemData name="Constant"       defStyleNum="dsConstant" />
+      <!-- Strings & Characters -->
+      <itemData name="Char"           defStyleNum="dsChar" />
+      <itemData name="SpecialChar"    defStyleNum="dsSpecialChar" />
+      <itemData name="String"         defStyleNum="dsString"  spellChecking="1"/>
+      <itemData name="VerbatimString" defStyleNum="dsVerbatimString" />
+      <itemData name="SpecialString"  defStyleNum="dsSpecialString" spellChecking="1"/>
+      <itemData name="Import"         defStyleNum="dsImport" />
+      <!-- Comments & Documentation -->
+      <itemData name="Comment"        defStyleNum="dsComment" />
+      <itemData name="Documentation"  defStyleNum="dsDocumentation" />
+      <itemData name="Annotation"     defStyleNum="dsAnnotation" />
+      <itemData name="CommentVar"     defStyleNum="dsCommentVar" />
+      <itemData name="RegionMarker"   defStyleNum="dsRegionMarker" />
+      <itemData name="Information"    defStyleNum="dsInformation" />
+      <itemData name="Warning"        defStyleNum="dsWarning" />
+      <itemData name="Alert"          defStyleNum="dsAlert" />
+      <!-- Miscellaneous -->
+      <itemData name="Error"          defStyleNum="dsError" />
+      <itemData name="Others"         defStyleNum="dsOthers" />
+    </itemDatas>
+    </highlighting>
+  <general>
+    <folding indentationsensitive="1"/>
+    <!-- default delimiters: \t !%&()*+,-./:;<=>?[\]^{|}~
+    <keywords casesensitive="0" weakDeliminator="$@%" additionalDeliminator="$" wordWrapDeliminator=",{}[]"/>
+    -->
+    <keywords casesensitive="0" additionalDeliminator="#" />
+    <comments><!-- only for comment tools -->
+      <comment name="singleLine" start=";" />
+    </comments>
+    <emptyLines>
+      <emptyLine regexpr="\s+" />
+      <emptyLine regexpr="\s*;.*" />
+    </emptyLines>
+  </general>
+</language>
+<!-- kate: space-indent on; indent-width 2; replace-tabs on; -->

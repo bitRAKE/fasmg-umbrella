@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language>
+
+<!-- x86 ISA list/rule file - to be used by implementations
+
+Instruction grouping at this level should serve code readablity and ease
+comprehension. I've choosen to focus on control flow - grouping based on
+the writing of the following internal processor state:
+  - instruction pointer (direct impact)
+  - flags (indirect impact)
+  - other
+      - registers
+      - other instructions
+
+Tool specific directives should be handled outside of this reference.
+
+-->
+
+<language name="x86" version="1" section="Assembler" kateversion="5.79" extensions="" priority="-9" hidden="true">
+  <highlighting>
+    <list name="registers">
+      <item>al</item>     <item>cl</item>     <item>dl</item>     <item>bl</item>
+      <item>spl</item>    <item>bpl</item>    <item>sil</item>    <item>dil</item>
+      <item>ah</item>     <item>ch</item>     <item>dh</item>     <item>bh</item>
+      <item>r8b</item>    <item>r8l</item>    <item>r9b</item>    <item>r9l</item>
+      <item>r10b</item>   <item>r10l</item>   <item>r11b</item>   <item>r11l</item>
+      <item>r12b</item>   <item>r12l</item>   <item>r13b</item>   <item>r13l</item>
+      <item>r14b</item>   <item>r14l</item>   <item>r15b</item>   <item>r15l</item>
+
+      <item>ax</item>     <item>cx</item>     <item>dx</item>     <item>bx</item>
+      <item>sp</item>     <item>bp</item>     <item>si</item>     <item>di</item>
+      <item>r8w</item>    <item>r9w</item>    <item>r10w</item>   <item>r11w</item>
+      <item>r12w</item>   <item>r13w</item>   <item>r14w</item>   <item>r15w</item>
+
+      <item>eax</item>    <item>ecx</item>    <item>edx</item>    <item>ebx</item>
+      <item>esp</item>    <item>ebp</item>    <item>esi</item>    <item>edi</item>
+      <item>r8d</item>    <item>r9d</item>    <item>r10d</item>   <item>r11d</item>
+      <item>r12d</item>   <item>r13d</item>   <item>r14d</item>   <item>r15d</item>
+
+      <item>rax</item>    <item>rcx</item>    <item>rdx</item>    <item>rbx</item>
+      <item>rsp</item>    <item>rbp</item>    <item>rsi</item>    <item>rdi</item>
+      <item>r8</item>     <item>r9</item>     <item>r10</item>    <item>r11</item>
+      <item>r12</item>    <item>r13</item>    <item>r14</item>    <item>r15</item>
+
+      <item>eip</item>    <item>rip</item>
+
+      <item>es</item>     <item>cs</item>     <item>ss</item>     <item>ds</item>
+      <item>fs</item>     <item>gs</item>
+
+      <item>cr0</item>    <item>cr1</item>    <item>cr2</item>    <item>cr3</item>
+      <item>cr4</item>    <item>cr5</item>    <item>cr6</item>    <item>cr7</item>
+      <item>cr8</item>    <item>cr9</item>    <item>cr10</item>   <item>cr11</item>
+      <item>cr12</item>   <item>cr13</item>   <item>cr14</item>   <item>cr15</item>
+
+      <item>dr0</item>    <item>dr1</item>    <item>dr2</item>    <item>dr3</item>
+      <item>dr4</item>    <item>dr5</item>    <item>dr6</item>    <item>dr7</item>
+      <item>dr8</item>    <item>dr9</item>    <item>dr10</item>   <item>dr11</item>
+      <item>dr12</item>   <item>dr13</item>   <item>dr14</item>   <item>dr15</item>
+
+      <item>xmm0</item>   <item>xmm1</item>   <item>xmm2</item>   <item>xmm3</item>
+      <item>xmm4</item>   <item>xmm5</item>   <item>xmm6</item>   <item>xmm7</item>
+      <item>xmm8</item>   <item>xmm9</item>   <item>xmm10</item>  <item>xmm11</item>
+      <item>xmm12</item>  <item>xmm13</item>  <item>xmm14</item>  <item>xmm15</item>
+      <item>xmm16</item>  <item>xmm17</item>  <item>xmm18</item>  <item>xmm19</item>
+      <item>xmm20</item>  <item>xmm21</item>  <item>xmm22</item>  <item>xmm23</item>
+      <item>xmm24</item>  <item>xmm25</item>  <item>xmm26</item>  <item>xmm27</item>
+      <item>xmm28</item>  <item>xmm29</item>  <item>xmm30</item>  <item>xmm31</item>
+
+      <item>ymm0</item>   <item>ymm1</item>   <item>ymm2</item>   <item>ymm3</item>
+      <item>ymm4</item>   <item>ymm5</item>   <item>ymm6</item>   <item>ymm7</item>
+      <item>ymm8</item>   <item>ymm9</item>   <item>ymm10</item>  <item>ymm11</item>
+      <item>ymm12</item>  <item>ymm13</item>  <item>ymm14</item>  <item>ymm15</item>
+      <item>ymm16</item>  <item>ymm17</item>  <item>ymm18</item>  <item>ymm19</item>
+      <item>ymm20</item>  <item>ymm21</item>  <item>ymm22</item>  <item>ymm23</item>
+      <item>ymm24</item>  <item>ymm25</item>  <item>ymm26</item>  <item>ymm27</item>
+      <item>ymm28</item>  <item>ymm29</item>  <item>ymm30</item>  <item>ymm31</item>
+
+      <item>zmm0</item>   <item>zmm1</item>   <item>zmm2</item>   <item>zmm3</item>
+      <item>zmm4</item>   <item>zmm5</item>   <item>zmm6</item>   <item>zmm7</item>
+      <item>zmm8</item>   <item>zmm9</item>   <item>zmm10</item>  <item>zmm11</item>
+      <item>zmm12</item>  <item>zmm13</item>  <item>zmm14</item>  <item>zmm15</item>
+      <item>zmm16</item>  <item>zmm17</item>  <item>zmm18</item>  <item>zmm19</item>
+      <item>zmm20</item>  <item>zmm21</item>  <item>zmm22</item>  <item>zmm23</item>
+      <item>zmm24</item>  <item>zmm25</item>  <item>zmm26</item>  <item>zmm27</item>
+      <item>zmm28</item>  <item>zmm29</item>  <item>zmm30</item>  <item>zmm31</item>
+      
+      <item>k0</item>     <item>k1</item>     <item>k2</item>     <item>k3</item>
+      <item>k4</item>     <item>k5</item>     <item>k6</item>     <item>k7</item>
+    </list>
+
+    <list name="instr_flow"><!-- only instruction that alter rIP (non-error state) -->
+      <item>iretw</item>
+      <item>iretd</item>
+      <item>iretq</item>
+      <item>retq</item>
+      <item>retnq</item>
+      <item>retfq</item>
+      <item>retf</item>
+      <item>retn</item>
+      <item>ret</item>
+      <item>retw</item>
+      <item>retnw</item>
+      <item>retd</item>
+      <item>retnd</item>
+      <item>retfw</item>
+      <item>retfd</item>
+      <item>jo</item>
+      <item>jc</item>
+      <item>jb</item>
+      <item>jnae</item>
+      <item>jnc</item>
+      <item>jnb</item>
+      <item>jae</item>
+      <item>jz</item>
+      <item>je</item>
+      <item>jnz</item>
+      <item>jne</item>
+      <item>jna</item>
+      <item>jbe</item>
+      <item>ja</item>
+      <item>jnbe</item>
+      <item>js</item>
+      <item>jns</item>
+      <item>jp</item>
+      <item>jpe</item>
+      <item>jnp</item>
+      <item>jpo</item>
+      <item>jl</item>
+      <item>jnge</item>
+      <item>jnl</item>
+      <item>jge</item>
+      <item>jng</item>
+      <item>jle</item>
+      <item>jg</item>
+      <item>jnle</item>
+      <item>jmp</item>
+      <item>loopnz</item>
+      <item>loopne</item>
+      <item>loopz</item>
+      <item>loope</item>
+      <item>loop</item>
+      <item>loopnzw</item>
+      <item>loopnew</item>
+      <item>loopzw</item>
+      <item>loopew</item>
+      <item>loopw</item>
+      <item>loopnzd</item>
+      <item>loopned</item>
+      <item>loopzd</item>
+      <item>looped</item>
+      <item>loopd</item>
+      <item>loopnzq</item>
+      <item>loopneq</item>
+      <item>loopzq</item>
+      <item>loopeq</item>
+      <item>loopq</item>
+      <item>jcxz</item>
+      <item>jecxz</item>
+      <item>jrcxz</item>
+      <item>int3</item>
+      <item>into</item>
+      <item>int1</item>
+      <item>hlt</item>
+      <item>sysenter</item>
+      <item>sysexit</item>
+      <item>sysretq</item>
+      <item>sysexitq</item>
+      <item>syscall</item>
+      <item>sysret</item>
+    </list>
+
+    <list name="instr_flag"><!-- only the flag writers -->
+      <item>cmp</item>
+      <item>inc</item>
+      <item>dec</item>
+      <item>sub</item>
+      <item>add</item>
+      <item>test</item>
+      <item>stc</item>
+      <item>clc</item>
+      <item>std</item>
+      <item>cld</item>
+      <item>neg</item>
+      <item>sar</item>
+      <item>shld</item>
+      <item>shrd</item>
+      <item>seto</item>
+      <item>setno</item>
+      <item>setc</item>
+      <item>setb</item>
+      <item>setnae</item>
+      <item>setnc</item>
+      <item>setnb</item>
+      <item>setae</item>
+      <item>setz</item>
+      <item>sete</item>
+      <item>setnz</item>
+      <item>setne</item>
+      <item>setna</item>
+      <item>setbe</item>
+      <item>seta</item>
+      <item>setnbe</item>
+      <item>sets</item>
+      <item>setns</item>
+      <item>setp</item>
+      <item>setpe</item>
+      <item>setnp</item>
+      <item>setpo</item>
+      <item>setl</item>
+      <item>setnge</item>
+      <item>setnl</item>
+      <item>setge</item>
+      <item>setng</item>
+      <item>setle</item>
+      <item>setg</item>
+      <item>setnle</item>
+      <item>cmovo</item>
+      <item>cmovno</item>
+      <item>cmovc</item>
+      <item>cmovb</item>
+      <item>cmovnae</item>
+      <item>cmovnc</item>
+      <item>cmovnb</item>
+      <item>cmovae</item>
+      <item>cmovz</item>
+      <item>cmove</item>
+      <item>cmovnz</item>
+      <item>cmovne</item>
+      <item>cmovna</item>
+      <item>cmovbe</item>
+      <item>cmova</item>
+      <item>cmovnbe</item>
+      <item>cmovs</item>
+      <item>cmovns</item>
+      <item>cmovp</item>
+      <item>cmovpe</item>
+      <item>cmovnp</item>
+      <item>cmovpo</item>
+      <item>cmovl</item>
+      <item>cmovnge</item>
+      <item>cmovnl</item>
+      <item>cmovge</item>
+      <item>cmovng</item>
+      <item>cmovle</item>
+      <item>cmovg</item>
+      <item>cmovnl</item>
+    </list>
+
+    <list name="instr_base"><!-- include upstream to define your base set -->
+      <item>enter</item>
+      <item>leave</item>
+      <item>lea</item>
+      <item>mov</item>
+      <item>lodsb</item>
+      <item>lodsd</item>
+      <item>movsd</item>
+      <item>stosd</item>
+      <item>pop</item>
+      <item>push</item>
+      <item>xchg</item>
+    </list>
+
+    <list name="instr_undoc"><!-- exercise care -->
+    </list>
+
+    <list name="instr_error"><!-- deprecated/invalid -->
+    </list>
+
+    <list name="instr_ext_mmx"><!-- ? -->
+    </list>
+    <list name="instr_ext_sse"><!-- ? -->
+    </list>
+    <list name="instr_ext_avx"><!-- ? -->
+    </list>
+    <list name="instr_prefix"><!-- ? -->
+      <item>rep</item>
+      <item>repz</item>
+      <item>repnz</item>
+      <item>repe</item>
+      <item>repne</item>
+    </list>
+
+    <contexts>
+      <context name="Normal" attribute="Normal" lineEndContext="#stay">
+        <!-- just to test lists -->
+        <keyword String="registers" attribute="Constant" context="#stay" />
+        <keyword String="instr_flow" attribute="ControlFlow" context="#stay" />
+        <keyword String="instr_flag" attribute="Variable" context="#stay" />
+        <keyword String="instr_other" attribute="Keyword" context="#stay" />
+        <keyword String="instr_prefix" attribute="Keyword" context="#stay" />
+        <keyword String="instr_mmx" attribute="BuiltIn" context="#stay" />
+        <keyword String="instr_sse" attribute="Preprocessor" context="#stay" />
+        <keyword String="instr_avx" attribute="Attribute" context="#stay" />
+      </context>
+    </contexts>
+
+    <itemDatas><!-- Cover ALL the default styles with similarly named attribute: -->
+      <!-- Normal Text & Source Code -->
+      <itemData name="Normal"         defStyleNum="dsNormal" />
+      <itemData name="Keyword"        defStyleNum="dsKeyword" />
+      <itemData name="Function"       defStyleNum="dsFunction" />
+      <itemData name="Variable"       defStyleNum="dsVariable" />
+      <itemData name="ControlFlow"    defStyleNum="dsControlFlow" />
+      <itemData name="Operator"       defStyleNum="dsOperator" />
+      <itemData name="BuiltIn"        defStyleNum="dsBuiltIn" />
+      <itemData name="Extension"      defStyleNum="dsExtension" />
+      <itemData name="Preprocessor"   defStyleNum="dsPreprocessor" />
+      <itemData name="Attribute"      defStyleNum="dsAttribute" />
+      <!-- Numbers, Types & Constants -->
+      <itemData name="DataType"       defStyleNum="dsDataType" />
+      <itemData name="DecVal"         defStyleNum="dsDecVal" />
+      <itemData name="BaseN"          defStyleNum="dsBaseN" />
+      <itemData name="Float"          defStyleNum="dsFloat" />
+      <itemData name="Constant"       defStyleNum="dsConstant" />
+      <!-- Strings & Characters -->
+      <itemData name="Char"           defStyleNum="dsChar" />
+      <itemData name="SpecialChar"    defStyleNum="dsSpecialChar" />
+      <itemData name="String"         defStyleNum="dsString"/>
+      <itemData name="VerbatimString" defStyleNum="dsVerbatimString" />
+      <itemData name="SpecialString"  defStyleNum="dsSpecialString"/>
+      <itemData name="Import"         defStyleNum="dsImport" />
+      <!-- Comments & Documentation -->
+      <itemData name="Comment"        defStyleNum="dsComment" />
+      <itemData name="Documentation"  defStyleNum="dsDocumentation" />
+      <itemData name="Annotation"     defStyleNum="dsAnnotation" />
+      <itemData name="CommentVar"     defStyleNum="dsCommentVar" />
+      <itemData name="RegionMarker"   defStyleNum="dsRegionMarker" />
+      <itemData name="Information"    defStyleNum="dsInformation" />
+      <itemData name="Warning"        defStyleNum="dsWarning" />
+      <itemData name="Alert"          defStyleNum="dsAlert" />
+      <!-- Miscellaneous -->
+      <itemData name="Error"          defStyleNum="dsError" />
+      <itemData name="Others"         defStyleNum="dsOthers" />
+    </itemDatas>
+    </highlighting>
+  <general>
+    <keywords casesensitive="0" />
+  </general>
+</language>
+<!-- kate: space-indent on; indent-width 2; replace-tabs on; -->
