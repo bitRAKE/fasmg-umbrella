@@ -19,7 +19,7 @@
     <!ENTITY LABEL "[!0-9]+">
 ]>
 <!-- TODO: change version number to match fasmg version. -->
-<language name="fasmg" version="1" kateversion="5.79" section="Assembler" extensions="*.asm;*.inc;" mimetype="text/x-fasmg" author="Rickey Bowers (bitRAKE@gmail.com)" license="MIT" priority="9">
+<language name="fasmg" version="1" kateversion="5.79" section="Assembler" extensions="*.g;*.asm;*.inc;" mimetype="text/x-fasmg" author="Rickey Bowers (bitRAKE@gmail.com)" license="MIT" priority="15">
   <highlighting>
     <list name="Preprocessors">
       <item>calminstruction</item>
@@ -143,7 +143,8 @@
       <item>dup</item>
     </list>
 
-    <list name="BuiltIns"><!-- export to x86 lists : instructions -->
+    <list name="BuiltIns">
+      <include>instr_base##x86</include>
       <item>__time__</item>
       <item>__source__</item>
       <item>__file__</item>
@@ -161,30 +162,39 @@
       <item>%</item>
 --> </list>
 
-    <list name="ControlFlows"><!-- export to x86 lists : control flow -->
-      <include>register##ISA x86</include>
+    <list name="Registers">
+      <include>registers##x86</include>
+    </list>
+
+    <list name="ControlFlows">
+      <include>instr_flow##x86</include>
       <!--
-      <include>instr_base##ISA x86</include>
-      <include>instr_flag##ISA x86</include>
-      <include>instr_flow##ISA x86</include>
-      <include>instr_ext_mmx##ISA x86</include>
-      <include>instr_ext_sse##ISA x86</include>
-      <include>instr_ext_avx##ISA x86</include>
-      <include>instr_ext_rest##ISA x86</include>
+      <include>instr_base##x86</include>
+      <include>instr_flag##x86</include>
+      <include>instr_ext_mmx##x86</include>
+      <include>instr_ext_sse##x86</include>
+      <include>instr_ext_avx##x86</include>
+      <include>instr_ext_rest##x86</include>
       -->
+    </list>
+    <list name="InstFlags">
+      <include>instr_flag##x86</include>
     </list>
 
     <!-- special comment flagging, casesensitive to not interfere with text -->
     <list name="Informations">
+      <include>instr_prefix##x86</include>
       <item>NOTE</item>
       <item>TODO</item>
     </list>
     <list name="Warnings">
+      <include>instr_error##x86</include>
       <item>FIXME</item>
       <item>DEBUG</item>
       <item>UNTESTED</item>
     </list>
     <list name="Alerts">
+      <include>instr_undoc##x86</include>
       <item>ERROR</item>
       <item>BROKEN</item>
     </list>
@@ -230,6 +240,9 @@
         <keyword String="BuiltIns" attribute="BuiltIn" context="#stay" />
         <keyword String="Operators" attribute="Attribute" context="#stay" />
         <AnyChar String="+-/*%!$?,|~#\[]=:()^`{}&amp;&lt;&gt;&quot;&apos;" attribute="Operator" context="#stay"/>
+
+        <keyword String="Registers" attribute="Variable" context="#stay" />
+        <keyword String="InstFlags" attribute="Extension" context="#stay" />
       </context>
 
       <context name="CommentLine">
