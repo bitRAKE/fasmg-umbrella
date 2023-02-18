@@ -33,7 +33,7 @@ Some things to note:
 
 Getting Started:
 ---
-The only requirement is a supported windows version, and a command prompt with ```git``` along search path:
+The only requirements are a supported windows version, and a command prompt with ```git``` along search path:
 ```bash
 git clone --recursive https://github.com/bitRAKE/fasmg-umbrella
 cd fasmg-umbrella
@@ -82,9 +82,10 @@ TOOLS:
 - [WinAPI Search by Dennis A. Babkin](https://dennisbabkin.com/winapisearch/)
 - [Api Set Viewer v0.8 (C)2019 by Pavel Yosifovich](https://github.com/zodiacon/ApiSetView)
 
-![GitHub repo size][1] ![GitHub code size in bytes][2]
+![GitHub repo size][1] ![GitHub code size in bytes][2] ![visitors][5]
 
 [1]: https://img.shields.io/github/languages/code-size/bitRAKE/fasmg-umbrella?style=for-the-badge
 [2]: https://img.shields.io/github/repo-size/bitRAKE/fasmg-umbrella?style=for-the-badge
 [3]: https://github.com/microsoft/WindowsAppSDK
 [4]: https://github.com/microsoft/microsoft-ui-xaml/
+[5]: https://visitor-badge.glitch.me/badge?page_id=bitRAKE/fasmg-umbrella
