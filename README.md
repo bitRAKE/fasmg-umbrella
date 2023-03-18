@@ -33,7 +33,7 @@ Some things to note:
 
 Getting Started:
 ---
-The only requirements are a supported windows version, and a command prompt with ```git``` along search path:
+The only requirements are a supported windows version, and a command prompt with `git` along search path:
 ```bash
 git clone --recursive https://github.com/bitRAKE/fasmg-umbrella
 cd fasmg-umbrella
@@ -42,7 +42,7 @@ environment.cmd
 
 Examples:
 ---
-- In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment.
+- In the `\examples` directory several small programs can be build with fasmg. A clone of the repository should be sufficient, `envionment.cmd` from a command prompt establishes the needed changs to the environment. Individual examples can be built or the `rebuild.cmd` script will build them all.
 - File naming makes a distinction between several types of source code: `.asm` are main project files, `.inc` generates code at inclusion, and `.g` files create abstractions (no code generation at inclusion).
 
 ---
