@@ -1,5 +1,7 @@
 @ECHO OFF	&:: echo will be restored when script ends
 SETLOCAL	&:: keep variables local to this file
+
+:: abstract output to capture and be quiet, if desired
 set DEBUG_LOG=NUL
 
 PUSHD "%~dp0"
