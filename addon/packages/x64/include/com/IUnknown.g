@@ -1,6 +1,10 @@
 
 ; basic COM support
 
+struct GUID
+	rb 16
+ends
+
 macro UUID line&
 	match A - B - C - D - E, line
 		dd 0x#A
