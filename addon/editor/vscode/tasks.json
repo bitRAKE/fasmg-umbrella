@@ -1,0 +1,64 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "DisplayErrors",
+            "description": "Set maximum displayed errors",
+            "default": "1",
+            "type": "promptString",
+        },
+        {
+            "id": "AllowedPasses",
+            "description": "Set maximum number of passes",
+            "default": "100",
+            "type": "promptString"
+        },
+        {
+            "id": "StackDepth",
+            "description": "Set maxumum stack depth",
+            "default": "10000",
+            "type": "promptString"
+        },
+        {
+            "id": "ShowAllLines",
+            "description": "Boolean flag to show all stack lines",
+            "default": "0",
+            "type": "pickString",
+            "options": [
+                "0",
+                "1"
+                "2"
+            ]
+        },
+        {
+            "id": "InsertCode",
+            "description": "Code to insert at start of source",
+            "default": "; nothing",
+            "type": "promptString"
+        }
+    ],
+    "tasks": [
+       {
+            "label": "Advanced build with fasmg",
+            "type": "shell",
+            "command": "fasmg",
+            "windows": {
+                "command": "fasmg.exe"
+            },
+            "args": [
+                "${fileBasename}",
+                "-e", "${input:DisplayErrors}",
+                "-p", "${input:AllowedPasses}",
+                "-r", "${input:StackDepth}",
+                "-v", "${input:ShowAllLines}",
+                "-i", "${input:InsertCode}"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "D:\\GIT\\fasmg\\core",
+                    "INCLUDE": "D:\\GIT\\fasmg\\packages\\x86\\include"
+                }
+            }
+       }
+    ]
+}
