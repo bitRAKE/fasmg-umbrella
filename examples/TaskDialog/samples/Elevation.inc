@@ -1,11 +1,12 @@
 BUTTON_ADMIN_STUFF := 0x101
 
-align 16,0xCC
+align 16, codepad #
 Elevation_Required_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.td	MY_TD
-		_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0

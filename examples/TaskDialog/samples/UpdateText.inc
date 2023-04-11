@@ -4,19 +4,20 @@ BTN_UPDATEFOOTER		:= 0x102
 BTN_UPDATEMAININSTRUCTION	:= 0x103
 BTN_UPDATEWINDOWTITLE		:= 0x3FF ; other
 
-align 16
+align 16, codepad #
 Update_Text_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 					rq 4
 		.td			MY_TD
 		.td.verificationChecked	dd ?
-					_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
 	.td.Init
 	or [.td.cfg.dwFlags],TDF_EXPANDED_BY_DEFAULT
-	;* also show text that cannot be changed at runtime
+; NOTE: also show text that cannot be changed at runtime
 	iterate <FIELD,			QUOTED>,\
 		pszWindowTitle,		"Update Text Sample (Window Title)",\
 		pszMainInstruction,	"Main instruction",\

@@ -3,12 +3,13 @@ BUTTON_DISABLE	:= 0x102
 
 RBUTTON_ABLE	:= 0x103
 
-align 16,0xCC
+align 16, codepad #
 Enable_Disable_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.td		MY_TD
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0

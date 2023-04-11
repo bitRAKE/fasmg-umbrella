@@ -32,9 +32,9 @@ iterate <_FILE,			FUNCTION,		B_ID>,\
 	end if
 end iterate
 
-align 16,0xCC
+align 16, codepad #
 WinMain:ENTRY $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.td	MY_TD
 		; if results are needed:
@@ -42,7 +42,8 @@ WinMain:ENTRY $
 		.td.selectedRadioButtonId	dd ?	; int
 		.td.verificationChecked		dd ?	; BOOL
 
-		_align 16
+		align.assume rbp, 16
+		align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -130,7 +131,7 @@ WinMain.OnButton:; RCX:hWnd, RDX:TDN_BUTTON_CLICKED, R8:{control id}, R9:0, obje
 
 ; oh, the vanity!
 WinMain.OnHyperlink:; RCX:hWnd, RDX:TDN_HYPERLINK_CLICKED, R8:0, R9:url, object
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 		.P6	dq ?
@@ -156,7 +157,7 @@ directory \
 resource icons,\
 	1,LANG_NEUTRAL,dip_chip_icon.48,\
 	2,LANG_NEUTRAL,dip_chip_icon.32,\
-	3,LANG_NEUTRAL,dip_chip_icon.24,\ 
+	3,LANG_NEUTRAL,dip_chip_icon.24,\
 	4,LANG_NEUTRAL,dip_chip_icon.16
 
 resource group_icons,\

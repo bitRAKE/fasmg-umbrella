@@ -1,16 +1,17 @@
 BUTTON_SENDFEEDBACK	:= 0x100
 BUTTON_NOTHANKS		:= 0x101
 
-align 16,0xCC
+align 16, codepad #
 Error_Sample:
-	virtual at RBP-.frame
+	virtual at rbp-.frame
 				rq 4
 		.td		MY_TD
 		.td.vflag	dd ?	; BOOL
-			_align 8
+			align 8
 		.td.td2		MY_TD
 		.td.td2.count	dd ?
-			_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -78,13 +79,14 @@ SendFeedbackDialog:
 	retn
 
 SendFeedbackDialog.OnTimer:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.hTDlg		dq ?
 		.ppos		dq ?
 		label .buffer:128
 				rw sizeof .buffer
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0

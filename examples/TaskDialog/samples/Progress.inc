@@ -1,10 +1,11 @@
-align 16,0xCC
+align 16, codepad #
 Progress_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.td		MY_TD
 		.td.count	dd ?
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -35,13 +36,14 @@ Progress_Sample:
 	retn
 
 Progress_Sample.update_progress:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.hTDlg		dq ?
 		.ppos		dq ?
 		label .buffer:128
 				rw sizeof .buffer
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0

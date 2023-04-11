@@ -1,17 +1,17 @@
 BUTTON_STATE	:= 0x100
 BUTTON_MODE	:= 0x101
 
-align 16,0xCC
+align 16, codepad #
 Progress_Effects_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.td		MY_TD
 
 		;: dialog-time state variables:
 		.td.marquee	dd ?
 		.td.state	dd ?
-
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -45,7 +45,7 @@ Progress_Effects_Sample:
 	retn
 
 macro COMMON_LEADIN
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.P5		dq ?,?
 		.hTDlg		dq ?

@@ -1,6 +1,6 @@
 BUTTON_RESET := 0x100
 
-align 16,0xCC
+align 16, codepad #
 Timer_Sample:
 	virtual at RBP-.frame
 				rq 4
@@ -8,7 +8,8 @@ Timer_Sample:
 		; dialog-time state variables
 		; (note prefix matches TD name so handlers can access it)
 		.td.reset	dd ?
-				_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0

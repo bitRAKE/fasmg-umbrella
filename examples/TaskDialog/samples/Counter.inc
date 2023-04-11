@@ -1,13 +1,14 @@
 BUTTON_INCREMENT := 0x101
 BUTTON_DECREMENT := 0x102
 
-align 16,0xCC
+align 16, codepad #
 Counter_Sample:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.td		MY_TD
 		.td.count	dd ?
-				_align 16
+				align.assume rbp, 16
+				align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -51,14 +52,15 @@ Counter_Sample.OnButton:
 
 Counter_Sample.OnConstructed:
 ;	RCX:hWnd, RDX:TDN_DIALOG_CONSTRUCTED, R8:0, R9:0, object
-	virtual at RBP-.frame
-			rq 4
-		.hTDlg	dq ?
+	virtual at rbp - .frame
+		rq 4
+	.hTDlg	dq ?
 
-		label .buffer:128
-			rw sizeof .buffer
-			_align 16
-		.frame := $ - $$
+	label .buffer:128
+	rw sizeof .buffer
+		align.assume rbp, 16
+		align 16
+	.frame := $ - $$
 	end virtual
 	enter .frame,0
 	mov [.hTDlg],rcx

@@ -6,9 +6,16 @@ define __ImageBase PE.IMAGE_BASE ; HINSTANCE constant
 
 include 'encoding\utf8.inc'
 
+; prefer advanced functionality macros
 include '..\..\utility\@@.inc'
+include '..\..\utility\align.inc'
+	align.assume PE.RELOCATION, 10000h
+;	align.assume PE.IMAGE_BASE, 10000h
+include 'macro\codepad.inc' ; for use with align
+
 include 'macro\struct.inc'
 include 'macro\resource.inc'
+
 
 Struct.CheckAlignment = 1
 
@@ -259,12 +266,12 @@ end iterate
 end macro
 
 
-; this version factors out variable terms in address space, and assumes base is infinitely alignable (use wisely)
-macro _align? value*,something:db ?
-	while ($-$$) and (value-1)
-		something
-	end while
-end macro
+; DEPRECATED ; this version factors out variable terms in address space, and assumes base is infinitely alignable (use wisely)
+;macro ? value*,something:db ?
+;	while ($-$$) and (value-1)
+;		something
+;	end while
+;end macro
 
 macro lea? line&
 ; NOTE: spaces needed for possible line breaks! Use most general configuration!
