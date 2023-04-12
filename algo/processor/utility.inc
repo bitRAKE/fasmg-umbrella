@@ -24,7 +24,7 @@ end if ; Safe_CPUID
 
 
 ; all these use the Z-flag for return rather than BOOL type
-;	call supports_avx2
+;	call supports_AVX2
 ;	jnz not_supported
 
 if	used supports_AVX		\

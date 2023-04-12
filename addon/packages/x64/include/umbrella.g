@@ -9,8 +9,9 @@ include 'encoding\utf8.inc'
 ; prefer advanced functionality macros
 include '..\..\utility\@@.inc'
 include '..\..\utility\align.inc'
-; NOTE: gaurd against exceeding section alignment, it seems this needs to be
-; injected into each section?
+; WARNING:
+;	- this shouldn't be needed for each section
+;	- fixed base can align beyond section alignment
 	mvmacro temp, section?
 	macro section?
 		namespace PE
