@@ -9,7 +9,7 @@ include 'cpu\ext\avx2.inc'
 include 'algo\window\utility.inc'
 include 'algo\window\magnetic.g'
 WndProc:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 		.P6	dq ?
@@ -17,7 +17,8 @@ WndProc:
 
 		.mag	MagneticWindow 24 ; set snap distance
 
-			_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 			dq ?,?
 		.hWnd	dq ?
@@ -89,14 +90,15 @@ WinMain.fatal:
 	ExitProcess 255
 	int3
 WinMain: ENTRY $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		repeat 12-4,i:5
 		.P#i	dq ?
 		end repeat
 
 		.hWnd	dq ?
-			_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 		assert sizeof MSG <= 8*6
 		.mgs	MSG

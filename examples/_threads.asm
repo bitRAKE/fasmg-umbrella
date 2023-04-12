@@ -25,7 +25,8 @@ macro ThreadData_at base*
 		.fy	dt ?
 
 		if ~ definite ThreadData.bytes
-			_align __CACHE_LINE__
+			align.assume base, __CACHE_LINE__
+			align __CACHE_LINE__
 			ThreadData.bytes := $ - $$
 		end if
 	end virtual
@@ -80,7 +81,7 @@ _1000.0 dq 1000.0
 
 ; resolve statistics for specific value amongst threads, using relative offset
 ItemStats:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 	.P5		dq ?
 	.hOut		dq ?
@@ -97,7 +98,8 @@ ItemStats:
 	.avg		dq ? ; mean
 	.dev		dq ? ; deviation
 	.var		dq ? ; variance
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -182,7 +184,7 @@ WinMain.fatal:
 	int3
 
 WinMain:entry $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 	.P5		dq ?
 	.P6		dq ?
@@ -194,10 +196,11 @@ WinMain:entry $
 	.pAff		dq ?	; ProcessAffinityMask
 
 	.hOut		dq ?
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 	end virtual
-	enter .frame,0
+	enter .frame, 0
 
 ; Windows 11 no longer constrains an application to one processor group.
 ; Insure process affinity is system affinity (note: this will fail when there are multiple processor groups being utilized):

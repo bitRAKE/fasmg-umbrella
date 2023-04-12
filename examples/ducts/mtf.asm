@@ -15,7 +15,7 @@ include 'buffer.g'
 include 'mtf.g'
 
 macro duct.FRAME
-virtual at RBP-.frame
+virtual at rbp - .frame
 			rq 4
 	.P5		dq ?
 	.P6		dq ?
@@ -28,7 +28,8 @@ virtual at RBP-.frame
 	.buf	Buffer
 	.mtf	MTF
 
-	_align 16
+	align.assume rbp, 16
+	align 16
 	.frame := $ - $$
 end virtual
 end macro

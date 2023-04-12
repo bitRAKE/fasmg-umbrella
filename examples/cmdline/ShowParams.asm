@@ -11,7 +11,7 @@ struct UNICODE_STRING
 ends
 
 Main:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
 		.P5		dq ?
 
@@ -20,7 +20,8 @@ Main:
 		.argc		dd ?
 		.kitten		dd ?
 
-		_align 16
+		align.assume rbp, 16
+		align 16
 		.frame := $ - $$
 	end virtual
 	push rbx rdi

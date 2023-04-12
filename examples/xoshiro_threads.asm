@@ -30,24 +30,24 @@ macro ThreadData_at base*
 		.flags	dd ?
 		.tsc	dq ?	; cached time
 			dq ?	; non-cached time
-
-		_align 32
+			align.assume base, __CACHE_LINE__
+			align 16
 		.xo_ctx: rb 32
 
 		if ~ definite ThreadData.bytes
-			_align __CACHE_LINE__
+			align __CACHE_LINE__
 			ThreadData.bytes := $ - $$
 		end if
 	end virtual
 end macro
 
-align __CACHE_LINE__
+align __CACHE_LINE__, codepad #
 _Thread:
 	.UNROLL := 100
 
 	push rbp
 	mov rbp,rcx
-	ThreadData_at RBP
+	ThreadData_at rbp
 	mov [.flags],0
 .reset:
 ;TIME░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░START░
@@ -84,7 +84,7 @@ _1000.0 dq 1000.0
 
 ; resolve statistics for specific value amongst threads, using relative offset
 ItemStats:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 	.P5		dq ?
 	.hOut		dq ?
@@ -101,7 +101,8 @@ ItemStats:
 	.avg		dq ? ; mean
 	.dev		dq ? ; deviation
 	.var		dq ? ; variance
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -185,7 +186,7 @@ WinMain.fatal:
 	int3
 
 WinMain:entry $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 	.P5		dq ?
 	.P6		dq ?
@@ -197,7 +198,8 @@ WinMain:entry $
 	.pAff		dq ?	; ProcessAffinityMask
 
 	.hOut		dq ?
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 	end virtual
 	enter .frame,0

@@ -24,17 +24,18 @@ macro UpdateWindowTransparency hWnd*, type*, value
 end macro
 if used _UpdateWindowTransparency
 _UpdateWindowTransparency:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 				rq 4
-				_align 16
-		.frame := $ - $$
+		align.assume rbp, 16
+		align 16
+	.frame := $ - $$
 				rq 2
 		.hWnd		dq ?
 		.dwFlags	db ?	; 0, LWA_COLORKEY, LWA_ALPHA
 		.alpha		db ?
 		.crKey		dd ?
-				_align 8
-		.parm_bytes := $ - .hWnd
+		align 8
+	.parm_bytes := $ - .hWnd
 		.style		dq ?
 	end virtual
 	enter	.frame,0
@@ -111,10 +112,11 @@ if used _GetWorkAreaRect
 align 16
 _GetWorkAreaRect:
 ; RCX: hWnd, RCX = 0 on fail, does not use shadow space
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.mi	MONITORINFO
-			_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 	end virtual
 	enter .frame,0
@@ -184,11 +186,13 @@ if used _GetWorkAreaRect_FromPoint
 align 16
 _GetWorkAreaRect_FromPoint:
 ; RCX: POINT address, RCX = 0 on fail, does not use shadow space
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.mi	MONITORINFO
-			_align 16
-		.frame := $ - $$
+
+		align.assume rbp, 16
+		align 16
+	.frame := $ - $$
 	end virtual
 	enter .frame,0
 	; note: POINT is passed in register!

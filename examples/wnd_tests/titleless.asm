@@ -7,13 +7,14 @@ format PE64 NX ASLR GUI 6.2 at 0x1234_5678_0000 on 'NUL'
 include 'umbrella.g'
 
 Main: ENTRY $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 		repeat 12
 			.P#%	dq ?
 		end repeat
 
 		.hWndParent	dq ?
-			_align 16
+			align.assume rbp, 16
+			align 16
 		.frame := $ - $$
 		assert sizeof MSG <= 8*6 ; confirm stack space
 		.mgs	MSG
@@ -43,8 +44,8 @@ Main: ENTRY $
 	InsertMenuItemW [g_hMenu], 0, TRUE, ADDR .mII
 	mov [.mII.fType], MFT_RIGHTJUSTIFY
 	iterate <BITMAP,		COMMAND>,\
-		HBMMENU_MBAR_RESTORE,	IDM_SYS_RESTORE,\
 		HBMMENU_MBAR_MINIMIZE,	IDM_SYS_MINIMIZE,\
+		HBMMENU_MBAR_RESTORE,	IDM_SYS_RESTORE,\
 		HBMMENU_MBAR_CLOSE,	IDM_SYS_CLOSE
 		mov [.mII.hbmpItem], BITMAP
 		mov [.mII.wID], COMMAND

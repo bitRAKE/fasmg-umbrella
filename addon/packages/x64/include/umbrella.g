@@ -9,8 +9,19 @@ include 'encoding\utf8.inc'
 ; prefer advanced functionality macros
 include '..\..\utility\@@.inc'
 include '..\..\utility\align.inc'
-	align.assume PE.RELOCATION, 10000h
-;	align.assume PE.IMAGE_BASE, 10000h
+; NOTE: gaurd against exceeding section alignment, it seems this needs to be
+; injected into each section?
+	mvmacro temp, section?
+	macro section?
+		namespace PE
+			if defined Fixups
+				align.assume SECTION_BASE, SECTION_ALIGNMENT
+			end if
+		end namespace
+		section
+	end macro ; section
+	mvmacro section?, temp
+
 include 'macro\codepad.inc' ; for use with align
 
 include 'macro\struct.inc'
@@ -388,15 +399,19 @@ postpone
 
 	; Assume user wants 32-bit addressing if they specifying a low base,
 	; don't output fixups to force loader to do what is implied.
-	if (PE.IMAGE_BASE - PE.RELOCATION) > 0x30_0000
+	; (NOTE: zero base always relocates.)
+	if (PE.IMAGE_BASE - PE.RELOCATION) > 0x30_0000 \
+	| (PE.IMAGE_BASE - PE.RELOCATION) = 0
 	section '.reloc' fixups data readable discardable
-	if $ = $$ ; loader doesn't like zero length sections
-		dd 0,8 ; if there are no fixups, generate dummy entry
-		display 10,9,"No relocations needed."
+		if $ = $$ ; loader doesn't like zero length sections
+			dd 0,8 ; if there are no fixups, generate dummy entry
+			display 10,9,"No relocations needed."
+		else
+			repeat 1,D:PE.NUMBER_OF_RELOCATIONS
+				display 10,9,`D,' relocations needed.'
+			end repeat
+		end if
 	else
-		repeat 1,D:PE.NUMBER_OF_RELOCATIONS
-			display 10,9,`D,' relocations needed.'
-		end repeat
-	end if
+		display 10,9,"Fixed base address: No relocations needed."
 	end if
 end postpone

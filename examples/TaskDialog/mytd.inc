@@ -54,7 +54,7 @@ end struc ; MY_TD
 
 
 
-align 64,0xCC
+align 64, codepad #
 ; universal callback processing (minimal environmental impact)
 TaskDialog__Callback: ; HWND,UINT,WPARAM,LPARAM,LONG_PTR
 	virtual at RSP
@@ -74,7 +74,7 @@ TaskDialog__Callback: ; HWND,UINT,WPARAM,LPARAM,LONG_PTR
 ;	TDN_TIMER:
 ;		S_OK		continue to advance timer
 ;		S_FALSE		reset tick count
-align 16,0xCC
+align 16, codepad #
 .S_OK:	xor eax,eax
 	retn
 

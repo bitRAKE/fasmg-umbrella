@@ -19,7 +19,7 @@
 
 namespace xoshiro256
 
-align 64 ; 65 bytes!
+align 64, codepad # ; 65 bytes!
 next:	mov r11,[state+1*8]
 	mov rdx,[state+0*8]
 	mov rax,[state+3*8]

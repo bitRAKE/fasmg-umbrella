@@ -49,7 +49,7 @@ UINT64__Baseform_FixedWidth:
 
 
 WinMain:entry $
-	virtual at RBP-.FRAME
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 
@@ -58,11 +58,12 @@ WinMain:entry $
 		.i		dd ?
 		.j		dd ?
 
-		_align 16
-		.FRAME := $ - $$
+		align.assume rbp, 16
+		align 16
+	.frame := $ - $$
 	end virtual
 	push rsi rdi
-	enter	.FRAME,0
+	enter .frame, 0
 	GetStdHandle STD_OUTPUT_HANDLE
 	mov [.hStdOut],rax
 

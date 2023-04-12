@@ -26,7 +26,7 @@ include 'com\IUnknown.g'
 include 'com\imp_ITextHost.g'
 
 InterfaceListQuery:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 
@@ -36,7 +36,8 @@ InterfaceListQuery:
 
 		.chars	dd ?
 
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 	end virtual
 	push rsi rbx
@@ -73,7 +74,7 @@ InterfaceListQuery:
 
 
 WinMain:entry $
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 
@@ -86,8 +87,9 @@ WinMain:entry $
 
 		.chars	dd ?
 
-		_align 16
-		.frame := $ - $$
+		align.assume rbp, 16
+		align 16
+	.frame := $ - $$
 	end virtual
 	enter .frame,0
 	GetStdHandle STD_OUTPUT_HANDLE
@@ -179,7 +181,7 @@ Display__LastError:
 ; Push custom string address of message to preceed error message from system.
 ; Push HRESULT from a COM interface.
 Display__HRESULT:
-	virtual at RBP-.frame
+	virtual at rbp - .frame
 			rq 4
 		.P5	dq ?
 		.P6	dq ?
@@ -191,7 +193,8 @@ Display__HRESULT:
 		.chars	dd ?
 		.status	dd ?
 
-		_align 16
+		align.assume rbp, 16
+		align 16
 	.frame := $ - $$
 			rq 2 ; rbp,ret
 		.err	dd ?,?

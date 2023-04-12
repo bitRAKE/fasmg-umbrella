@@ -11,7 +11,7 @@ namespace SplitMix64
 		x dq ? ; seed with any value
 	end collect
 
-align 16
+align 16, codepad #
 Next:	mov rax,0x9E3779B97F4A7C15
 	add rax,[x]
 	mov [x],rax
