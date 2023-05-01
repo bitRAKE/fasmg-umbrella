@@ -1,5 +1,5 @@
 
-#### In-Tale - Building for multiple languages.
+### In-Tale - Building for multiple languages.
 
 *Tale* is the Afrikaans word for languages, and in English is an imaginatively recounted story. Here I explore various techniques to build multi-lingual applications in fasmg. Due to my naiveté in both spoken/written languages and prior work I've seen in this area programmatically; I'm just going to start with the simplest methods I can think of.
 
@@ -25,18 +25,20 @@ Currently, the demo menu builds in 14 languages (alphabetically):
 
 Obviously, other languages or refinements are welcome.
 
+---
+
 Translating the words is just the start of localization. Other cultural factors should also be concidered which might only be known by peoples of the region. Effecting this example, would be keyboard shortcuts or maybe slang terms exist which are more perferred.
 
 
 There are a number of ISO standards regarding abbreviating languages and countries
-	[ISO 639-1/2/3][0]
-	[ISO 3166-1 alpha-2][1]
+	- [ISO 639-1/2/3][0]
+	- [ISO 3166-1 alpha-2][1]
 
 I've chosen to use a 2+2 syntax to represent language and region spoken. This might be completely in error or insufficient. As I learn more perhaps this will change.
 
+---
 
-
-#### Inquiring with GPT-4 as to reasons for translating software:
+### Inquiring with GPT-4 as to reasons for translating software:
 
 While it is true that English is widely used in technology and many people around the world have some level of proficiency in English, it is still important to consider translating software into native languages. Here are some reasons why:
 
