@@ -7,6 +7,8 @@ macro LANGUAGE lang*,sublang*
 	SUBLANG := sublang
 end macro
 LANG_INDONESIAN := 0x21
+LANG_HINDI := 0x39
+LANG_BENGALI := 0x45
 
 section '.rsrc' resource data readable
 
