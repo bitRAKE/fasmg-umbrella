@@ -101,29 +101,24 @@ The default return value is 0xFF, which signifies that no bits are present - hen
 
 ## Further Discovery:
 
-<details>
-<summary><b>Question: </b>What is the maximum number of states that can be represented in a byte-based transition table?</summary>
-<b>Answer: </b>No upper limit exists as states can be represented by multiple tables.</p>
-</details>
+<details><summary>What is the maximum number of states that can be represented in a byte-based transition table?</summary><b>
 
-<details><summary>What is the maximum number of states that can be represented in a byte-based transition table?</summary><p style="margin-left: 20px; color: #555555;">
+> No uppper limit exist as states can be represented by multiple tables.
 
-No uppper limit exist as states can be represented by multiple tables.
-
-</p></details>
-<details><summary>Give a code example of your above ideas.</summary><p style="margin-left: 20px; color: #555555;">
+</b></details>
+<details><summary>Give a code example of your above ideas.</summary><b>
 
 ```asm
 ; some code here
 ```
 
-</p></details>
-<details><summary>How could we manage early termination for other types of graphs? Or handle multiple invalid termination states?</summary><p style="margin-left: 20px; color: #555555;">
+</b></details>
+<details><summary>How could we manage early termination for other types of graphs? Or handle multiple invalid termination states?</summary><b>
 
-Both of these can be accomplished with additional data within each state, and another termination branch within the inner loop.
+> Both of these can be accomplished with additional data within each state, and another termination branch within the inner loop.
 
-</p></details>
-<details><summary>If we can only use the bit indices of the set bits, write an algorithm to determine if the number is divisible by three.</summary><p style="margin-left: 20px; color: #555555;">
+</b></details>
+<details><summary>If we can only use the bit indices of the set bits, write an algorithm to determine if the number is divisible by three.</summary><b>
 
 ```asm
 	xor eax, eax
@@ -139,4 +134,4 @@ Both of these can be accomplished with additional data within each state, and an
 	test edx, edx
 ```
 
-</p></details>
+</b></details>
