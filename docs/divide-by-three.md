@@ -1,7 +1,7 @@
 
 ## State Graph Representations in x86
 
-We begin with a trivial state graph which tracks the remainder of a number divided by three. Bits of an arbitrarily long number are examined from the most significant bit to bit zero. When no more bits remain the final state resolves if the number is an exact multiple of three.
+We start with a simple state graph that monitors the remainder of a number when divided by three. We examine the bits of a number of any length, starting from the most significant bit down to the least significant bit. Once all bits have been examined, the final state determines whether the number is a multiple of three.
 ```mermaid
 graph LR
 	classDef start color:green,stroke-dasharray: 2
@@ -32,8 +32,7 @@ graph LR
 	linkStyle 8 stroke:darkred;
 	linkStyle 9 stroke:darkred;
 ```
-Next a basic translation to x86 code which literal duplicates each `q*` node in the graph.
-Function: Is a ECX bit [number] an exact multiple of three?
+Next, we translate this into basic x86 code, which essentially replicates each q* node in the graph. The function: Does the ECX bit [number] represent a multiple of three?
 ```asm
 	jrcxz	invalid
 q0:
@@ -61,7 +60,7 @@ reject0:
 ...carry flag set when number is exact multiple of three.
 
 
-Noticing the repetitive assembly, we can more generally represent the state machine as a transition table.
+Observing the repetitive assembly, we can represent the state machine more generally as a transition table.
 ```asm
 	mov eax, 0xFF
 	xor edx, edx ; clear sign flag to signal error
@@ -79,50 +78,65 @@ no_bits:
 ; SF=0, error
 ; SF=1, AL is result of state machine
 ```
-A table of bytes is sufficient to represent the small number of states in this graph:
+A byte table is adequate to represent the limited number of states in this graph:
 ```asm
 transitions db \;	0	1	end-of-input	this-state
 			q0,	q1,	accept,\	; q0
 			q2,	q0,	reject,\	; q1
 			q2,	q1,	reject		; q2
 ```
-States are defined by their offset within the table:
+States are identified by their position within the table:
 ```asm
 q0 := 3 * 0
 q1 := 3 * 1
 q2 := 3 * 2
 ```
-Return values must be specified for end of input in each state.
+We need to specify return values for each state when no more input is available.
 ```asm
 accept := 1
 reject := 0
 ```
-The default return value is `0xFF` - when no bits are present - not a number.
+The default return value is 0xFF, which signifies that no bits are present - hence, not a number.
 
 
 ## Further Discovery:
 
-<details><summary>What is the upper-limit on the number of states which can be represented in a byte granular transition table?</summary>
+<details>
+<summary><b>Question: </b>What is the maximum number of states that can be represented in a byte-based transition table?</summary>
+<b>Answer: </b>No upper limit exists as states can be represented by multiple tables.</p>
+</details>
+
+<details><summary>What is the maximum number of states that can be represented in a byte-based transition table?</summary><p style="margin-left: 20px; color: #555555;">
 
 No uppper limit exist as states can be represented by multiple tables.
 
-</details>
-<details><summary>Give a code example of your above ideas.</summary>
+</p></details>
+<details><summary>Give a code example of your above ideas.</summary><p style="margin-left: 20px; color: #555555;">
 
 ```asm
 ; some code here
 ```
 
-</details>
-<details><summary>How could early termination be handled for other types of graphs? ... or multiple invalid termination states?</summary>
+</p></details>
+<details><summary>How could we manage early termination for other types of graphs? Or handle multiple invalid termination states?</summary><p style="margin-left: 20px; color: #555555;">
 
 Both of these can be accomplished with additional data within each state, and another termination branch within the inner loop.
 
-</details>
-<details><summary>If only the bit indices of the set bits can be used, write an algorithm to determine if the number is divisible by three.</summary>
+</p></details>
+<details><summary>If we can only use the bit indices of the set bits, write an algorithm to determine if the number is divisible by three.</summary><p style="margin-left: 20px; color: #555555;">
 
 ```asm
-; some code here
+	xor eax, eax
+	; only test bit zero of number's bit indices
+@@:	bt dword [rsi + rcx*8 - 8], 0
+	; all `2^n MOD 3` values result in {1,2} based on parity of index
+	adc eax, 1
+	loop @B
+	mov ecx, 3
+	xor edx, edx
+	div ecx
+	; return zero flag if exact multiple of three
+	test edx, edx
 ```
 
-</details>
+</p></details>
