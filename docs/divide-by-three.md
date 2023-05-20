@@ -18,9 +18,9 @@ graph LR
 		q2 -- 1 --> q1
 	end
 	%% only a remainder of zero indicates divisible by three
-	q0 --> |"`input end`"| q3[accept]:::stop
-	q1 --> |"`input end`"| q4[reject]:::stop
-	q2 --> |"`input end`"| q4
+	q0 --> |"input end"| q3[accept]:::stop
+	q1 --> |"input end"| q4[reject]:::stop
+	q2 --> |"input end"| q4
 
 	linkStyle 0 stroke:green;
 
@@ -38,29 +38,33 @@ Function: Is a ECX bit [number] an exact multiple of three?
 	jrcxz	invalid
 q0:
 	dec	ecx
-	js	accept
+	js	accept ; CF=0/1,
 	bt	[number], ecx
 	jnc	q0
 q1:
 	dec	ecx
-	js	reject
+	js	reject1
 	bt	[number], ecx
 	jc	q0
 q2:
 	dec	ecx
-	js	reject
+	js	reject0
 	bt	[number], ecx
 	jc	q1
 	jmp	q2
 accept:
-reject:
+	clc
+reject1:
+	cmc
+reject0:
 ```
-... sign flag is inverse of result
+...carry flag set when number is exact multiple of three.
+
 
 Noticing the repetitive assembly, we can more generally represent the state machine as a transition table.
 ```asm
 	mov eax, 0xFF
-	xor edx, edx
+	xor edx, edx ; clear sign flag to signal error
 	jrcxz no_bits
 	jmp entry
 more:
@@ -98,10 +102,27 @@ The default return value is `0xFF` - when no bits are present - not a number.
 
 ## Further Discovery:
 
-How could early termination be handled for other types of graphs? ... or multiple invalid termination states?
+<details><summary>What is the upper-limit on the number of states which can be represented in a byte granular transition table?</summary>
 
-If only the bit indices of the set bits can be used, write an algorithm to determine if the number is divisible by three.
+No uppper limit exist as states can be represented by multiple tables.
 
+</details>
+<details><summary>Give a code example of your above ideas.</summary>
 
+```asm
+; some code here
+```
 
+</details>
+<details><summary>How could early termination be handled for other types of graphs? ... or multiple invalid termination states?</summary>
 
+Both of these can be accomplished with additional data within each state, and another termination branch within the inner loop.
+
+</details>
+<details><summary>If only the bit indices of the set bits can be used, write an algorithm to determine if the number is divisible by three.</summary>
+
+```asm
+; some code here
+```
+
+</details>
