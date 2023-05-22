@@ -1,3 +1,4 @@
+
 ; based on: https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
 ;
 ; By using the Z-flag the code becomes quite concise.
@@ -13,6 +14,8 @@
 ; TODO:
 ;	+ escape codes for special characters
 ;	+ case insensitive mode
+;	+ https://www.linuxjournal.com/content/bash-extended-globbing
+
 RegEx__Glob:
 namespace RegEx__Glob
 ; RSI: pattern to match

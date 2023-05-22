@@ -26,14 +26,14 @@ fasmg examples\wnd_tests\mag.asm >>%DEBUG_LOG%
 PUSHD "examples\in-tale" 2>>NUL
 If %errorlevel% EQU 0 (
 	ECHO	-----	menu.cmd ----- >>%DEBUG_LOG%
-	CALL menu.cmd
+	CALL menu.cmd >>%DEBUG_LOG%
 	POPD
 )
 
 PUSHD "tools" 2>>NUL
 If %errorlevel% EQU 0 (
 	ECHO	-----	build.cmd ----- >>%DEBUG_LOG%
-	CALL build.cmd
+	CALL build.cmd >>%DEBUG_LOG%
 	POPD
 )
 

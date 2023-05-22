@@ -1,5 +1,5 @@
 # skip /.wip/ directories wherever they appear
-*/.wip/*
+.wip*
 
 # don't include executables in repo
 *.exe

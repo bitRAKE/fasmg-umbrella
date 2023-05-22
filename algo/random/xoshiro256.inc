@@ -19,7 +19,7 @@
 
 namespace xoshiro256
 
-align 64, codepad # ; 65 bytes!
+align 16, codepad # ; 65 bytes!
 next:	mov r11,[state+1*8]
 	mov rdx,[state+0*8]
 	mov rax,[state+3*8]
@@ -47,26 +47,7 @@ next:	mov r11,[state+1*8]
 ; it can be used to generate 2^(256-K) non-overlapping subsequences for
 ; parallel computations.
 ;
-; TODO: produce these constants from the polynomial, reduce jump functions
-; to 32 bytes of code - doesn't need to be fast; usually only one is needed.
-; Here is one possiblity ...
-;::	; produce jump context/state in YMM0, based on current state
-;::	_FUNCTION:
-;::		xor eax,eax ; any legacy 32-bit register
-;::		vpxor ymm0,ymm0,ymm0
-;::	.scan:
-;::		push rax
-;::		bt dword [xoshiro256.2],eax  ; RIP+<offset>
-;::		jnc .skip
-;::		vpxor ymm0,ymm0,qqword [state]
-;::	.skip:
-;::		call next
-;::		pop rax
-;::		inc al
-;::		jnz .scan
-;::		retn
-;::	assert 32 = $ - _FUNCTION ; <state> addressing mode could alter size.
-
+; TODO: Perhaps produce these constants from the polynomial.
 
 iterate <FUNCTION,DATAS>,\
 	jump128,<\
@@ -81,7 +62,7 @@ iterate <FUNCTION,DATAS>,\
 			xoshiro256.% dq DATAS
 		end collect
 
-		align 16
+		align 16, codepad #
 		FUNCTION: ; 34 bytes
 			xor ecx,ecx
 			vpxor ymm0,ymm0,ymm0
