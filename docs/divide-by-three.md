@@ -96,7 +96,7 @@ We need to specify return values for each state when no more input is available.
 accept := 1
 reject := 0
 ```
-An error state is indicated by the inversion of the sign flag, which signifies that no bits are present - hence, not a number. Known valid input would only remove the leading JRCXZ instruction.
+An error state is indicated by the inversion of the sign flag, which signifies that no bits are present - hence, not a number. Known valid input would only remove the JRCXZ instruction.
 
 
 ## Further Discovery:
