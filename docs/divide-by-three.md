@@ -37,7 +37,7 @@ Next, we translate this into basic x86 code, which essentially replicates each q
 	jrcxz	invalid
 q0:
 	dec	ecx
-	js	accept ; CF=0/1,
+	js	accept
 	bt	[number], ecx
 	jnc	q0
 q1:
@@ -57,14 +57,14 @@ reject1:
 	cmc
 reject0:
 ```
-...carry flag set when number is exact multiple of three.
+... carry flag set when number is exact multiple of three.
 
 
 Observing the repetitive assembly, we can represent the state machine more generally as a transition table.
 ```asm
-	mov eax, 0xFF
-	xor edx, edx ; clear sign flag to signal error
+	xor eax, eax ; clear sign flag to signal error
 	jrcxz no_bits
+	xor edx, edx ; start state zero
 	jmp entry
 more:
 	bt [number], ecx
@@ -96,7 +96,7 @@ We need to specify return values for each state when no more input is available.
 accept := 1
 reject := 0
 ```
-The default return value is 0xFF, which signifies that no bits are present - hence, not a number.
+An error state is indicated by the inversion of the sign flag, which signifies that no bits are present - hence, not a number. Known valid input would only remove the leading JRCXZ instruction.
 
 
 ## Further Discovery:
@@ -109,7 +109,7 @@ The default return value is 0xFF, which signifies that no bits are present - hen
 <details><summary>Give a code example of your above ideas.</summary><b>
 
 ```asm
-; some code here
+; TODO : some code here
 ```
 
 </b></details>
