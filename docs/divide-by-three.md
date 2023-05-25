@@ -1,7 +1,7 @@
 
 ## State Graph Representations in x86
 
-We start with a simple state graph that monitors the remainder of a number when divided by three. We examine the bits of a number of any length, starting from the most significant bit down to the least significant bit. Once all bits have been examined, the final state determines whether the number is a multiple of three.
+We start with a simple state graph that passes exact divisors of three. We examine the bits of a number of any length, starting from the most significant bit down to the least significant bit. Once all bits have been examined, the final state determines whether the number is a multiple of three.
 ```mermaid
 graph LR
 	classDef start color:green,stroke-dasharray: 2
@@ -34,6 +34,7 @@ graph LR
 ```
 Next, we translate this into basic x86 code, which essentially replicates each q* node in the graph. The function: Does the ECX bit [number] represent a multiple of three?
 ```asm
+; RSI : array of qword indices, set bits in number.
 	jrcxz	invalid
 q0:
 	dec	ecx
@@ -64,8 +65,8 @@ Observing the repetitive assembly, we can represent the state machine more gener
 ```asm
 	xor eax, eax ; clear sign flag to signal error
 	jrcxz no_bits
+	dec ecx
 	xor edx, edx ; start state zero
-	jmp entry
 more:
 	bt [number], ecx
 	setc al
@@ -113,14 +114,15 @@ An error state is indicated by the inversion of the sign flag, which signifies t
 ```
 
 </b></details>
-<details><summary>How could we manage early termination for other types of graphs? Or handle multiple invalid termination states?</summary><b>
+<details><summary>How could we manage early termination for other types of graphs? Or handle multiple termination states?</summary><b>
 
-> Both of these can be accomplished with additional data within each state, and another termination branch within the inner loop.
+> Both of these can be accomplished with additional data within each state, and/or another termination branch within the inner loop.
 
 </b></details>
 <details><summary>If we can only use the bit indices of the set bits, write an algorithm to determine if the number is divisible by three.</summary><b>
 
 ```asm
+	jrcxz invalid
 	xor eax, eax
 	; only test bit zero of number's bit indices
 @@:	bt dword [rsi + rcx*8 - 8], 0
