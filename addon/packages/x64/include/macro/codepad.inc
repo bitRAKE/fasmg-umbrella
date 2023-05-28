@@ -37,7 +37,16 @@ namespace aligncode
 end namespace
 
 calminstruction codepad length*
+	local line
 	compute length, length
+limit:
+	check length > 15
+	jno tail
+	arrange line, =db =aligncode.9
+	assemble line
+	compute length, length - 9
+	jump limit
+tail:
 	arrange length, =db =aligncode.length
 	assemble length
 end calminstruction
