@@ -54,6 +54,9 @@ here:
 	jz _1
 	cmpsb			; literal match, advance strings
 	jz here
+
+; DANGER : this can underflow at start of pattern
+; HACK : require byte before pattern to be non-'.' :-)
 	cmp byte [rsi-1],'.'
 	jz here
 	retn
