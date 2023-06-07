@@ -8,7 +8,7 @@ graph LR
 	classDef stop color:red,stroke-dasharray: 2
 
 	start(((start))):::start --> q0
-	%% these states track the modulus of the number
+	%% these state transitions respond to decreasing bit values and input end
 	subgraph "Divide by Three "
 		q0 -. 0 .-> q0((q0))
 		q0 -- 1 --> q1((q1))
@@ -17,7 +17,7 @@ graph LR
 		q2 -. 0 .-> q2
 		q2 -- 1 --> q1
 	end
-	%% only a remainder of zero indicates divisible by three
+	%% only state q0 indicates divisible by three
 	q0 --> |"input end"| q3[accept]:::stop
 	q1 --> |"input end"| q4[reject]:::stop
 	q2 --> |"input end"| q4
