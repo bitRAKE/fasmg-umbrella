@@ -2408,41 +2408,48 @@ to use them for more than just pre-processing, but also to directly generate
 and process output. They perform elementary operations, mostly on a single
 unit of data, but at the same time they can perform many calculations in-place,
 because their arguments, with few exceptions, are pre-compiled expressions,
-similar to the second argument to `compute`.\
+similar to the second argument to `compute`.
+
   The `display` command presents a string of bytes as a message in
 the standard output, just like the regular directive with the same name.
 It takes a single argument, an expression giving either a string or a numeric
-value of a single byte.\
+value of a single byte.
+
   The `err` command signalizes an error, analogously to its namesake in
 base language. It takes a single argument, specifying a custom message to
-present. The argument is expected to evaluate to string value.\
+present. The argument is expected to evaluate to string value.
+
   The `emit` command generates data of length specified by the first argument
 and the value specified by the second. Both arguments are treated as
 pre-compiled expressions. The second argument is optional, if it is omitted,
 the data of specified length is generated as uninitialized. When the second
 argument is a string, it must fit within the specified size (a `lengthof`
-operator may be useful in this case).\
+operator may be useful in this case).
+
   The `load` and `store` commands allow to inspect or modify values in the
 already generated output or in the virtual blocks. While they are similar
 to their counterparts in base language, they have a different syntax, both
 always taking three comma-separated arguments. Unlike their cousins, they
 do not operate on addresses associated with output areas, but on raw offsets.
-To point to the first byte of an area, stated offset must be zero.\
+To point to the first byte of an area, stated offset must be zero.
+
   The arguments to `load` are, in order: target variable, offset to load from,
 number of bytes to load. The first argument must be an identifier of a symbol,
 the latter two are pre-compiled expressions. The second argument may contain
 a label of the area, followed by `:` and then offset, or just a plain numeric
 expression, in which case it is an offset within entire output generated
-up to this point. The loaded value is always a string of the specified length.\
+up to this point. The loaded value is always a string of the specified length.
+
   The arguments to `store` are, in order: offset to store at, number of bytes
 to store, the value to store (numeric or string). The last two arguments
 are analogous to the arguments to `emit`, at the same time the first two
 arguments are like the last two arguments to `load`. The offset may be
-prepended with the label of an area with `:` as the separator.\
+prepended with the label of an area with `:` as the separator.
+
   To convert between the addresses used by classic `load` and `store` and
 the raw offsets expected by the CALM commands, it suffices to add or subtract
 the base address of the area. If the base address is not known, it can be
-obtained with help of `1 metadataof` operator applied to an area label.\
+obtained with help of `1 metadataof` operator applied to an area label.
 
 
 <!--
