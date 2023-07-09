@@ -100,17 +100,17 @@ For example, `0Ah` is a valid number, while `Ah` is just a name.
 Any name can become a defined symbol by having some meaning (a value) assigned to it.
 One of the simplest methods of creating a symbol with a given value is to use
 the `=` command:
-
-        a = 1
-
+```assembly
+a = 1
+```
 The `:` command defines a label, that is a symbol with a value equal to the
 current address in the generated output. At the beginning of the source text this
 address is always zero, so when the following two commands are the first ones
 in the source file, they define symbols that have identical values:
-
-        first:
-        second = 0
-
+```assembly
+first:
+second = 0
+```
 Labels defined with `:` command are special constructs in assembly language,
 since they allow any other command (including another label definition) to
 follow in the same line. This is the only kind of command that allows this.
@@ -132,29 +132,29 @@ case-insensitive one. Then the case-sensitive symbol takes precedence and the mo
 general one is used only when corresponding case-sensitive symbol is not defined.
 This can be remedied by using the `?` modifier, since it always means that the name
 followed by it refers to the case-insensitive symbol.
-
-        tester? = 0
-        tester = 1
-        TESTER = 2
-        x = tester       ; x = 1
-        y = Tester       ; y = 0
-        z = TESTER       ; z = 2
-        t = tester?      ; t = 0
-
+```assembly
+tester? = 0
+tester = 1
+TESTER = 2
+x = tester       ; x = 1
+y = Tester       ; y = 0
+z = TESTER       ; z = 2
+t = tester?      ; t = 0
+```
   Every symbol has its own namespace of descendants, called child namespace. When two
 names are connected with a dot (with no whitespace in between), such identifier refers to
 an entity named by the second one in the namespace of descendants to the symbol specified
 by the first one. This operation can be repeated many times within a single identifier,
 allowing to refer to descendants of descendants in a chain of any length.
-
-        space:
-        space.x = 1
-        space.y = 2
-        space.color:
-        space.color.r = 0
-        space.color.g = 0
-        space.color.b = 0
-
+```assembly
+space:
+space.x = 1
+space.y = 2
+space.color:
+space.color.r = 0
+space.color.g = 0
+space.color.b = 0
+```
 Any of the names in such chain may optionally be followed by the `?` character
 to mark that it refers to a case-insensitive symbol. If `?` is inserted in
 the middle of the name (effectively splitting it into separate tokens) such
@@ -164,15 +164,15 @@ identifier is considered a syntactical error.
 symbol is empty), it refers to the symbol in the namespace of the most recent
 regular label defined before current line. This allows to rewrite the above sample
 like this:
-
-        space:
-        .x = 1
-        .y = 2
-        .color:
-        .color.r = 0
-        .color.g = 0
-        .color.b = 0
-
+```assembly
+space:
+.x = 1
+.y = 2
+.color:
+.color.r = 0
+.color.g = 0
+.color.b = 0
+```
 After the `space` label is defined, it becomes the most recently defined normal
 label, so the following `.x` refers to the `space.x` symbol and then the `.color`
 refers to the `space.color`.
@@ -181,17 +181,17 @@ refers to the `space.color`.
 namespace for a section of source text. It must be paired with the
 `end namespace` command later in the source to mark the end of such block.
 This can be used to again rewrite the above sample in a different way:
-
-        space:
-        namespace space
-                x = 1
-                y = 2
-                color:
-                .r = 0
-                .g = 0
-                .b = 0
-        end namespace
-
+```assembly
+space:
+namespace space
+	x = 1
+	y = 2
+	color:
+	.r = 0
+	.g = 0
+	.b = 0
+end namespace
+```
 When a name is not preceded by a dot, and as such it does not have explicitly
 specified in what namespace the symbol resides, the assembler looks for defined
 symbol in the current namespace, and if none is found, in the consecutive namespaces
@@ -201,16 +201,16 @@ the name refers to the symbol in the current namespace (and unless there is `?`
 character after such name, it is assumed that the symbol is case-sensitive).
 A definition that does not specify the namespace where the new symbol should be
 created, always makes a new symbol in the current base namespace.
-
-        global = 0
-        regional = 1
-        namespace regional
-                regional = 2            ; regional.regional = 2
-                x = global              ; regional.x = 0
-                regional.x = regional   ; regional.regional.x = 2
-                global.x = global       ; global.x = 0
-        end namespace
-
+```assembly
+global = 0
+regional = 1
+namespace regional
+	regional = 2            ; regional.regional = 2
+	x = global              ; regional.x = 0
+	regional.x = regional   ; regional.regional.x = 2
+	global.x = global       ; global.x = 0
+end namespace
+```
 The comments in the above sample show equivalent definitions with respect
 to the original base namespace. Note that when a name is used to specify the
 namespace, the assembler looks for a defined symbol with such name to lookup in
@@ -231,28 +231,28 @@ whether it was previously defined as case-insensitive or not.
   If an identifier is just a single dot, by the above rules it refers to the most
 recent label that did not start with a dot. This can be applied to rewrite
 the earlier example in yet another way:
-
-        space:
-        namespace .
-                x = 1
-                y = 2
-                color:
-                namespace .
-                        r = 0
-                        g = 0
-                        b = 0
-                end namespace
-        end namespace
-
+```assembly
+space:
+namespace .
+	x = 1
+	y = 2
+	color:
+	namespace .
+		r = 0
+		g = 0
+		b = 0
+	end namespace
+end namespace
+```
 It also demonstrates how namespace sections can be nested one within another.
 
   The `#` may be inserted anywhere inside an identifier without changing its
 meaning. When `#` is the only character separating two name tokens, it causes
 them to be interpreted as a single name formed by concatenating the tokens.
-
-        variable = 1
-        varia#ble = var#iable + 2       ; variable = 3
-
+```assembly
+variable = 1
+varia#ble = var#iable + 2       ; variable = 3
+```
 This can also be applied to numbers.
 
   Inside a block defined with `namespace` there is initially no label that would
@@ -270,14 +270,14 @@ a similar unnamed symbol, but it is a distinct one for any given number of dots.
 While the namespace accessed with a single starting dot changes every time a new
 regular label is defined, the special namespace accessed with two or more dots
 in the beginning of an identifier remains the same:
-
-        first:
-                .child = 1
-                ..other = 0
-        second:
-                .child = 2
-                ..another = ..other
-
+```assembly
+first:
+	.child = 1
+	..other = 0
+second:
+	.child = 2
+	..another = ..other
+```
 In this example the meaning of the `.child` identifier changes from place to
 place, but the `..other` identifier means the same everywhere.
 
@@ -287,13 +287,13 @@ symbol in the namespace specified by the partial identifier before that sequence
 of dots. The unnamed child namespace is chosen depending on a number of dots and
 in this case the number of required dots is increased by one. The following
 example demonstrates the two methods of identifying such symbol:
+```assembly
+namespace base
+	..other = 1
+end namespace
 
-        namespace base
-                ..other = 1
-        end namespace
-
-        result = base.#..other
-
+result = base.#..other
+```
 The `#` character has been inserted into the last identifier for a better
 readability, but the plain sequence of three dots would do the same.
 
@@ -313,9 +313,9 @@ suppresses any other interpretation. For example, identifier starting with `?`
 is not going to be treated as an instruction, even if it is the first symbol
 on the line. This can be used to define a variable that shares a name with
 an existing command:
-
-        ?namespace = 0
-
+```assembly
+?namespace = 0
+```
 If such modified identifier is used in a place where it is evaluated and not
 defined, it still refers to the same symbol it would refer to in a definition.
 Therefore, unless identifier also uses a dot, it always refers to a symbol
@@ -345,21 +345,21 @@ of this kind. Such symbol is called variable and when it is used, the value from
 its latest definition is accessed. A symbol defined with such command may also be
 forward-referenced, but only when it is defined exactly once in the entire
 source and as such has a single unambiguous value.
-
-        a = 1           ; a = 1
-        a = a + 1       ; a = 2
-        a = b + 1       ; a = 3
-        b = 2
-
+```assembly
+a = 1           ; a = 1
+a = a + 1       ; a = 2
+a = b + 1       ; a = 3
+b = 2
+```
   A special case of forward-referencing is self-referencing, when the value
 of a symbol is used in its own definition. The assembly of such construct is
 successful only when the assembler is able to find a value that is stable under
 such evaluation, effectively solving an equation. But due to the simplicity
 of the resolving algorithm based on predictions a solution may not be found even
 when it exists.
-
-        x = (x-1)*(x+2)/2-2*(x+1)       ; x = 6 or x = -1
-
+```assembly
+x = (x-1)*(x+2)/2-2*(x+1)       ; x = 6 or x = -1
+```
   The `:=` defines a constant value. It may be used instead of `=` to
 ensure that the given symbol is defined exactly once and that it can be
 forward-referenced.
@@ -368,12 +368,12 @@ forward-referenced.
 it treats the previous value (when such exists). While `=` discards the
 previous value, `=:` preserves it so it can later be brought back with the
 `restore` command:
-
-        a = 1
-        a =: 2          ; preserves a = 1
-        a = 3           ; discards a = 2 and replaces it with a = 3
-        restore a       ; brings back a = 1
-
+```assembly
+a = 1
+a =: 2          ; preserves a = 1
+a = 3           ; discards a = 2 and replaces it with a = 3
+restore a       ; brings back a = 1
+```
 A `restore` may be followed by multiple symbol identifiers separated with
 commas, and it discards the latest definition of every one of them. It is not
 considered an error to use `restore` with a symbol that has no active
@@ -390,44 +390,44 @@ be optionally followed by the `:` token and then an additional value to be
 associated with this label (usually denoting the size of the labeled entity).
 The assembler has a number of built-in constants defining various sizes for
 this purpose, but this value can also be provided as a plain number.
-
-        label character:byte
-        label char:1
-
+```assembly
+label character:byte
+label char:1
+```
 The `:` character may be omitted in favor of a plain whitespace, but it is
 recommended for clarity. After an identifier and an optional size, the `at`
 keyword may follow and then a value that should be assigned to the label instead
 of the current address.
-
-        label wchar:word at char
-
+```assembly
+label wchar:word at char
+```
   The built-in size constants are equivalent to the following set of
 definitions:
-
-        byte? = 1       ; 8 bits
-        word? = 2       ; 16 bits
-        dword? = 4      ; 32 bits
-        fword? = 6      ; 48 bits
-        pword? = 6      ; 48 bits
-        qword? = 8      ; 64 bits
-        tbyte? = 10     ; 80 bits
-        tword? = 10     ; 80 bits
-        dqword? = 16    ; 128 bits
-        xword? = 16     ; 128 bits
-        qqword? = 32    ; 256 bits
-        yword? = 32     ; 256 bits
-        dqqword? = 64   ; 512 bits
-        zword? = 64     ; 512 bits
-
+```assembly
+byte? = 1       ; 8 bits
+word? = 2       ; 16 bits
+dword? = 4      ; 32 bits
+fword? = 6      ; 48 bits
+pword? = 6      ; 48 bits
+qword? = 8      ; 64 bits
+tbyte? = 10     ; 80 bits
+tword? = 10     ; 80 bits
+dqword? = 16    ; 128 bits
+xword? = 16     ; 128 bits
+qqword? = 32    ; 256 bits
+yword? = 32     ; 256 bits
+dqqword? = 64   ; 512 bits
+zword? = 64     ; 512 bits
+```
   The `element` keyword followed by a symbol identifier defines a special
 constant that has no fixed value and can be used as a variable in the linear
 polynomials. The identifier may be optionally followed by the `:` token and
 then a value to be associated with this symbol, called metadata of the
 element.
-
-        element A
-        element B:1
-
+```assembly
+element A
+element B:1
+```
   The metadata assigned to a symbol can be extracted with a special operator,
 defined in the next section.
 
@@ -513,21 +513,21 @@ operator gives back the metadata associated with the variable.
 of the polynomial, all three operators return zero. When the second argument
 is zero, `element` and `scale` give information about the constant term -
 `element` returns numeric 1 and `scale` returns the value of the constant term.
-
-        element A
-        linpoly = A + A + 3
-        vterm = linpoly scale 1 * linpoly element 1     ; vterm = 2 * A
-        cterm = linpoly scale 0 * linpoly element 0     ; cterm = 3 * 1
-
+```assembly
+element A
+linpoly = A + A + 3
+vterm = linpoly scale 1 * linpoly element 1     ; vterm = 2 * A
+cterm = linpoly scale 0 * linpoly element 0     ; cterm = 3 * 1
+```
   The `metadata` operator with an index of zero returns the size that is associated
 with the first argument. This value is definite only when the first argument is
 a symbol that has a size associated with it (or an arithmetic expression
 that contains such symbol), otherwise it is zero. There exists an additional
 unary operator `sizeof`, which gives the same value as `metadata 0`.
-
-        label table : 256
-        length = sizeof table   ; length = 256
-
+```assembly
+label table : 256
+length = sizeof table   ; length = 256
+```
   The `elementof`, `scaleof` and `metadataof` are variants of `element`, `scale`
 and `metadata` operators with the opposite order of arguments. Therefore when `sizeof`
 is used in an expression it is equivalent to writing `0 metadataof` in its place.
@@ -600,10 +600,10 @@ to the expression class.
 
   It is even possible for a single line to contain the same identifier
 meaning different things depending on its position:
-
-        ?restore = 1
-        restore restore ; remove the value of the expression-class symbol
-
+```assembly
+?restore = 1
+restore restore ; remove the value of the expression-class symbol
+```
   The third class of symbols are the labeled instructions. A symbol belonging
 to this class may be recognized only when the first identifier of the command
 is not an instruction - in such case the first identifier becomes a label to
@@ -622,13 +622,13 @@ noted, however, that when a namespace is specified through its parent symbol,
 it is always a symbol belonging to the expression class. It is not possible to
 refer to a child namespace of an instruction, only to the namespace belonging
 to the expression class symbol with the same name.
+```assembly
+xor?.mask? := 10101010b
+a = XOR.MASK    ; symbol in the namespace of built-in case-insensitive "XOR"
 
-        xor?.mask? := 10101010b
-        a = XOR.MASK    ; symbol in the namespace of built-in case-insensitive "XOR"
-
-        label?.test? := 0
-        a = LABEL.TEST  ; undefined unless "label?" is defined
-
+label?.test? := 0
+a = LABEL.TEST  ; undefined unless "label?" is defined
+```
 Here the namespace containing `test` belongs to an expression-class symbol,
 not to the existing instruction `label`. When there is no expression-class symbol
 that would fit the `LABEL` specifier, the namespace chosen is the one that would
@@ -642,18 +642,18 @@ The `db` instruction allows to generate bytes of data and put them into the
 output. It should be followed by one or more values, separated with commas.
 When the value is numeric, it defines a single byte. When the value is a
 string, it puts the string of bytes into output.
-
-        db 'Hello',13,10        ; generate 7 bytes
-
+```assembly
+db 'Hello',13,10        ; generate 7 bytes
+```
 The `dup` keyword may be used to generate the same value multiple times. The
 `dup` should be preceded by numeric expression defining the number of
 repetitions, and the value to be repeated should follow. A sequence of values
 may also be duplicated this way, in such case `dup` should be followed by the
 entire sequence enclosed in parentheses (with values separated with commas).
-
-        db 4 dup 90h            ; generate 4 bytes
-        db 2 dup ('abc',10)     ; generate 8 bytes
-
+```assembly
+db 4 dup 90h            ; generate 4 bytes
+db 2 dup ('abc',10)     ; generate 8 bytes
+```
   When a special identifier consisting of a lone `?` character is used as a
 value in the arguments to `db`, it reserves a single byte. This advances the
 address in the output where the next data are going to be put, but the reserved
@@ -663,18 +663,18 @@ the size of generated file. This kind of data is called uninitialized, while
 all the regular data are said to be initialized.
 
   The `rb` instruction reserves a number of bytes specified by its argument.
-
-        db ?                    ; reserve 1 byte
-        rb 7                    ; reserve 7 bytes
-
+```assembly
+db ?                    ; reserve 1 byte
+rb 7                    ; reserve 7 bytes
+```
   Every built-in instruction that generates data (traditionally called a data
 directive) is paired with a labeled instruction of the same name. Such command
 in addition to generating data defines a label at address of generated data,
 with associated size equal to the size of data unit used by this instruction.
 In case of `db` and `rb` this size is 1.
-
-        some db sizeof some     ; generate a byte with value 1
-
+```assembly
+some db sizeof some     ; generate a byte with value 1
+```
   The `dw`, `dd`, `dp`, `dq`, `dt`, `ddq`, `dqq` and `ddqq` are instructions
 analogous to `db` with a different sizes of data unit. The order of bytes
 within a single generated unit is always little-endian. When a string of bytes
@@ -695,18 +695,18 @@ a colon instead of a comma, for better readability. When the unit size
 is such that it has a dedicated data directive, the definition made with `emit`
 has the same effect as if these values were passed to the instruction tailored
 for this size.
-
-        emit 2: 0,1000,2000      ; generate three 16-bit values
-
+```assembly
+emit 2: 0,1000,2000      ; generate three 16-bit values
+```
   The `file` instruction reads the data from an external file and writes it
 into output. The argument must be a string containing the path to the file, it
 may optionally be followed by `:` and the numeric value specifying an offset
 within the file, next it may be followed by comma and the numeric value
 specifying how many bytes to copy.
-
-        file 'data.bin'                 ; insert entire file
-        excerpt file 'data.bin':10h,4   ; insert selected four bytes
-
+```assembly
+file 'data.bin'                 ; insert entire file
+excerpt file 'data.bin':10h,4   ; insert selected four bytes
+```
 Table 1: Data directives
 
 | Unit (bytes) | Generate data | Reserve data |
@@ -749,15 +749,15 @@ Another way to create a logical value is to compare the values of two basic
 expressions with one of the following operators: `=` (equal), `<` (less than),
 `>` (greater than), `<=` (less or equal), `>=` (greater or equal),
 `<>` (not equal).
-
-        count = 2
-        if count > 1
-                db '0'
-                db count-1 dup ',0'
-        else if count = 1
-                db '0'
-        end if
-
+```assembly
+count = 2
+if count > 1
+	db '0'
+	db count-1 dup ',0'
+else if count = 1
+	db '0'
+end if
+```
   When linear polynomials are compared this way, the logical value is
 valid only when they are comparable, which is whey they differ in constant
 term only. Otherwise the condition like equality is neither universally true
@@ -773,11 +773,11 @@ variable terms.
   Because logical expressions are lazily evaluated, it is possible to create
 a single condition that will not cause an error when the polynomials are not
 comparable, but will compare them if they are:
-
-        if a relativeto b & a > b
-                db a - b
-        end if
-
+```assembly
+if a relativeto b & a > b
+	db a - b
+end if
+```
   The `eqtype` operator can also be used to compare two basic expressions,
 it makes a logical value which is true when the values of the expressions are
 of the same type - either both are algebraic, both are strings or both are
@@ -809,9 +809,9 @@ been used anywhere in the source.
 
   The `assert` is an instruction that signalizes an error when a condition
 specified by its argument is not met.
-
-        assert a < 65536
-
+```assembly
+assert a < 65536
+```
 
 ### 8. Macroinstructions
 
@@ -820,13 +820,13 @@ macroinstruction. The block of source text between the `macro` and
 `end macro` command becomes the text of macroinstruction and this sequence
 of lines is assembled in place of the original command that starts with
 identifier of instruction defined this way.
+```assembly
+macro null
+	db 0
+end macro
 
-        macro null
-                db 0
-        end macro
-
-        null            ; "db 0" is assembled here
-
+null            ; "db 0" is assembled here
+```
   The macroinstruction is allowed to have arguments only when the
 definition contains them. After the `macro` and the identifier of defined
 symbol optionally may come a list of simple names separated with commas,
@@ -836,13 +836,13 @@ separated with commas, and their values are assigned to the consecutive
 parameters. Before any line of text inside the macroinstruction is interpreted,
 the name tokens that correspond to any of the parameters are replaced with their
 assigned values.
+```assembly
+macro lower name,value
+	name = value and 0FFh
+end macro
 
-        macro lower name,value
-                name = value and 0FFh
-        end macro
-
-        lower a,123h    ; a = 23h
-
+lower a,123h    ; a = 23h
+```
 The value of a parameter can be any text, not necessarily a correct expression.
 If a line calling the macroinstruction contains fewer arguments than the
 number of defined parameters, the excess parameters receive the empty values.
@@ -854,52 +854,52 @@ A definition of a parameter may also be followed by `*` to denote that it
 requires a value that is not empty, or alternatively by `:` character
 followed by a default value, which is assigned to the parameter instead of
 an empty one when no other value is provided.
+```assembly
+macro prepare name*,value:0
+	name = value
+end macro
 
-        macro prepare name*,value:0
-                name = value
-        end macro
-
-        prepare x       ; x = 0
-        prepare y,1     ; y = 1
-
+prepare x       ; x = 0
+prepare y,1     ; y = 1
+```
   If an argument to macroinstruction needs to contain a comma character, the
 entire argument must be enclosed between the `<` and `>` characters (they do
 not become a part of the value). If another `<` character is encountered inside
 such value, it must be balanced with corresponding `>` character inside the
 same value.
+```assembly
+macro data name,value
+	name:
+	.data db value
+	.end:
+end macro
 
-        macro data name,value
-                name:
-                .data db value
-                .end:
-        end macro
-
-        data example, <'abc',10>
-
+data example, <'abc',10>
+```
   The last defined parameter may be followed by `&` character to denote that
 this parameter should be assigned a value containing the entire remaining
 part of line, even if it normally would define multiple arguments. Therefore
 when macroinstruction has just one parameter followed by `&`, the value of
 this parameter is the entire text of arguments following the instruction.
+```assembly
+macro id first,rest&
+	dw first
+	db rest
+end macro
 
-        macro id first,rest&
-                dw first
-                db rest
-        end macro
-
-        id 2, 7,1,8
-
+id 2, 7,1,8
+```
   When a name of a parameter is to be replaced with its value and it is
 preceded by `` ` `` character (without any whitespace inbetween), the text of
 the value is embedded into a quoted string and this string replaces
 both the `` ` `` character and the name of parameter.
+```assembly
+macro text line&
+	db `line
+end macro
 
-        macro text line&
-                db `line
-        end macro
-
-        text x+1        ; db 'x+1'
-
+text x+1        ; db 'x+1'
+```
   The `local` is a command that may only be used inside a macroinstruction.
 It should be followed by one or more names separated with commas, and it
 declares that the names from this list should in the context of current
@@ -910,15 +910,15 @@ Such declaration defines additional parameters with the specified names and
 therefore only affects the uses of those names that follow within the same
 macroinstruction. Declaring the same name as local multiple times within
 the same macroinstruction gives no additional effect.
+```assembly
+macro measured name,string
+	local top
+	name db string
+	top: name.length = top - name
+end macro
 
-        macro measured name,string
-                local top
-                name db string
-                top: name.length = top - name
-        end macro
-
-        measured hello, 'Hello!'        ; hello.length = 6
-
+measured hello, 'Hello!'        ; hello.length = 6
+```
 A parameter created with `local` becomes replaced with a text that contains
 the same name as the name of parameter, but has added context information
 that causes it to be identified as belonging to the unique local namespace
@@ -937,18 +937,18 @@ instructions of the assembler, even commands like `end namespace`).
 value in the definition of the new one, the macroinstructions can also be
 redefined, and use the previous value of this instruction symbol in its
 text:
+```assembly
+macro zero
+	db 0
+end macro
 
-        macro zero
-                db 0
-        end macro
+macro zero name
+	label name:byte
+	zero
+end macro
 
-        macro zero name
-                label name:byte
-                zero
-        end macro
-
-        zero x
-
+zero x
+```
 And just like other symbols, a macroinstruction may be forward-referenced when
 it is defined exactly once in the entire source.
 
@@ -961,16 +961,16 @@ own definition with `purge`.
 but to avoid inadvertent infinite recursion this feature is only available when
 the macroinstruction is marked as such by following its identifier with `:`
 character.
-
-        macro factorial: n
-                if n
-                        factorial n-1
-                        result = result * (n)
-                else
-                        result = 1
-                end if
-        end macro
-
+```assembly
+macro factorial: n
+	if n
+		factorial n-1
+		result = result * (n)
+	else
+		result = 1
+	end if
+end macro
+```
 In addition to allowing recursion, such macroinstruction behaves like a constant.
 It cannot be redefined and `purge` cannot be applied to it.
 
@@ -978,37 +978,37 @@ It cannot be redefined and `purge` cannot be applied to it.
 of them. The blocks designated by `macro` and `end macro` must be properly
 nested one within the other for such definition to be accepted by the
 assembler.
+```assembly
+macro enum enclosing
+	counter = 0
+	macro item name
+		name := counter
+		counter = counter + 1
+	end macro
+	macro enclosing
+		purge item,enclosing
+	end macro
+end macro
 
-        macro enum enclosing
-                counter = 0
-                macro item name
-                        name := counter
-                        counter = counter + 1
-                end macro
-                macro enclosing
-                        purge item,enclosing
-                end macro
-        end macro
-
-        enum x
-                item a
-                item b
-                item c
-        x
-
+enum x
+	item a
+	item b
+	item c
+x
+```
   When it is required that macroinstruction generates unpaired `macro` or
 `end macro` command, it can be done with special `esc` instruction. Its
 argument becomes a part of macroinstruction, but is not being taken into
 account when counting the nested `macro` and `end macro` pairs.
+```assembly
+macro xmacro name
+	esc macro name x&
+end macro
 
-        macro xmacro name
-                esc macro name x&
-        end macro
-
-        xmacro text
-                db `x
-        end macro
-
+xmacro text
+	db `x
+end macro
+```
 If `esc` is placed inside a nested definition, it is not processed out until
 the innermost macroinstruction becomes defined. This allows a definition
 containing `esc` to be placed inside another macroinstruction without having
@@ -1021,21 +1021,21 @@ assembly is suspended - like inside a conditional block whose condition is
 false, or inside a definition of another macroinstruction. This allows to
 define instructions that can be used where otherwise a directly stated
 `end if` or `end macro` would be required, as in the following example:
+```assembly
+macro proc name
+	name:
+	if used name
+end macro
 
-        macro proc name
-                name:
-                if used name
-        end macro
+macro endp!
+	end if
+	.end:
+end macro
 
-        macro endp!
-                end if
-                .end:
-        end macro
-
-        proc tester
-                db ?
-        endp
-
+proc tester
+	db ?
+endp
+```
 If the macroinstruction `endp` in the above sample was not defined as an
 unconditional one and the block started with `if` was being skipped, the
 macroinstruction would not get evaluated, and this would lead to an error
@@ -1048,21 +1048,21 @@ an `end.if` identifier, and it is possible to override any such instruction
 by redefining a symbol in the `end?` namespace. Moreover, any instruction
 defined within the `end?` namespace can then be called with the `end` command.
 This slighly modified variant of the above sample puts these facts to use:
+```assembly
+macro proc name
+	name:
+	if used name
+end macro
 
-        macro proc name
-                name:
-                if used name
-        end macro
+macro end?.proc!
+	end if
+	.end:
+end macro
 
-        macro end?.proc!
-                end if
-                .end:
-        end macro
-
-        proc tester
-                db ?
-        end proc
-
+proc tester
+	db ?
+end proc
+```
 A similar rule applies to the `else` command and the instructions in the
 `else?` namespace.
 
@@ -1076,19 +1076,19 @@ with no exception. This allows to completely override the assembly process on
 portions of the text. The following sample defines a macroinstruction which
 allows to define a block of comments by skiping all the lines of text until it
 encounters a line with content equal to the argument given to `comment`.
+```assembly
+macro comment? ender
+	macro ?! line&
+		if `line = `ender
+			purge ?
+		end if
+	end macro
+end macro
 
-        macro comment? ender
-                macro ?! line&
-                        if `line = `ender
-                                purge ?
-                        end if
-                end macro
-        end macro
-
-        comment ~
-                 Any text may follow here.
-        ~
-
+comment ~
+	Any text may follow here.
+~
+```
 An identifier consisting of two question marks can be used to define a special
 instruction that is called only as last resort, on lines that contain no
 recognizable instruction. This allows to intercept lines that would otherwise
@@ -1111,25 +1111,25 @@ with `end struc` instead of `end macro`, these macroinstructions are defined
 in the same way as with `macro` command. A labeled instruction is evaluated
 when the first identifier of a command is not an instruction and the second
 identifier is of the labeled instruction class:
+```assembly
+struc some
+	db 1
+end struc
 
-        struc some
-                db 1
-        end struc
-
-        get some        ; "db 1" is assembled here
-
+get some        ; "db 1" is assembled here
+```
   Inside a labeled macroinstruction identifiers starting with dot no longer
 refer to the namespace of a previously defined regular label. Instead they
 refer to the namespace of label with which the instruction was labeled.
+```assembly
+struc POINT
+	label . : qword
+	.x dd ?
+	.y dd ?
+end struc
 
-        struc POINT
-                label . : qword
-                .x dd ?
-                .y dd ?
-        end struc
-
-        my POINT        ; defines my.x and my.y
-
+my POINT        ; defines my.x and my.y
+```
 Note that the parent symbol, which can be refered by `.` identifier, is not
 defined unless an appropriate definition is generated by the macroinstruction.
 Furthermore, this symbol is not considered the most recent label in
@@ -1138,26 +1138,26 @@ the macroinstruction it labeled.
 
   For an easier use of this feature, other syntaxes may be defined with
 macroinstructions, like in this sample:
+```assembly
+macro struct? definition&
+	esc struc definition
+		label . : .%top - .
+		namespace .
+end macro
 
-        macro struct? definition&
-                esc struc definition
-                        label . : .%top - .
-                        namespace .
-        end macro
+macro ends?!
+			%top:
+		end namespace
+	esc end struc
+end macro
 
-        macro ends?!
-                                %top:
-                        end namespace
-                esc end struc
-        end macro
+struct POINT vx:?,vy:?
+	x dd vx
+	y dd vy
+ends
 
-        struct POINT vx:?,vy:?
-                x dd vx
-                y dd vy
-        ends
-
-        my POINT 10,20
-
+my POINT 10,20
+```
   The `restruc` command is analogous to `purge`, but it operates on symbols
 from the class of labeled instructions. Similarly, the `mvstruc` command is
 the same as `mvmacro` but for labeled instructions.
@@ -1170,15 +1170,15 @@ macroinstruction. The following sample uses this feature to catch any orphaned
 labels (the ones that are not followed by any character) and treat them as regular
 ones instead of causing an error. It achieves it by making `:` the default value
 for `def` parameter:
+```assembly
+struc ? def::&
+	. def
+end struc
 
-        struc ? def::&
-                . def
-        end struc
-
-        orphan
-        regular:
-        assert orphan = regular
-
+orphan
+regular:
+assert orphan = regular
+```
 Similarly to `macro` this special variant does not override unconditional labeled
 instructions unless it is unconditional itself.
 
@@ -1186,13 +1186,13 @@ instructions unless it is unconditional itself.
 sometimes it may be needed to process the actual text of the label.
 A special parameter can be defined for this purpose and its name should be
 inserted enclosed in parentheses before the name of labeled macroinstruction:
+```assembly
+struc (name) SYMBOL
+	. db `name,0
+end struc
 
-        struc (name) SYMBOL
-                . db `name,0
-        end struc
-
-        test SYMBOL
-
+test SYMBOL
+```
 
 ### 10. Symbolic variables and recognition context
 
@@ -1207,12 +1207,12 @@ behind a complex identifier).
 
   This can lead to an unexpected outcome compared to the use of standard
 variables defined with `=`, as the following example demonstrates:
-
-        numeric = 2 + 2
-        symbolic equ 2 + 2
-        x = numeric*3           ; x = 4*3
-        y = symbolic*3          ; y = 2 + 2*3
-
+```assembly
+numeric = 2 + 2
+symbolic equ 2 + 2
+x = numeric*3           ; x = 4*3
+y = symbolic*3          ; y = 2 + 2*3
+```
 While `x` is assigned the value of 12, the value of `y` is 8. This shows that
 the use of such symbols can lead to unintended interactions and therefore
 definitions of this type should be avoided unless really necessary.
@@ -1229,32 +1229,32 @@ to be interpreted. Therefore it can effectively become a reliable link to
 value of some other symbol, lasting even when it is used in a different
 context (this includes change of the base namespace or a symbol referred by
 a starting dot):
-
-        first:
-                .x = 1
-                link equ .x
-                .x = 2
-        second:
-                .x = 3
-                db link         ; db 2
-
+```assembly
+first:
+	.x = 1
+	link equ .x
+	.x = 2
+second:
+	.x = 3
+	db link         ; db 2
+```
   It should be noted that the same process is applied to the arguments of any
 macroinstruction when they become preprocessed parameters. If during
 the execution of a macroinstruction the context changes, the identifiers
 within the text of parameters still refer to the same symbols as in the line
 that called the instruction:
-
-        x = 1
-        namespace x
-                x = 2
-        end namespace
-        macro prodx value
-                namespace x
-                        db value*x
-                end namespace
-        end macro
-        prodx x         ; db 1*2
-
+```assembly
+x = 1
+namespace x
+	x = 2
+end namespace
+macro prodx value
+	namespace x
+		db value*x
+	end namespace
+end macro
+prodx x         ; db 1*2
+```
 Furthermore, parameters defined with `local` command use the same mechanism
 to alter the context in which given name is interpreted, without altering
 the text of the name. However, such modified context is not relevant
@@ -1288,14 +1288,14 @@ when used in final expression the symbolic variables are nestedly evaluated
 until only the usable constituents of expressions are left. A possible use of
 `define` is to create a link to another symbolic variable, like the following
 example demonstrates:
-
-        a equ 0*
-        x equ -a
-        define y -a
-        a equ 1*
-        db x 2          ; db -0*2
-        db y 2          ; db -1*2
-
+```assembly
+a equ 0*
+x equ -a
+define y -a
+a equ 1*
+db x 2          ; db -0*2
+db y 2          ; db -1*2
+```
 The other uses of `define` will arise in the later sections, with the
 introduction of other instructions that operate on symbolic values.
 
@@ -1320,35 +1320,35 @@ The `repeat` instruction allows to assemble a block of instructions multiple
 times, with the number of repetitions specified by the value of its argument.
 The block of instructions should be ended with `end repeat` command. A synonym
 `rept` can be used instead of `repeat`.
-
-        a = 2
-        repeat a + 3
-                a = a + 1
-        end repeat
-        assert a = 7
-
+```assembly
+a = 2
+repeat a + 3
+	a = a + 1
+end repeat
+assert a = 7
+```
   The `while` instruction causes the block of instructions to be assembled
 repeatedly as long as the condition specified by its argument is true. Its
 argument should be a logical expression, like an argument for `if` or
 `assert`. The block should be closed with `end while` command.
-
-        a = 7
-        while a > 4
-                a = a - 2
-        end while
-        assert a = 3
-
+```assembly
+a = 7
+while a > 4
+	a = a - 2
+end while
+assert a = 3
+```
   The `%` is a special parameter which is preprocessed inside the repeated
 block of instructions and is replaced with a decimal number being the number
 of current repetition (starting with 1). It works in a similar way to a
 parameter of macroinstruction, so it is replaced with its value before the
 actual command is processed and so it can be used to create symbol
 identifiers containing the number as a part of name:
-
-        repeat 16
-                f#% = 1 shl %
-        end repeat
-
+```assembly
+repeat 16
+	f#% = 1 shl %
+end repeat
+```
 The above example defines symbols `f1` to `f16` with values being the
 consecutive powers of two.
 
@@ -1358,55 +1358,55 @@ block. Each of the names can be followed by `:` character and the expression
 specifying the base value from which the parameter is going to start counting
 the repetitions. This allows to easily change the previous sample to define
 the range of symbols from `f0` to `f15`:
-
-        repeat 16, i:0
-                f#i = 1 shl i
-        end repeat
-
+```assembly
+repeat 16, i:0
+	f#i = 1 shl i
+end repeat
+```
   The `%%` is another special parameter that has a value equal to the total
 number of repetitions planned. This parameter is undefined inside the `while`
 block. The following example uses it to create the sequence of bytes with
 values descending from 255 to 0:
-
-        repeat 256
-                db %%-%
-        end repeat
-
+```assembly
+repeat 256
+	db %%-%
+end repeat
+```
   The `break` instruction allows to stop the repeating prematurely. When it
 is encountered, it causes the rest of repeated block to be skipped and no
 further repetitions to be executed. It can be used to stop the repeating if
 a certain condition is met:
-
-        s = x/2
-        repeat 100
-                if x/s = s
-                        break
-                end if
-                s = (s+x/s)/2
-        end repeat
-
+```assembly
+s = x/2
+repeat 100
+	if x/s = s
+		break
+	end if
+	s = (s+x/s)/2
+end repeat
+```
 The above sample tries to find the square root of the value of symbol `x`,
 which is assumed defined elsewhere. It can easily be rewritten to perform the
 same task with `while` instead of `repeat`:
-
-        s = x/2
-        while x/s <> s
-                s = (s+x/s)/2
-                if % = 100
-                        break
-                end if
-        end while
-
+```assembly
+s = x/2
+while x/s <> s
+	s = (s+x/s)/2
+	if % = 100
+		break
+	end if
+end while
+```
   The `iterate` instruction (with a synonym `irp`) repeats the block of
 instructions while iterating through the list of values separated with commas.
 The first argument to `iterate` should be the a name of parameter, folowed by
 the comma and then a list of values. During each iteration the parameter
 receives one of the values from the list.
-
-        iterate value, 1,2,3
-                db value
-        end iterate
-
+```assembly
+iterate value, 1,2,3
+	db value
+end iterate
+```
 Like it is in the case of an argument to macroinstruction, the value of parameter
 that contains commas needs to be enclosed with `<` and `>` characters. It is
 also possible to enclose the first argument to `iterate` with `<` and `>`, in
@@ -1414,11 +1414,11 @@ order to define multiple parameters. The list of values is then divided
 into section containing as many values as there are parameters, and each
 iteration operates on one such section, assigning to each parameter a
 corresponding value:
-
-        iterate <name,value>, a,1, b,2, c,3
-                name = value
-        end iterate
-
+```assembly
+iterate <name,value>, a,1, b,2, c,3
+	name = value
+end iterate
+```
 The name of a parameter can also, like in the case of macroinstructions, be
 followed by `*` to require that the parameter has a value that is not empty,
 or `:` and a default value. If an `iterate` statement ends with a comma not
@@ -1435,28 +1435,28 @@ when the next iteration is started, the values of parameters are again assigned
 the normal way). This allows to process the iterated values in a different
 order. In the following example the values are processed from the last to the
 first:
-
-        iterate value, 1,2,3
-                indx 1+%%-%
-                db value
-        end iterate
-
+```assembly
+iterate value, 1,2,3
+	indx 1+%%-%
+	db value
+end iterate
+```
 With `indx` it is even possible to move the view of iterated values many times
 during the single repetition. In the following example the entire processing
 is done during the first repetition of iterated block and then the `break`
 instruction is used to prevent further iterations:
-
-        iterate str, 'alpha','beta','gamma'
-                repeat %%
-                        dw offset#%
-                end repeat
-                repeat %%
-                        indx %
-                        offset#% db str
-                end repeat
-                break
-        end iterate
-
+```assembly
+iterate str, 'alpha','beta','gamma'
+	repeat %%
+		dw offset#%
+	end repeat
+	repeat %%
+		indx %
+		offset#% db str
+	end repeat
+	break
+end iterate
+```
   The parameters defined by `iterate` do not attach the context to iterated
 values, but neither do they remove the original context if such is already
 attached to the text of arguments. So if the values given to `iterate` were
@@ -1490,13 +1490,13 @@ an otherwise skipped block.
   The `postpone` is another control directive, which causes a block of
 instructions to be assembled later, when all of the following source text
 has already been processed.
-
-        dw final_count
-        postpone
-                final_count = counter
-        end postpone
-        counter = 0
-
+```assembly
+dw final_count
+postpone
+	final_count = counter
+end postpone
+counter = 0
+```
 The above sample postpones the definition of `final_count` symbol until the
 entire source has been processed, so that it can access the final value of
 `counter` variable.
@@ -1520,15 +1520,15 @@ arguments, first being a name of parameter and second an identifier of
 a variable. It iterates through all the stacked values of symbolic
 variable, starting from the oldest one (this applies only to the values
 defined earlier in the source).
-
-        var equ 1
-        var equ 2
-        var equ 3
-        var reequ 4
-        irpv param, var
-                db param
-        end irpv
-
+```assembly
+var equ 1
+var equ 2
+var equ 3
+var reequ 4
+irpv param, var
+	db param
+end irpv
+```
 In the above example there are three iterations, with values 1, 2, and 4.
 
   `irpv` can effectively convert a value of symbolic variable into a parameter,
@@ -1537,16 +1537,16 @@ evaluated in the expressions inside the arguments of instructions (labeled or
 not), while the parameters are preprocessed in the entire line before any
 processing of command is started. This allows, for example, to redefine a
 regular value that is linked by symbolic variable:
-
-        x = 1
-        var equ x
-        irpv symbol, var
-                indx %%
-                symbol = 2
-                break
-        end irpv
-        assert x = 2
-
+```assembly
+x = 1
+var equ x
+irpv symbol, var
+	indx %%
+	symbol = 2
+	break
+end irpv
+assert x = 2
+```
 The combination of `indx` and `break` was added to the above sample to limit
 the iteration to the latest value of symbolic variable. In the next section
 a better solution to the same problem will be presented.
@@ -1562,12 +1562,12 @@ value from stack.
 and it modifies the command that follows in the same line. If the command causes
 any parameters to be defined, they are created not in the context of currently
 processed macroinstruction but in the context of the source text that called it.
-
-        macro irpv?! statement&
-                display 'IRPV wrapper'
-                esc outscope irpv statement
-        end macro
-
+```assembly
+macro irpv?! statement&
+	display 'IRPV wrapper'
+	esc outscope irpv statement
+end macro
+```
 This allows not only to safely wrap some control directives in macroinstructions,
 but also to create additional customized language constructions that define
 parameters for a block of text. Because `outscope` needs to be present in the
@@ -1589,25 +1589,25 @@ of line.
 meaning in the pattern) is matched literally - it must be paired with identical
 token in the text. In the following example the content of the first block
 is assembled, while the content of the second one is not.
+```assembly
+match +,+
+	assert 1        ; positive match
+end match
 
-        match +,+
-                assert 1        ; positive match
-        end match
-
-        match +,-
-                assert 0        ; negative match
-        end match
-
+match +,-
+	assert 0        ; negative match
+end match
+```
   The quoted strings are also matched literally, but name tokens in the pattern
 are treated differently. Every name acts as a wildcard and can match any
 sequence of tokens which is not empty. If the match is successful, the
 parameters with such names are created, and each is assigned a value equal
 to the text the wildcard was matched with.
-
-        match a[b], 100h[3]
-                dw a+b          ; dw 100h+3
-        end match
-
+```assembly
+match a[b], 100h[3]
+	dw a+b          ; dw 100h+3
+end match
+```
   A parameter name in pattern can have an extra `?` character attached to it
 to indicate that it is a case-insensitive name.
 
@@ -1615,133 +1615,133 @@ to indicate that it is a case-insensitive name.
 It allows to perform matching of name tokens, and also of special characters
 that would otherwise have a different meaning, like `,` or `=`, or `?` following
 a name.
-
-        match =a==a, a=8
-                db a            ; db 8
-        end match
-
+```assembly
+match =a==a, a=8
+	db a            ; db 8
+end match
+```
   If `=` is followed by name token with `?` character attached to it, this
 element is matched literally but in a case-insensitive way:
-
-        match =a?==a, A=8
-                db a            ; db 8
-        end match
-
+```assembly
+match =a?==a, A=8
+	db a            ; db 8
+end match
+```
   When there are many wildcards in the pattern, each consecutive one is matched
 with as few tokens as possible and the last one takes what is left. If the
 wildcards follow each other without any literally matched elements between
 them, the first one is matched with just a single token, and the second one with
 the remaining text:
-
-        match car cdr, 1+2+3
-                db car          ; db 1
-                db cdr          ; db +2+3
-        end match
-
+```assembly
+match car cdr, 1+2+3
+	db car          ; db 1
+	db cdr          ; db +2+3
+end match
+```
 In the above sample the matched text must contain at least two tokens, because
 each wildcard needs at least one token to be not empty. In the next example
 there are additional constraints, but the same general rules applies and the
 first wildcard consumes as little as possible:
-
-        match first:rest, 1+2:3+4:5+6
-                db `first       ; db '1+2'
-                db 13,10
-                db `rest        ; db '3+4:5+6'
-        end match
-
+```assembly
+match first:rest, 1+2:3+4:5+6
+	db `first       ; db '1+2'
+	db 13,10
+	db `rest        ; db '3+4:5+6'
+end match
+```
   While any whitespace next to a wildcard is ignored, the presence or
 absence of whitespace between literally matched elements is meaningful.
 If such elements have no whitespace between them, their counterparts must
 contain no whitespace between them either. But if there is a whitespace
 between elements in pattern, it places no constraints on the use of
 whitespace in the corresponding text - it can be present of not.
+```assembly
+match ++,++
+	assert 1        ; positive match
+end match
 
-        match ++,++
-                assert 1        ; positive match
-        end match
+match ++,+ +
+	assert 0        ; negative match
+end match
 
-        match ++,+ +
-                assert 0        ; negative match
-        end match
+match + +,++
+	assert 1        ; positive match
+end match
 
-        match + +,++
-                assert 1        ; positive match
-        end match
-
-        match + +,+ +
-                assert 1        ; positive match
-        end match
-
+match + +,+ +
+	assert 1        ; positive match
+end match
+```
 The presence of whitespace in the text becomes required when the pattern
 contains the `=` character followed by a whitespace:
+```assembly
+match += +, ++
+	assert 0        ; negative match
+end match
 
-        match += +, ++
-                assert 0        ; negative match
-        end match
-
-        match += +, + +
-                assert 1        ; positive match
-        end match
-
+match += +, + +
+	assert 1        ; positive match
+end match
+```
   The `match` command is analogous to `if` in that it allows to use the
 `else` or `else match` to create a selection of blocks from which only one is
 executed:
+```assembly
+macro let param
+	match dest+==src, param
+		dest = dest + src
+	else match dest-==src, param
+		dest = dest - src
+	else match dest++, param
+		dest = dest + 1
+	else match dest--, param
+		dest = dest - 1
+	else match dest==src, param
+		dest = src
+	else
+		assert 0
+	end match
+end macro
 
-        macro let param
-                match dest+==src, param
-                        dest = dest + src
-                else match dest-==src, param
-                        dest = dest - src
-                else match dest++, param
-                        dest = dest + 1
-                else match dest--, param
-                        dest = dest - 1
-                else match dest==src, param
-                        dest = src
-                else
-                        assert 0
-                end match
-        end macro
-
-        let x=3                 ; x = 3
-        let x+=7                ; x = x + 7
-        let x++                 ; x = x + 1
-
+let x=3                 ; x = 3
+let x+=7                ; x = x + 7
+let x++                 ; x = x + 1
+```
 It is even possible to mix `if` and `match` conditions in a sequence of
 `else` blocks. The entire construction must be closed with `end` command
 corresponding to whichever of the two was used last:
-
-        macro record text
-                match any, text
-                        recorded equ `text
-                else if RECORD_EMPTY
-                        recorded equ ''
-                end if
-        end macro
-
+```assembly
+macro record text
+	match any, text
+		recorded equ `text
+	else if RECORD_EMPTY
+		recorded equ ''
+	end if
+end macro
+```
   The `match` is able to recognize symbolic variables and before the matching
 is started, their identifiers in the text of the second argument are replaced
 with corresponding values (just like they are replaced in the text that follows
 the `equ` command):
+```assembly
+var equ 2+3
 
-        var equ 2+3
-
-        match a+b, var
-                db a xor b
-        end match
-
+match a+b, var
+	db a xor b
+end match
+```
 This means that the `match` can be used instead of `irpv` to convert the
 latest value of a symbolic variable to parameter. The sample from the previous
 section, where `irpv` was used with `break` to perform just one iteration on
 the last value, can be rewritten to use `match` instead:
-
-        x = 1
-        var equ x
-        match symbol, var
-                symbol = 2
-        end match
-        assert x = 2
-
+```assembly
+x = 1
+var equ x
+match symbol, var
+	symbol = 2
+end match
+assert x = 2
+```
 The difference between them is that `irpv` would execute its block even for
 an empty value, while in the case of `match` the `else` block would need to be
 added to handle an empty text.
@@ -1749,24 +1749,24 @@ added to handle an empty text.
   When the evaluation of symbolic variables in the matched text is undesirable,
 a symbol created with `define` can be used as a proxy to preserve the text,
 because the replacement is not recursive:
+```assembly
+macro drop value
+	local temporary
+	define temporary value
+	match =A, temporary
+		db A
+		restore A
+	else
+		db value
+	end match
+end macro
 
-        macro drop value
-                local temporary
-                define temporary value
-                match =A, temporary
-                        db A
-                        restore A
-                else
-                        db value
-                end match
-        end macro
+A equ 1
+A equ 2
 
-        A equ 1
-        A equ 2
-
-        drop A
-        drop A
-
+drop A
+drop A
+```
 A concern could arise that `define` may modify the meaning of text by
 equipping it with a local context. But when the value for `define` comes from
 a parameter of macroinstruction (as in the above sample), it already carries
@@ -1776,19 +1776,19 @@ its original context and `define` does not alter it.
 but it operates on the raw text of the second argument. Not only it does not
 evaluate the symbolic variables, but it also strips the text of any additional
 context it could have carried.
+```assembly
+struc has instruction
+	rawmatch text, instruction
+		namespace .
+			text
+		end namespace
+	end rawmatch
+end struc
 
-        struc has instruction
-                rawmatch text, instruction
-                        namespace .
-                                text
-                        end namespace
-                end rawmatch
-        end struc
-
-        define x
-        x has a = 3
-        assert x.a = 3
-
+define x
+x has a = 3
+assert x.a = 3
+```
 In the above sample the identifier of `a` would be interpreted in the context
 effective for the line calling the `has` macroinstruction if it was not
 converted back into the raw text by `rmatch`.
@@ -1801,26 +1801,26 @@ area is written into the destination file next to the previous data, but the
 addresses in the new area are based on the value specified in the argument to
 `org`. The area is closed automatically when the next one is started or when
 the source ends.
-
-        org 100h
-        start:                  ; start = 100h
-
+```assembly
+org 100h
+start:                  ; start = 100h
+```
   The `$` is a built-in symbol of expression class which is always equal to
 the value of current address. Therefore definition of a constant with the value
 specified by `$` symbol is equivalent to defining a label at the same point:
-
-        org 100h
-        start = $               ; start = 100h
-
+```assembly
+org 100h
+start = $               ; start = 100h
+```
 The `$$` symbol is always equal to the base of current addressing space, so
 in the area started with `org` it has the same value as the base address from
 the argument of `org`. The difference between `$` and `$$` is thus the current
 position relative to the start of the area:
-
-        org 2000h
-        db 'Hello!'
-        size = $ - $$           ; size = 6
-
+```assembly
+org 2000h
+db 'Hello!'
+size = $ - $$           ; size = 6
+```
 The `$@` symbol evaluates to the base address of current block of uninitialized
 data. When there was no such data defined just before the current position,
 this value is equal to `$`, otherwise it is equal to `$` minus the length of
@@ -1836,18 +1836,18 @@ output. In this sample only the first of the three reserved buffers is
 actually converted into zeroed data and written into output, because it is
 followed by some initialized data. The second one is trimmed because of the
 `section`, and the third one is cut off since it lies at the end of file:
+```assembly
+data1 dw 1
+buffer1 rb 10h          ; zeroed and present in the output
 
-        data1 dw 1
-        buffer1 rb 10h          ; zeroed and present in the output
+org 400h
+data dw 2
+buffer2 rb 20h          ; not in the output
 
-        org 400h
-        data dw 2
-        buffer2 rb 20h          ; not in the output
-
-        section 1000h
-        data3 dw 3
-        buffer3 rb 30h          ; not in the output
-
+section 1000h
+data3 dw 3
+buffer3 rb 30h          ; not in the output
+```
   The `$%` is a built-in symbol equal to the offset within the output file at
 which the initialized data would be generated if it was defined at this point.
 The `$%%` symbol is the current offset within the output file. These two
@@ -1855,12 +1855,12 @@ values differ only when they are used after some data has been reserved -
 the `$%` is then larger than `$%%` by the length of unitialized data which
 would be generated into output if it was to be followed by some initialized
 one.
-
-        db 'Hello!'
-        rb 4
-        position = $%%          ; position = 6
-        next = $%               ; next = 10
-
+```assembly
+db 'Hello!'
+rb 4
+position = $%%          ; position = 6
+next = $%               ; next = 10
+```
 The values in the comments of the above sample assume that the source contains
 no other instructions generating output.
 
@@ -1875,13 +1875,13 @@ within each other.
 as current address in the outer area. An argument to `virtual` can have a form
 of `at` keyword followed by an expression defining the base address for the
 enclosed area:
-
-        int dw 1234h
-        virtual at int
-                low db ?
-                high db ?
-        end virtual
-
+```assembly
+int dw 1234h
+virtual at int
+	low db ?
+	high db ?
+end virtual
+```
   Instead of or in addition to such argument, `virtual` can also be followed by
 an `as` keyword and a string defining an extension of additional file where
 the initialized content of the area is going to be stored at the end of
@@ -1895,12 +1895,12 @@ to load. This address can be specified in two modes. If it is simply a numeric
 expression, it is an address within the current area. In that case the loaded
 bytes must have already been generated, so it is only possible to load from the
 space between `$$` and `$` addresses.
-
-        virtual at 100h
-                db 'abc'
-                load b:byte from 101h   ; b = 'b'
-        end virtual
-
+```assembly
+virtual at 100h
+	db 'abc'
+	load b:byte from 101h   ; b = 'b'
+end virtual
+```
 When the number of bytes is not specified, the length of loaded string is
 determined by the size associated with address.
 
@@ -1910,21 +1910,21 @@ but it can be used with `load` instruction to access the data of the area in
 which this label has been defined. The address for `load` has then to be
 specified as the area label followed by `:` and then the address within that
 area:
-
-        virtual at 0
-                hex_digits::
-                db '0123456789ABCDEF'
-        end virtual
-        load a:byte from hex_digits:10  ; a = 'A'
-
+```assembly
+virtual at 0
+	hex_digits::
+	db '0123456789ABCDEF'
+end virtual
+load a:byte from hex_digits:10  ; a = 'A'
+```
 This variant of `load` can access the data which is generated later, even
 within the current area:
-
-        area::
-        db 'abc'
-        load sub:3 from area:$-2        ; sub = 'bcd'
-        db 'def'
-
+```assembly
+area::
+db 'abc'
+load sub:3 from area:$-2        ; sub = 'bcd'
+db 'def'
+```
   The `store` instruction can modify already generated data in the output
 area. It should be followed by a value (automatically converted to string
 of bytes), then optionally the `:` character followed by a number of bytes
@@ -1937,37 +1937,37 @@ also the `load` to read a data from such area in advance.
 
   The following example uses the combination of `load` and `store` to encrypt
 the entire contents of the current area with a simple `xor` operation:
-
-        db "Text"
-        key = 7Bh
-        repeat $-$$
-                load a : byte from $$+%-1
-                store a xor key : byte at $$+%-1
-        end repeat
-
+```assembly
+db "Text"
+key = 7Bh
+repeat $-$$
+	load a : byte from $$+%-1
+	store a xor key : byte at $$+%-1
+end repeat
+```
   If the final data of an area that has been modified by `store` needs to be
 read earlier in the source, it can be achieved by copying this data into
 a different area that would not be constrained in such way. This is analogous
 to defining a constant with a final value of some variable:
+```assembly
+load char : byte from const:0
 
-        load char : byte from const:0
+virtual
+	var::
+	db 'abc'
+	.length = $
+end virtual
 
-        virtual
-                var::
-                db 'abc'
-                .length = $
-        end virtual
+store 'A' : byte at var:0
 
-        store 'A' : byte at var:0
-
-        virtual
-                const::
-                repeat var.length
-                        load a : byte from var:%-1
-                        db a
-                end repeat
-        end virtual
-
+virtual
+const::
+repeat var.length
+	load a : byte from var:%-1
+	db a
+end repeat
+end virtual
+```
   The area label can be forward-referenced by `load`, but it can never be
 forward-referenced by `store`, even if it refers to the current output area.
 
@@ -1977,15 +1977,15 @@ block with additional data. The area label must refer to a block that was
 created earlier in the source with `virtual`. Any definition of data within
 an extending block is going to have the same effect as if that definition was
 present in the original `virtual` block.
+```assembly
+virtual at 0 as 'log'
+	Log::
+end virtual
 
-        virtual at 0 as 'log'
-                Log::
-        end virtual
-
-        virtual Log
-                db 'Hello!',13,10
-        end virtual
-
+virtual Log
+	db 'Hello!',13,10
+end virtual
+```
   If an area label is used in an expression, it forms a variable term of a
 linear polynomial. The metadata of such term is the base address of the area.
 The metadata of an area label itself, accessible with `sizeof` operator,
@@ -1995,13 +1995,13 @@ is equal to the current length of data within the area.
 to read and modify already generated data in the output file given simply
 an offset within that output. This variant is recognized when the `at` or
 `from` keyword is followed by `:` character and then the value of an offset.
-
-        checksum = 0
-        repeat $%
-                load a : byte from : %-1
-                checksum = checksum + a
-        end repeat
-
+```assembly
+checksum = 0
+repeat $%
+	load a : byte from : %-1
+	checksum = checksum + a
+end repeat
+```
   The `restartout` instruction abandons all the output generated up to this
 point and starts anew with an empty one. An optional argument may specify
 the base address of newly started output area. When `restartout` has no
@@ -2021,9 +2021,9 @@ depend on the operating system). If there is a `!` between the instruction
 and the argument, the other file is read and processed unconditionally,
 even when it is inside a skipped block (the unconditional instructions from
 the other file may then get recognized).
-
-        include 'macro.inc'
-
+```assembly
+include 'macro.inc'
+```
 An additional argument may be optionally added (separated from the path
 by comma), and it is interpreted as a command to be executed after the file
 has been read and inserted into the source stream, just before processing
@@ -2034,45 +2034,45 @@ treats it as a source text and assembles it. The arguments are either strings
 or the numeric values of single bytes, separated with commas. In the next
 example `eval` is used to generate definitions of symbols named as a
 consecutive letters of the alphabet:
+```assembly
+repeat 26
+	eval 'A'+%-1,'=',`%
+end repeat
 
-        repeat 26
-                eval 'A'+%-1,'=',`%
-        end repeat
-
-        assert B = 2
-
+assert B = 2
+```
   The `display` instruction causes a sequence of bytes to be written into
 standard output, next to the messages generated by the assembler. It should
 be followed by strings or numeric values of single bytes, separated
 with commas. The following example uses `repeat 1` to define a parameter
 with a decimal representation of computed number, and then displays it as
 a string:
+```assembly
+macro show description,value
+	repeat 1, d:value
+		display description,`d,13,10
+	end repeat
+end macro
 
-        macro show description,value
-                repeat 1, d:value
-                        display description,`d,13,10
-                end repeat
-        end macro
-
-        show '2^64=',1 shl 64
-
+show '2^64=',1 shl 64
+```
   The `err` instruction signalizes an error in the assembly process, with
 a custom message specified by its argument. It allows the same kind of
 arguments as the `display` directive.
-
-        if $>10000h
-                err 'segment too large'
-        end if
-
+```assembly
+if $>10000h
+	err 'segment too large'
+end if
+```
   The `format` directive allows to set up additional options concerning
 the main output. Currently the only available choice is `format binary` followed
 by the `as` keyword and a string defining an extension for the output file.
 Unless a name of the output file is specified from the command line, it is
 constructed from the path to the main source file by dropping the extension and
 attaching a new extension if such is defined.
-
-        format binary as 'com'
-
+```assembly
+format binary as 'com'
+```
   The `format` directive, analogously to `end`, uses an identifier that follows
 it to find an instruction in the child namespace of case-insensitive symbol
 named `format`. The only built-in instruction that resides in that namespace
@@ -2095,21 +2095,21 @@ the name of the main source file.
   The `retaincomments` directive switches the assembler to treat a semicolon as
 a regular token and therefore not strip comments from lines before processing.
 This allows to use semicolons in places like MATCH pattern.
+```assembly
+retaincomments
+macro ? line&
+	match instruction ; comment , line
+		virtual
+			comment
+		end virtual
+		instruction
+	else
+		line
+	end match
+end macro
 
-        retaincomments
-        macro ? line&
-                match instruction ; comment , line
-                        virtual
-                                comment
-                        end virtual
-                        instruction
-                else
-                        line
-                end match
-        end macro
-
-        var dd ?  ; bvar db ?
-
+var dd ?  ; bvar db ?
+```
   The `isolatelines` directive prevents the assembler from subsequently combining
 lines read from the source text when the line break is preceded by a backslash.
 
@@ -2166,13 +2166,13 @@ but an identically named instruction in the CALM namespace, which only accepts
 an identifier of a symbolic variable. The text of this variable is passed directly
 to assembly, without any preprocessing (if the text came from an argument to
 the instruction, it already went through preprocessing when that line was prepared).
+```assembly
+calminstruction please? cmd&
+	assemble cmd
+end calminstruction
 
-        calminstruction please? cmd&
-                assemble cmd
-        end calminstruction
-
-        please display 'Hi!'
-
+please display 'Hi!'
+```
   The `match` command is in many ways similar to the standard directive with the same
 name. Its first argument should be a pattern following the same rules as those for
 `match` directive. The second argument must be an identifier of a symbolic variable,
@@ -2181,27 +2181,27 @@ whose text is going to be matched against the pattern. The name tokens in patter
 where the matched portions of text should be put if the match is successful. The same
 variable that is a source of text can also be used in pattern as a variable
 to write to. When there is no match, all variables remain unaffected.
+```assembly
+calminstruction please? cmd&
+	match (cmd), cmd
+	assemble cmd
+end calminstruction
 
-        calminstruction please? cmd&
-                match (cmd), cmd
-                assemble cmd
-        end calminstruction
-
-        please(display 'Hi!')
-
+please(display 'Hi!')
+```
   Whether the match was successful can also be tested with a conditional jump `jyes`
 or `jno` following the `match` command. A `jyes` jump is taken only when the match
 succeeded.
+```assembly
+calminstruction please? cmd&
+	match =do? =not? cmd, cmd
+	jyes done
+	assemble cmd
+    done:
+end calminstruction
 
-        calminstruction please? cmd&
-                match =do? =not? cmd, cmd
-                jyes done
-                assemble cmd
-            done:
-        end calminstruction
-
-        please do not display 'Bye!'
-
+please do not display 'Bye!'
+```
 To further control the flow of processing, the `jump` command allows to jump
 unconditionally, and with `exit` it is possible to terminate processing of
 CALM instruction at any moment (this command takes no arguments).
@@ -2211,26 +2211,26 @@ other identifiers may become fixed references to global symbols if they are seen
 as accessible at the time of definition (because in CALM instruction all such references
 are treated as uses, not as definitions). A command like `match` may then write to
 a global variable.
+```assembly
+define comment
 
-        define comment
+calminstruction please? cmd&
+	match cmd //comment, cmd
+	assemble cmd
+end calminstruction
 
-        calminstruction please? cmd&
-                match cmd //comment, cmd
-                assemble cmd
-        end calminstruction
-
-        please display 'Hi!' // 3
-        db comment                      ; db 3
-
+please display 'Hi!' // 3
+db comment                      ; db 3
+```
 To enforce treatment of a symbol as local, a `local` command should be used, followed
 by one or more names separated with commas.
-
-        calminstruction please? cmd&
-                local comment
-                match cmd //comment, cmd
-                assemble cmd
-        end calminstruction
-
+```assembly
+calminstruction please? cmd&
+	local comment
+	match cmd //comment, cmd
+	assemble cmd
+end calminstruction
+```
 A symbol made local is initally assigned a defined but unusable value.
 
   If a pattern in CALM instruction has a `?` character immediately following the name
@@ -2243,20 +2243,20 @@ to be matched with an empty text.
 this syntax allows to have more optional arguments. A third argument to `match` may
 contain a pair of bracket characters. Any wildcard element must then be matched with
 a text that has this kind of brackets properly balanced.
+```assembly
+calminstruction please? cmd&
+	local first, second
+	match first + second, cmd, ()
+	jyes split
+	assemble cmd
+	exit
+    split:
+	assemble first
+	assemble second
+end calminstruction
 
-        calminstruction please? cmd&
-                local first, second
-                match first + second, cmd, ()
-                jyes split
-                assemble cmd
-                exit
-            split:
-                assemble first
-                assemble second
-        end calminstruction
-
-        please display 'H',('g'+2) + display '!'
-
+please display 'H',('g'+2) + display '!'
+```
 The brackets selected by the third argument must not be used anywhere in the pattern.
 
   The `arrange` command is like an inverse of `match`, it can build up a text
@@ -2269,17 +2269,17 @@ All non-name tokens other than `=` and tokens preceded with `=` are copied liter
 into the constructed text and they do not carry any recognition context with them.
 The name tokens that are not made literal with `=` are treates as names of variables
 whose symbolic values are put in their place into the constructed text.
+```assembly
+calminstruction addr? arg
+	local base, index
+	match base[index], arg
+	local cmd
+	arrange cmd, =dd base + index
+	assemble cmd
+end calminstruction
 
-        calminstruction addr? arg
-                local base, index
-                match base[index], arg
-                local cmd
-                arrange cmd, =dd base + index
-                assemble cmd
-        end calminstruction
-
-        addr 8[5]                       ; dd 8 + 5
-
+addr 8[5]                       ; dd 8 + 5
+```
 With suitably selected patterns, `arrange` can be used to copy symbolic value
 from one variable to another or to assign it a fixed value (even an empty one).
 
@@ -2287,17 +2287,17 @@ from one variable to another or to assign it a fixed value (even an empty one).
 as long as it is a non-negative number with no additional terms, it is converted
 into a decimal token stored into the constructed symbolic value (an operation
 that outside of CALM instructions would require use of a `repeat 1` trick):
+```assembly
+digit = 4 - 1
 
-        digit = 4 - 1
+calminstruction demo
+	local cmd
+	arrange cmd, =display digit#0h
+	assemble cmd
+end calminstruction
 
-        calminstruction demo
-                local cmd
-                arrange cmd, =display digit#0h
-                assemble cmd
-        end calminstruction
-
-        demo                            ; display 3#0h
-
+demo                            ; display 3#0h
+```
 This is the only case when a non-symbolic value is converted to symbols that may be
 put into text composed by `arrange`, other types are not supported.
 
@@ -2312,15 +2312,15 @@ computation of the main expression.
   A `compute` therefore can be used not only to evaluate a pre-defined expression,
 but also to parse and compute an expression from a text of a symbolic variable
 (like one coming from an argument to the instruction), or a combination of both:
+```assembly
+a = 0
 
-        a = 0
+calminstruction low expr*
+	compute a, expr and 0FFh
+end calminstruction
 
-        calminstruction low expr*
-                compute a, expr and 0FFh
-        end calminstruction
-
-        low 200 + 73                    ; a = 11h
-
+low 200 + 73                    ; a = 11h
+```
 Because symbolic variable is evaluated as a sub-expression, its use here has no
 side-effects that would be caused by a straightforward text substitution.
 
@@ -2329,18 +2329,18 @@ the logical expression that follows it and accordingly sets up the result flag w
 may be tested with `jyes` or `jno` command. The values of symbolic variables
 are treated as numeric sub-expressions (they may not contain any operators specific
 to logical expression).
+```assembly
+calminstruction u8range? value
+	check value >= 0 & value < 256
+	jyes ok
+	local cmd
+	arrange cmd, =err 'value out of range'
+	assemble cmd
+    ok:
+end calminstruction
 
-        calminstruction u8range? value
-                check value >= 0 & value < 256
-                jyes ok
-                local cmd
-                arrange cmd, =err 'value out of range'
-                assemble cmd
-            ok:
-        end calminstruction
-
-        u8range -1
-
+u8range -1
+```
 All commands that are not explicitly said to set the flag that is checked by `jyes`
 and `jno`, keep the value of this flag unchanged.
 
@@ -2353,16 +2353,16 @@ the value to assign (either symbolic or numeric). The first argument may be
 followed by `:` character to indicate that the symbol should be made constant,
 or it can be preceded by `:` to make the value stacked on top of the previous one
 (so that the previous one can be brought back with `restore` directive).
+```assembly
+calminstruction constdefine? var
+	local val
+	arrange val,
+	match var=  val, var
+	publish var:, val
+end calminstruction
 
-        calminstruction constdefine? var
-                local val
-                arrange val,
-                match var=  val, var
-                publish var:, val
-        end calminstruction
-
-        constdefine plus? +
-
+constdefine plus? +
+```
 The above instruction allows to define a symbolic constant, something that is not
 possible with standard directives of the assembler.
 
@@ -2371,22 +2371,22 @@ possible with standard directives of the assembler.
 by `equ` directive when it prepares the value to assign. The argument to `transform`
 should be a symbolic variable whose value is going to be processed this way and then
 replaced by the transformed text.
-
-        calminstruction (var) constequ? val
-                transform val
-                publish var:, val
-        end calminstruction
-
+```assembly
+calminstruction (var) constequ? val
+	transform val
+	publish var:, val
+end calminstruction
+```
 A `transform` command updates the result flag to indicate whether any replacement
 has been done.
-
-        calminstruction prepasm? cmd&
-            loop:
-                transform cmd
-                jyes loop               ; warning: may hang on cyclic references
-                assemble cmd
-        end calminstruction
-
+```assembly
+calminstruction prepasm? cmd&
+    loop:
+	transform cmd
+	jyes loop               ; warning: may hang on cyclic references
+	assemble cmd
+end calminstruction
+```
 The result flag is modified only by some of the commands, like `check`, `match` or `transform`. Other commands keep it unchanged.
 
   Optionally, `transform` can have two arguments, with second one specifying
@@ -2397,17 +2397,17 @@ as symbols in this namespace regardless of their original context.
 and writes it into the same variable, specified by the only argument. This operation
 is similar to the one performed by `` ` `` operator in preprocessing, but it produces
 a value of string type, not a quoted string.
+```assembly
+calminstruction (var) strcalc? val
+	compute val, val        ; compute expression
+	arrange val, val        ; convert result to a decimal token
+	stringify val           ; convert decimal token to string
+	publish var, val
+end calminstruction
 
-        calminstruction (var) strcalc? val
-                compute val, val        ; compute expression
-                arrange val, val        ; convert result to a decimal token
-                stringify val           ; convert decimal token to string
-                publish var, val
-        end calminstruction
-
-        p strcalc 1 shl 1000
-        display p
-
+p strcalc 1 shl 1000
+display p
+```
   While most commands available to CALM instructions replace the values of variables
 when writing to them, the `take` is a command that allows to work with stacks of values.
 It removes the topmost value of the source symbol (specified by the second argument)
@@ -2417,54 +2417,54 @@ removed completely and the operation is analogous to `restore` directive. This c
 updates the result flag to indicate whether there was any value to remove.
 If the destination symbol is the same as source, the result flag can be used to check
 whether there is an available value without affecting it.
+```assembly
+calminstruction reverse? cmd&
+	local tmp, stack
+    collect:
+	match tmp=,cmd, cmd
+	take stack, tmp
+	jyes collect
+    execute:
+	assemble cmd
+	take cmd, stack
+	jyes execute
+end calminstruction
 
-        calminstruction reverse? cmd&
-                local tmp, stack
-            collect:
-                match tmp=,cmd, cmd
-                take stack, tmp
-                jyes collect
-            execute:
-                assemble cmd
-                take cmd, stack
-                jyes execute
-        end calminstruction
-
-        reverse display '!', display 'i', display 'H'
-
+reverse display '!', display 'i', display 'H'
+```
 A symbol accessed as either destination or source by a `take` command can never be
 forward-referenced even if it could otherwise.
 
   Defining macro instructions in the namespace of case-insensitive `calminstruction`
 allows to add customized commands to the language of CALM instructions. However,
 they must be defined as case-insensitive to be recognized as such.
+```assembly
+macro calminstruction?.asmarranged? variable*, pattern&
+	arrange variable, pattern
+	assemble variable
+end macro
 
-        macro calminstruction?.asmarranged? variable*, pattern&
-                arrange variable, pattern
-                assemble variable
-        end macro
+calminstruction writeln? text&
+	asmarranged text, =display text,10
+end calminstruction
 
-        calminstruction writeln? text&
-                asmarranged text, =display text,10
-        end calminstruction
-
-        writeln 'Next!'
-
+writeln 'Next!'
+```
 Such additional commands may even be defined as CALM instructions themselves:
+```assembly
+calminstruction calminstruction?.initsym? variable*,value&
+	publish variable, value
+end calminstruction
 
-        calminstruction calminstruction?.initsym? variable*,value&
-                publish variable, value
-        end calminstruction
+calminstruction show? text&
+	local command
+	initsym command, display text
+	stringify text
+	assemble command
+end calminstruction
 
-        calminstruction show? text&
-                local command
-                initsym command, display text
-                stringify text
-                assemble command
-        end calminstruction
-
-        show :)
-
+show :)
+```
 The command `initsym` in this example is used to assign text to the local
 symbolic variable at the time when `show` instruction is defined.
 Similarly to `local` (and unlike `stringify` and `assemble`) it does not produce
@@ -2482,21 +2482,21 @@ at the execution time this symbol must be defined as CALM (it is not possible
 to call a macroinstruction or a built-in instruction this way). The execution
 then proceeds directly to the entry point of that instruction, and only returns
 after the called instruction finishes.
+```assembly
+define Msg display 'Hi'
 
-        define Msg display 'Hi'
+calminstruction showMsg
+	assemble Msg
+end calminstruction
 
-        calminstruction showMsg
-                assemble Msg
-        end calminstruction
+calminstruction demo
+	call showMsg
+	arrange Msg, =display '!'
+	call showMsg
+end calminstruction
 
-        calminstruction demo
-                call showMsg
-                arrange Msg, =display '!'
-                call showMsg
-        end calminstruction
-
-        demo
-
+demo
+```
 When looking up the instruction symbol, the assembler skips the local namespace
 of the CALM instruction, as it is not expected to contain instruction definitions.
 
