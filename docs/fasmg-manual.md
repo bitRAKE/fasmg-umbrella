@@ -13,26 +13,26 @@ it is needed in order to better understand the later ones.
 
 ### Table of contents
 
-0. Executing the assembler
-1. Fundamental syntax rules
-2. Symbol identifiers
-3. Basic symbol definitions
-4. Expression values
-5. Symbol classes
-6. Generating data
-7. Conditional assembly
-8. Macroinstructions
-9. Labeled macroinstructions
-10. Symbolic variables and recognition context
-11. Repeating blocks of instructions
-12. Matching parameters
-13. Output areas
-14. Source and output control
-15. CALM instructions
-16. Assembly commands in CALM instructions
+0. [Executing the assembler](#0)
+1. [Fundamental syntax rules](#1)
+2. [Symbol identifiers](#2)
+3. [Basic symbol definitions](#3)
+4. [Expression values](#4)
+5. [Symbol classes](#5)
+6. [Generating data](#6)
+7. [Conditional assembly](#7)
+8. [Macroinstructions](#8)
+9. [Labeled macroinstructions](#9)
+10. [Symbolic variables and recognition context](#10)
+11. [Repeating blocks of instructions](#11)
+12. [Matching parameters](#12)
+13. [Output areas](#13)
+14. [Source and output control](#14)
+15. [CALM instructions](#15)
+16. [Assembly commands in CALM instructions](#16)
 
 
-### 0. Executing the assembler
+### 0. Executing the assembler<a id='0'></a>
 
 To start assembly from the command line it is necessary to provide at least one
 parameter, the name of a source file, and optionally a second one -
@@ -53,7 +53,7 @@ time (in every consecutive pass). The `-i` switch allows to insert any command a
 the beginning of processed source.
 
 
-### 1. Fundamental syntax rules
+### 1. Fundamental syntax rules<a id='1'></a>
 
 Every command in the assembly language occupies a single line of text.
 If a line contains the semicolon character, everything from that character up
@@ -95,7 +95,7 @@ needed to prepend it with the digit zero in order to make it recognizable as a n
 For example, `0Ah` is a valid number, while `Ah` is just a name.
 
 
-### 2. Symbol identifiers
+### 2. Symbol identifiers<a id='2'></a>
 
 Any name can become a defined symbol by having some meaning (a value) assigned to it.
 One of the simplest methods of creating a symbol with a given value is to use
@@ -326,7 +326,7 @@ it is placed at the beginning, because then it is considered a literal value.
 This restriction also may be bypassed by prepending an identifier with `?`.
 
 
-### 3. Basic symbol definitions
+### 3. Basic symbol definitions<a id='3'></a>
 
 When a symbol is defined as a label, it must be the only definition of
 this symbol in the entire source. A value that is assigned to the symbol this way
@@ -432,7 +432,7 @@ element B:1
 defined in the next section.
 
 
-### 4. Expression values
+### 4. Expression values<a id='4'></a>
 
 In every construction described so far where a value of some kind was
 provided, like after the `=` command or after the `at` keyword, it could be
@@ -581,7 +581,7 @@ to the `shl` and `shr` operators. The number is then multiplied or divided by th
 power of two specified by the second argument.
 
 
-### 5. Symbol classes
+### 5. Symbol classes<a id='5'></a>
 
 There are three distinct classes of symbols, determining the position in
 source line at which the symbol may be recognized. A symbol belonging to the
@@ -636,7 +636,7 @@ belong to the case-sensitive symbol of such name. The `test` is therefore not fo
 because it has been defined in another namespace - the one of case-insensitive `label`.
 
 
-### 6. Generating data
+### 6. Generating data<a id='6'></a>
 
 The `db` instruction allows to generate bytes of data and put them into the
 output. It should be followed by one or more values, separated with commas.
@@ -723,7 +723,7 @@ Table 1: Data directives
 | *            | emit          |              |
 
 
-### 7. Conditional assembly
+### 7. Conditional assembly<a id='7'></a>
 
 The `if` instruction causes a block of source text to be assembled only
 under certain condition, specified by a logical expression that is an argument
@@ -813,7 +813,7 @@ specified by its argument is not met.
 assert a < 65536
 ```
 
-### 8. Macroinstructions
+### 8. Macroinstructions<a id='8'></a>
 
 The `macro` command allows to define a new instruction, in form of a
 macroinstruction. The block of source text between the `macro` and
@@ -1103,7 +1103,7 @@ only to bring it back later. The symbols affected by this operation become
 variables and cannot be forward-referenced.
 
 
-### 9. Labeled macroinstructions
+### 9. Labeled macroinstructions<a id='9'></a>
 
 The `struc` command allows to define a labeled instruction, in form of a
 macroinstruction. Except for the fact that such definition must be closed
@@ -1194,7 +1194,7 @@ end struc
 test SYMBOL
 ```
 
-### 10. Symbolic variables and recognition context
+### 10. Symbolic variables and recognition context<a id='10'></a>
 
 The `equ` is a built-in labeled instruction that defines symbol of expression
 class with a symbolic value. Such value contains a snippet of source text
@@ -1314,7 +1314,7 @@ followed by the identifier of said symbolic variable is going to determine
 the status of a linked symbol, not a linking variable.
 
 
-### 11. Repeating blocks of instructions
+### 11. Repeating blocks of instructions<a id='11'></a>
 
 The `repeat` instruction allows to assemble a block of instructions multiple
 times, with the number of repetitions specified by the value of its argument.
@@ -1577,7 +1577,7 @@ handled the same way even when the entire definition is put inside another
 macroinstruction.
 
 
-### 12. Matching parameters
+### 12. Matching parameters<a id='12'></a>
 
 The `match` is a control directive which causes its block of instructions to
 be assembled only when the text specified by its second argument matches the
@@ -1794,7 +1794,7 @@ effective for the line calling the `has` macroinstruction if it was not
 converted back into the raw text by `rmatch`.
 
 
-### 13. Output areas
+### 13. Output areas<a id='13'></a>
 
 The `org` instruction starts a new area of output. The content of such
 area is written into the destination file next to the previous data, but the
@@ -2012,7 +2012,7 @@ new area.
 a `virtual` block, they can only separate areas that go into the output file.
 
 
-### 14. Source and output control
+### 14. Source and output control<a id='14'></a>
 
 The `include` instruction reads the source text from another file and
 processes it before proceeding further in the current source. Its argument
@@ -2118,7 +2118,7 @@ and the `combinelines` directive allows lines from the source text to be combine
 as usual.
 
 
-### 15. CALM instructions
+### 15. CALM instructions<a id='15'></a>
 
 The `calminstruction` directive allows to define new instructions in form of
 compiled sequences of specialized commands. As opposed to regular macroinstructions,
@@ -2536,7 +2536,7 @@ end calminstruction
 demo
 ```
 
-### 16. Assembly commands in CALM instructions
+### 16. Assembly commands in CALM instructions<a id='16'></a>
 
   An additional sets of commands for CALM instructions makes it possible
 to use them for more than just pre-processing, but also to directly generate
@@ -2590,7 +2590,8 @@ obtained with help of `1 metadataof` operator applied to an area label.
 <!--
 NOTE : Care must be taken to preserve spaces and tabs due to markdown processing:
 	- two space at line ends are hard line breaks
-	- tabs appear like 4 spaces
+	- tabs appear like 4 spaces to markdown processing
+	- tabs appear like 8 spaces in code blocks
 
 # kate: syntax Markdown;
 # kate: tab-width 4;
