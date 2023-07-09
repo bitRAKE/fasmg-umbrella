@@ -658,33 +658,20 @@ specifying how many bytes to copy.
         file 'data.bin'                 ; insert entire file
         excerpt file 'data.bin':10h,4   ; insert selected four bytes
 
+Table 1: Data directives
 
-   Table 1   Data directives
-  /------------------------------\
-  | Unit    | Generate | Reserve |
-  | (bytes) | data     | data    |
-  |=========|==========|=========|
-  | 1       | db       | rb      |
-  |         | file     |         |
-  |---------|----------|---------|
-  | 2       | dw       | rw      |
-  |---------|----------|---------|
-  | 4       | dd       | rd      |
-  |---------|----------|---------|
-  | 6       | dp       | rp      |
-  |---------|----------|---------|
-  | 8       | dq       | rq      |
-  |---------|----------|---------|
-  | 10      | dt       | rt      |
-  |---------|----------|---------|
-  | 16      | ddq      | rdq     |
-  |---------|----------|---------|
-  | 32      | dqq      | rqq     |
-  |---------|----------|---------|
-  | 64      | ddqq     | rdqq    |
-  |---------|----------|---------|
-  | *       | emit     |         |
-  \------------------------------/
+| Unit (bytes) | Generate data | Reserve data |
+|--------------|---------------|--------------|
+| 1            | db, file      | rb           |
+| 2            | dw            | rw           |
+| 4            | dd            | rd           |
+| 6            | dp            | rp           |
+| 8            | dq            | rq           |
+| 10           | dt            | rt           |
+| 16           | ddq           | rdq          |
+| 32           | dqq           | rqq          |
+| 64           | ddqq          | rdqq         |
+| *            | emit          |              |
 
 
 ### 7. Conditional assembly
