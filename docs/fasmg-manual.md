@@ -64,6 +64,7 @@ appended to this one. This allows to split any command across multiple lines,
 when needed. From now on we will refer to a source line as an entity obtained
 by stripping comments and joining the lines of text connected with backslash
 characters.
+
   The text of source line is divided into syntactical units called tokens.
 There is a number of special characters that become separate tokens all by
 themselves. Any of the characters listed below is such a syntactical unit:
@@ -81,6 +82,7 @@ If it is needed to define a string containing the same character that is used to
 enclose it, the character needs to be doubled inside the string - only one copy
 of the character will become a part of the string, and the sequence will
 continue.
+
   Numbers are distinguished from names by the fact that they either
 begin with a decimal digit, or with the `$` character followed by any hexadecimal
 digit. This means that a token can be considered numeric even when it is not a
@@ -112,9 +114,11 @@ in the source file, they define symbols that have identical values:
 Labels defined with `:` command are special constructs in assembly language,
 since they allow any other command (including another label definition) to
 follow in the same line. This is the only kind of command that allows this.
+
   What comes before the `:` or `=` character in such definition is a symbol
 identifier. It can be a simple name, like in the above samples, but it may
 also contain some additional modifiers, described below.
+
   When a name in a symbol definition has the `?` character appended to it (with
 no whitespace between them), the symbol is case-insensitive (otherwise it would
 be defined as case-sensitive). This means that the value of such
@@ -122,6 +126,7 @@ symbol may be referred to (as in an expression to the right of the `=` character
 by the name being any variant of the original name that differs only in the case
 of letters. Only the cases of the 26 letters of the English alphabet are
 allowed to differ, though.
+
   It is possible to define a case-sensitive symbol that clashes with a
 case-insensitive one. Then the case-sensitive symbol takes precedence and the more
 general one is used only when corresponding case-sensitive symbol is not defined.
@@ -154,6 +159,7 @@ Any of the names in such chain may optionally be followed by the `?` character
 to mark that it refers to a case-insensitive symbol. If `?` is inserted in
 the middle of the name (effectively splitting it into separate tokens) such
 identifier is considered a syntactical error.
+
   When an identifier starts with a dot (in other words: when the name of the parent
 symbol is empty), it refers to the symbol in the namespace of the most recent
 regular label defined before current line. This allows to rewrite the above sample
@@ -170,6 +176,7 @@ like this:
 After the `space` label is defined, it becomes the most recently defined normal
 label, so the following `.x` refers to the `space.x` symbol and then the `.color`
 refers to the `space.color`.
+
   The `namespace` command followed by a symbol identifier changes the base
 namespace for a section of source text. It must be paired with the
 `end namespace` command later in the source to mark the end of such block.
@@ -209,6 +216,7 @@ to the original base namespace. Note that when a name is used to specify the
 namespace, the assembler looks for a defined symbol with such name to lookup in
 its namespace, but when it is a name of a symbol to be defined, it is always
 created within the current base namespace.
+
   When the final dot of an identifier is not followed by any name, it refers
 to the parent symbol of the namespace that would be searched for a symbol if
 there was a name after this dot. Adding such dot at the end of an identifier may
@@ -237,6 +245,7 @@ the earlier example in yet another way:
         end namespace
 
 It also demonstrates how namespace sections can be nested one within another.
+
   The `#` may be inserted anywhere inside an identifier without changing its
 meaning. When `#` is the only character separating two name tokens, it causes
 them to be interpreted as a single name formed by concatenating the tokens.
@@ -245,12 +254,14 @@ them to be interpreted as a single name formed by concatenating the tokens.
         varia#ble = var#iable + 2       ; variable = 3
 
 This can also be applied to numbers.
+
   Inside a block defined with `namespace` there is initially no label that would
 be considered base for identifiers starting with dot (even if there was a label
 that served this purpose outside of the block, it loses this status and is brought
 back to use only after the block is closed with `end namespace`). A similar thing
 also happens in the beginning of the source text, before any label has been defined.
 This is connected to additional rules concerning dots in identifiers.
+
   When an identifier starts with a dot, but there is no label that would be
 a parent for it, the identifier refers to the descendant of a special symbol
 that resides in the current namespace but has no name. If an identifier starts
@@ -269,6 +280,7 @@ in the beginning of an identifier remains the same:
 
 In this example the meaning of the `.child` identifier changes from place to
 place, but the `..other` identifier means the same everywhere.
+
   When two names inside an identifier are connected with a sequence of two or
 more dots, the identifier refers to the descendant of such special unnamed
 symbol in the namespace specified by the partial identifier before that sequence
@@ -284,6 +296,7 @@ example demonstrates the two methods of identifying such symbol:
 
 The `#` character has been inserted into the last identifier for a better
 readability, but the plain sequence of three dots would do the same.
+
   The unnamed symbol that hosts a special namespace can itself be accessed
 when an identifier ends with a sequence of two or more dots - thanks to the
 rule that an identifier which ends in a dot refers to the parent symbol of
@@ -292,6 +305,7 @@ in the context of the previous example the `base...` (or `base.#..`) would
 refer to the unnamed parent of the namespace where the `other` symbol resides,
 and it would be the same symbol as identified by simple `..` inside the
 namespace of the `base` symbol.
+
   Any identifier can be prepended with a `?` character and such modifier has
 an effect when it is used in a context where identifier could mean something
 different than a label or variable to be defined. This modifier then
@@ -306,6 +320,7 @@ If such modified identifier is used in a place where it is evaluated and not
 defined, it still refers to the same symbol it would refer to in a definition.
 Therefore, unless identifier also uses a dot, it always refers to a symbol
 in the current namespace.
+
   A number can be used in a role of a name inside an identifier, but not when
 it is placed at the beginning, because then it is considered a literal value.
 This restriction also may be bypassed by prepending an identifier with `?`.
@@ -320,9 +335,11 @@ defined. When a symbol is used before it is defined (this is often called
 forward-referencing) the assembler tries to correctly predict the value of
 the symbol by doing multiple passes over the source text. Only when all
 predictions prove to be correct, the assembler generates the final output.
+
   This kind of symbol, which can only be defined once and thus have a universal
 value that can always be forward-referenced, is called a constant. All labels
 are constants.
+
   When a symbol is defined with a `=` command, it may have multiple definitions
 of this kind. Such symbol is called variable and when it is used, the value from
 its latest definition is accessed. A symbol defined with such command may also be
@@ -346,6 +363,7 @@ when it exists.
   The `:=` defines a constant value. It may be used instead of `=` to
 ensure that the given symbol is defined exactly once and that it can be
 forward-referenced.
+
   The `=:` defines a variable symbol like `=`, but it differs in how
 it treats the previous value (when such exists). While `=` discards the
 previous value, `=:` preserves it so it can later be brought back with the
@@ -363,6 +381,7 @@ definition (either because it was never defined or because all of its
 definitions were already discarded earlier). If a symbol is treated with the
 `restore` command, it becomes a variable and can never be forward-referenced.
 For this reason `restore` cannot be applied to constants.
+
   The `label` keyword followed by a symbol identifier is an alternative way
 of defining a label. In this basic form it is equivalent to a definition made
 with `:`, but it occupies an entire line. However with this command it is
@@ -420,6 +439,7 @@ provided, like after the `=` command or after the `at` keyword, it could be
 a literal value (a number or a quoted string) or a symbol identifier.
 A value can also be specified through an expression containing built-in
 operators.
+
   The `+`, `-` and `*` perform standard arithmetic operations on integers
 (`+` and `-` can also be used in a unary form - with only one argument).
 `/` and `mod` perform division with remainder, giving a quotient or a remainder
@@ -428,55 +448,67 @@ respectively. Of these arithmetic operators `mod` has the highest precedence
 last (even in their unary variants). Operators with the same precedence are
 evaluated from left to right. Parentheses can be used to enclose sub-expressions
 when a different order of operations is required.
+
   The `xor`, `and` and `or` perform bitwise operations on numbers. `xor` is
 addition of bits (exclusive or), `and` is multiplication of bits, and `or` is
 inclusive or (logical disjunction). These operators have higher precedence
 than any arithmetic operators.
+
   The `shl` and `shr` perform bit-shifting of the first argument by the amount
 of bits specified by the second one. `shl` shifts bits left (towards the higher
 powers of two), while `shr` shifts bits right (towards zero), dropping bits that
 fall into the fractional range. These operators have higher precedence than other
 binary bitwise operations.
+
   The `not`, `bsf` and `bsr` are unary operators with even higher precedence.
 `not` inverts all the bits of a number, while `bsf` and `bsr` search for the
 lowest or highest set bit respectively, and give the index of that bit as a
 result.
+
   All the operations on numbers are performed as if they were done on the
 infinite 2-adic representations of those numbers. For example the `bsr` with a
 negative number as an argument gives no valid result, since such number has an
 infinite chain of set bits extending towards infinity and as such contains no
 highest set bit (this is signaled as an error).
+
   The `bswap` operator allows to create a string of bytes containing the
 representation of a number in a reverse byte order (big endian). The second
 argument to this operator should be the length in bytes of the required string.
 This operator has the same precedence as the `shl` and `shr` operators.
+
   When a string value is used as an argument to any of the operations on
 numbers, it is treated as a sequence of bits and automatically converted into
 a positive number (extended with zero bits towards the infinity). The
 consecutive characters of a string correspond to the higher and higher bits of a
 number.
+
   To convert a number back to a string, the `string` unary operator may be
 used. This operator has the lowest possible precedence, so when it precedes
 an expression, all of it is evaluated prior to the conversion. When conversion
 in the opposite direction is needed, simple unary `+` is enough to make a string
 become a number.
+
   The length of a string may be obtained with the `lengthof` unary operator,
 one of the operators with the highest precedence.
+
   The `bappend` operator appends a sequence of bytes of a string given by the
 second argument to the sequence of bytes given by the first one. If either of
 the arguments is a number, it becomes implicitly converted into a string. This
 operator has the same precedence as binary bitwise operations.
+
   When a symbol defined with the `element` command is used in an expression the
 result may be a linear polynomial in a variable represented by the symbol.
 Only simple arithmetic operations are allowed on the terms of a polynomial,
 and it must stay linear - so, for example, it is only allowed to multiply a
 polynomial by a number, but not by another polynomial.
+
   There are a few operators with high precedence that allow to extract the information
 about the terms of linear polynomial. The polynomial should come as the first argument,
 and the index of the term as the second one. The `element` operator extracts
 the variable of a polynomial term (with the coefficient of one), the `scale` operator
 extracts the coefficient (a number by which the variable is multiplied) and `metadata`
 operator gives back the metadata associated with the variable.
+
   When the second argument is an index higher than the index of the last term
 of the polynomial, all three operators return zero. When the second argument
 is zero, `element` and `scale` give information about the constant term -
@@ -501,13 +533,16 @@ and `metadata` operators with the opposite order of arguments. Therefore when `s
 is used in an expression it is equivalent to writing `0 metadataof` in its place.
 These operators have even higher precendence than their counterparts and are
 right-associative.
+
   The order of the terms of the linear polynomial depends on the way in which the value
 was constructed. Every arithmetic operation preserves the order of the terms in
 the first argument, and the terms that were not present in the first argument are
 attached at the end in the same order in which they occurred in the second argument.
 This order only matters when extracting terms with appropriate operators.
+
   The `elementsof` is another unary operator of the highest precedence, it
 counts the number of variable terms of a linear polynomial.
+
   An expression may also contain a literal value that defines a floating-point
 number. Such number must be in decimal notation, it may contain `.` character
 as a decimal mark and may be followed by the `e` character and then a decimal
@@ -517,24 +552,30 @@ one digit. The `f` character can be appended at the end of such literal value.
 If a number contains neither `.` nor `e`, the final `f` is the only way to
 ensure that it is treated as floating-point and not as a simple decimal
 integer.
+
   The floating-point numbers are handled by the assembler in the binary form.
 Their range and precision are at least as high as they are in the longest
 floating-point format that the assembler is able to produce in the output.
+
   Basic arithmetic operations are allowed to have a floating-point
 number as any of the arguments, but none of the arguments may contain
 a non-scalar (linear polynomial) terms then. The result of such operation is
 always a floating-point number.
+
   The unary `float` operator may be used to convert an integer value to
 floating-point. This operator has the highest precedence.
+
   The `trunc` is another unary operator with the highest precedence and it can be
 applied to floating-point numbers. It extracts the integer part of a number
 (it is a truncation toward zero) and the result is always a plain integer, not
 a floating-point number. If the argument was already a plain integer, this
 operation leaves it unchanged.
+
   The `bsr` operator can be applied to floating-point numbers and it returns
 the exponent of such number, which is the exponent of the largest power of
 two that is not larger than the given number. The sign of the floating-point value
 does not affect the result of this operation.
+
   It is also allowed to use a floating-point number as the first argument
 to the `shl` and `shr` operators. The number is then multiplied or divided by the
 power of two specified by the second argument.
@@ -547,13 +588,16 @@ source line at which the symbol may be recognized. A symbol belonging to the
 instruction class is recognized only when it is the first identifier of the
 command, while a symbol from the expression class is recognized only when used
 to provide a value of arguments to some command.
+
   All the types of definitions that were described in the earlier sections
 create the expression class symbols. The `label` and `restore` are examples
 of built-in symbols belonging to the instruction class.
+
   In any namespace it is allowed for symbols of different classes to share the
 same name, for example it is possible to define the instruction named `shl`,
 while there is also an operator with the same name - but an operator belongs
 to the expression class.
+
   It is even possible for a single line to contain the same identifier
 meaning different things depending on its position:
 
@@ -565,10 +609,12 @@ to this class may be recognized only when the first identifier of the command
 is not an instruction - in such case the first identifier becomes a label to
 the instruction defined by the second one. If we treat `=` as a special kind
 of identifer, it may serve as an example of labeled instruction.
+
   The assembler contains built-in symbols of all classes. Their names are
 always case-insensitive and they may be redefined, but it is not possible to
 remove them. When all the values of such symbol are removed with a command
 like `restore`, the built-in value persists.
+
   The rules concerning namespace apply equally to the symbols of all classes,
 for example symbol of instruction class belonging to the child namespace of
 latest label can be executed by preceding its name with dot. It should be
@@ -615,6 +661,7 @@ bytes are not generated themselves unless they are followed by some other data.
 Therefore if the bytes are reserved at the end of output, they do not increase
 the size of generated file. This kind of data is called uninitialized, while
 all the regular data are said to be initialized.
+
   The `rb` instruction reserves a number of bytes specified by its argument.
 
         db ?                    ; reserve 1 byte
@@ -636,9 +683,11 @@ is extended with zero bytes to the length which is the multiple of data unit.
 The `rw`, `rd`, `rp`, `rq`, `rt`, `rdq`, `rqq` and `rdqq` are the instructions
 that reserve a specified number of data units. The unit sizes associated with
 all these instructions are listed in table 1.
+
   The `dw`, `dd`, `dq`, `dt` and `ddq` instructions allow floating-point
 numbers as data units. Any such number is then converted into floating-point
 format appropriate for a given size.
+
   The `emit` (with a synonym `dbx`) is a data directive that uses the size
 of unit specified by its first argument to generate data defined by
 the remaining ones. The size may be separated from the next argument with
@@ -686,12 +735,14 @@ conditionally assembled block and begins a block that is assembled only when
 none of the previous conditions was true. The `end if` command should be used
 to end the entire construction. There may be many or none `else if` commands
 inside and no more than one `else`.
+
   A logical expression is a distinct syntactical entity from the basic
 expressions that were described earlier. A logical expression consists of
 logical values connected with logical operators. The logical operators are:
 unary `~` for negation, `&` for conjunction and `|` for alternative.
 The negation is evaluated first, while `&` and `|` are simply evaluated
 from left to right, with no precedence over each other.
+
   A logical value in its simplest form may be a basic expression, it then
 corresponds to true condition if and only if its value is not constant zero.
 Another way to create a logical value is to compare the values of two basic
@@ -712,11 +763,13 @@ valid only when they are comparable, which is whey they differ in constant
 term only. Otherwise the condition like equality is neither universally true
 nor universally false, since it depends on the values substituted for variables,
 and assembler signals this as an error.
+
   The `relativeto` operator creates a logical value that is true only when
 the difference of compared values does not contain any variable terms. Therefore
 it can be used to check whether two linear polynomials are comparable - the
 `relativeto` condition is true only when both compared polynomials have the same
 variable terms.
+
   Because logical expressions are lazily evaluated, it is possible to create
 a single condition that will not cause an error when the polynomials are not
 comparable, but will compare them if they are:
@@ -730,11 +783,13 @@ it makes a logical value which is true when the values of the expressions are
 of the same type - either both are algebraic, both are strings or both are
 floating-point numbers. An algebraic type covers the linear polynomials and
 it includes the integer values.
+
   The `eq` operator compares two basic expressions and creates a logical value
 which is true only when their values are of the same type and equal. This operator
 can be used to check whether a value is a certain string, a certain floating-point
 number or a certain linear polynomial. It can compare values that are not
 comparable with `=` operator.
+
   The `defined` operator creates a logical value combined with a basic expression
 that follows it. This condition is true when the expression does not contain
 symbols that have no accessible definition. The expression is only tested for the
@@ -744,11 +799,14 @@ but since the symbol can be accessible through forward-referencing, this conditi
 may be true even when the symbol is defined later in source. If this is undesirable,
 the `definite` operator should be used instead, as it checks whether all symbols
 within a basic expression that follows have been defined earlier.
+
   The basic expression that follows `defined` is also allowed to be empty and
 the condition is then trivially satisfied. This does not apply to `definite`.
+
   The `used` operator forms a logical value if it is followed by a single
 identifier. This condition is true when the value of specified symbol has
 been used anywhere in the source.
+
   The `assert` is an instruction that signalizes an error when a condition
 specified by its argument is not met.
 
@@ -788,6 +846,7 @@ assigned values.
 The value of a parameter can be any text, not necessarily a correct expression.
 If a line calling the macroinstruction contains fewer arguments than the
 number of defined parameters, the excess parameters receive the empty values.
+
   When a name of a parameter is defined, it may be followed by `?` character
 to denote that it is case-insensitive, analogously to a name in a symbol
 identifier. There must be no whitespace between the name and `?`.
@@ -866,12 +925,14 @@ that causes it to be identified as belonging to the unique local namespace
 associated with the instance of macroinstruction. This kind of context
 information is going to be discussed further in the section about
 symbolic variables.
+
   A symbol that is local to a macroinstruction is never considered the most
 recent label that is base for symbols starting with dot. Moreover, its
 descendant namespace is disconnected from the main tree of symbols, so if
 `namespace` command was used with a local symbol as the argument, symbols
 from the main tree would no longer be visible (including all the named
 instructions of the assembler, even commands like `end namespace`).
+
   Just like an expression symbol may be redefined and refer to its previous
 value in the definition of the new one, the macroinstructions can also be
 redefined, and use the previous value of this instruction symbol in its
@@ -890,10 +951,12 @@ text:
 
 And just like other symbols, a macroinstruction may be forward-referenced when
 it is defined exactly once in the entire source.
+
   The `purge` command discards the definition of a symbol just like `restore`,
 but it does so for the symbol of instruction class. It behaves in the same
 way as `restore` in all the other aspects. A macroinstruction can remove its
 own definition with `purge`.
+
   It is possible for a macroinstruction to use its own value in a recursive way,
 but to avoid inadvertent infinite recursion this feature is only available when
 the macroinstruction is marked as such by following its identifier with `:`
@@ -910,6 +973,7 @@ character.
 
 In addition to allowing recursion, such macroinstruction behaves like a constant.
 It cannot be redefined and `purge` cannot be applied to it.
+
   A macroinstruction may in turn define another macroinstruction or a number
 of them. The blocks designated by `macro` and `end macro` must be properly
 nested one within the other for such definition to be accepted by the
@@ -949,6 +1013,7 @@ If `esc` is placed inside a nested definition, it is not processed out until
 the innermost macroinstruction becomes defined. This allows a definition
 containing `esc` to be placed inside another macroinstruction without having
 to repeat `esc` for every nesting level.
+
   When an identifer of macroinstruction in its definition is followed by `!`
 character, it defines an unconditional macroinstruction. This is a special
 kind of instruction class symbol, which is evaluated even in places where the
@@ -975,6 +1040,7 @@ If the macroinstruction `endp` in the above sample was not defined as an
 unconditional one and the block started with `if` was being skipped, the
 macroinstruction would not get evaluated, and this would lead to an error
 because `end if` would be missing.
+
   It should be noted that `end` command executes an instruction identified
 by its argument in the child namespace of case-insensitive `end` symbol.
 Therefore command like `end if` could be alternatively invoked with
@@ -999,6 +1065,7 @@ This slighly modified variant of the above sample puts these facts to use:
 
 A similar rule applies to the `else` command and the instructions in the
 `else?` namespace.
+
   When an identifier consisting of a lone `?` character is used as an
 instruction symbol in the definition of macroinstruction, it defines a special
 instruction that is then called every time a line to be assembled does not
@@ -1026,6 +1093,7 @@ An identifier consisting of two question marks can be used to define a special
 instruction that is called only as last resort, on lines that contain no
 recognizable instruction. This allows to intercept lines that would otherwise
 be rejected with "illegal instruction" message due to unknown syntax.
+
   The `mvmacro` is an instruction that takes two arguments, both identifying
 an instruction-class symbols. The definition of a macroinstruction specified
 by the second argument is moved to the symbol identified by the first one.
@@ -1067,6 +1135,7 @@ defined unless an appropriate definition is generated by the macroinstruction.
 Furthermore, this symbol is not considered the most recent label in
 the surrounding namespace unless it gets defined as an actual label in
 the macroinstruction it labeled.
+
   For an easier use of this feature, other syntaxes may be defined with
 macroinstructions, like in this sample:
 
@@ -1092,6 +1161,7 @@ macroinstructions, like in this sample:
   The `restruc` command is analogous to `purge`, but it operates on symbols
 from the class of labeled instructions. Similarly, the `mvstruc` command is
 the same as `mvmacro` but for labeled instructions.
+
   As with `macro`, it is possible to use an identifier consisting of a lone `?`
 character with `struc`. It defines a special labeled macroinstruction that is
 called every time the first symbol of a line is not recognized as an instruction.
@@ -1111,6 +1181,7 @@ for `def` parameter:
 
 Similarly to `macro` this special variant does not override unconditional labeled
 instructions unless it is unconditional itself.
+
   While `.` provides an efficient method of accessing the label symbol,
 sometimes it may be needed to process the actual text of the label.
 A special parameter can be defined for this purpose and its name should be
@@ -1133,6 +1204,7 @@ of its value in place of its identifier, with an effect similar to
 evaluation of a parameter of macroinstruction (except that a parameter is
 always identified by a single name, while a symbolic value may be hidden
 behind a complex identifier).
+
   This can lead to an unexpected outcome compared to the use of standard
 variables defined with `=`, as the following example demonstrates:
 
@@ -1144,11 +1216,13 @@ variables defined with `=`, as the following example demonstrates:
 While `x` is assigned the value of 12, the value of `y` is 8. This shows that
 the use of such symbols can lead to unintended interactions and therefore
 definitions of this type should be avoided unless really necessary.
+
   The `equ` allows redefinitions, and it preserves the previous value of
 symbol analogously to the `=:` command, so the earlier value can be brought
 back with `restore` instruction. To replace the symbolic value (analogously
 to how `=` overwrites the regular value) the `reequ` command should be used
 instead of `equ`.
+
   A symbolic value, in addition to retaining the exact text it was defined
 with, preserves the context in which the symbols contained in this text are
 to be interpreted. Therefore it can effectively become a reliable link to
@@ -1191,6 +1265,7 @@ initial part matters. For example, prepending a name of a parameter with
 `#` character is going to cause the identifier to use current context instead
 of context carried by the text of that parameter, because initial context
 for the identifier is then the context associated with text `#`.
+
   Unlike the value of a symbolic variable, the body of a macroinstruction
 by itself carries no context (although it may contain snippets of text that
 came from replaced parameters and because of that have some context associated
@@ -1198,13 +1273,16 @@ with them). Also, if a macroinstruction becomes unrolled at the time when
 another one is being defined (this can only happen when called macroinstruction
 is unconditional), no context information is added to the arguments, to aid in
 preservation of this context-lessness.
+
   If the text following `equ` contains identifiers of known symbolic variables,
 each of them is replaced with its contents and it is such processed text that
 gets assigned to the newly defined symbol.
+
   The `define` is a regular instruction that also creates a symbolic value,
 but as opposed to `equ` it does not evaluate symbolic variables in the
 assigned text. It should be followed by an identifier of symbol to be defined
 and then by the text of the value.
+
   The difference between `equ` and `define` is often not noticeable, because
 when used in final expression the symbolic variables are nestedly evaluated
 until only the usable constituents of expressions are left. A possible use of
@@ -1220,9 +1298,11 @@ example demonstrates:
 
 The other uses of `define` will arise in the later sections, with the
 introduction of other instructions that operate on symbolic values.
+
   The `define`, like `equ`, preserves the previous value of symbol. The
 `redefine` is a variant of this instruction that discards the earlier value,
 analogously to `reequ`.
+
   Note that while symbolic variables belong to the expression class of symbols,
 their state cannot be determined with operators like `defined`, `definite`,
 or `used`, because a logical expression is evaluated as if every symbolic
@@ -1271,6 +1351,7 @@ identifiers containing the number as a part of name:
 
 The above example defines symbols `f1` to `f16` with values being the
 consecutive powers of two.
+
   The `repeat` instruction can have additional arguments, separated with
 commas, each containing a name of supplementary parameters specific to this
 block. Each of the names can be followed by `:` character and the expression
@@ -1343,8 +1424,10 @@ followed by `*` to require that the parameter has a value that is not empty,
 or `:` and a default value. If an `iterate` statement ends with a comma not
 followed by anything else, it is not interpreted as an additional empty value,
 to put a blank value at the end of list an empty enclosing `<>` needs to be used.
+
   The `break` instruction plus both the `%` and `%%` parameters can be used
 inside the `iterate` block with the same effects as in case of `repeat`.
+
   The `indx` is an instruction that can be only be used inside an iterated
 block and it changes the values of all the iterated parameters to the ones
 corresponding to iteration with number specified by the argument to `indx` (but
@@ -1381,17 +1464,20 @@ themselves created from another parameter that preserved the original context
 for the symbol identifiers (like the parameter of macroinstruction), then this
 context is preserved, but otherwise `iterate` defines just a plain text
 substitution.
+
   The parameters defined by instructions like `iterate` or `repeat` are
 processed everywhere in the text of associated block, but with some limitations
 if the block is defined partly by the text of macroinstruction and partly in
 other places. In that case the parameters are only accessible in the parts of
 the block that are defined in the same place as the initial command.
+
   Every time a parameter is defined, its name can have the `?` character
 attached to it to indicate that this parameter is case-insensitive. However
 when parameters are recognized inside the preprocessed line, it does not matter
 whether they are followed by `?` there. The only modifier that is recognized
 by preprocessor when it replaces the parameter with its value is the `` ` ``
 character.
+
   The repeating instructions together with `if` belong to a group called
 control directives. They are the instructions that control the flow of
 assembly. Each of them defines its own block of subordinate instructions,
@@ -1400,6 +1486,7 @@ each other, it always must be a proper nesting - the inner block must always
 be closed before the outer one. All control directives are therefore the
 unconditional instructions - they are recognized even when they are inside
 an otherwise skipped block.
+
   The `postpone` is another control directive, which causes a block of
 instructions to be assembled later, when all of the following source text
 has already been processed.
@@ -1413,10 +1500,12 @@ has already been processed.
 The above sample postpones the definition of `final_count` symbol until the
 entire source has been processed, so that it can access the final value of
 `counter` variable.
+
   The assembly of the source text that follows `postpone` includes the assembly
 of any additional blocks declared with `postpone`, therefore if there are
 multiple such blocks, they are assembled in the reverse order. The one that
 was declared last is assembled first when the end of the source text is reached.
+
   When the `postpone` directive is provided with an argument consisting of
 a single `?` character, it tells the assembler that the block contains
 operations which should not affect any of the values defined in the main
@@ -1425,6 +1514,7 @@ other values have been successfully resolved. Such blocks are processed
 even later than the ones declared by `postpone` with no arguments. They
 may be used to perform some finalizing tasks, like the computation of a
 checksum of the assembled code.
+
   The `irpv` is another repeating instruction and an iterator. It has just two
 arguments, first being a name of parameter and second an identifier of
 a variable. It iterates through all the stacked values of symbolic
@@ -1440,6 +1530,7 @@ defined earlier in the source).
         end irpv
 
 In the above example there are three iterations, with values 1, 2, and 4.
+
   `irpv` can effectively convert a value of symbolic variable into a parameter,
 and this can be useful all by itself, because the symbolic variable is only
 evaluated in the expressions inside the arguments of instructions (labeled or
@@ -1459,12 +1550,14 @@ regular value that is linked by symbolic variable:
 The combination of `indx` and `break` was added to the above sample to limit
 the iteration to the latest value of symbolic variable. In the next section
 a better solution to the same problem will be presented.
+
   When a variable passed to `irpv` has a value that is not symbolic, the
 parameter is given a text that produces the same value upon computation. When
 the value is a positive number, the parameter is replaced with its decimal
 representation (similarly how the `%` parameter is processed), otherwise
 the parameter is replaced with an identifier of a proxy symbol holding the
 value from stack.
+
   The `outscope` directive is available while any macroinstruction is processed,
 and it modifies the command that follows in the same line. If the command causes
 any parameters to be defined, they are created not in the context of currently
@@ -1491,6 +1584,7 @@ be assembled only when the text specified by its second argument matches the
 pattern given by the first one. A text is separated from a pattern with a comma
 character, and it includes everything that follows this separator up to the end
 of line.
+
   Every special character (except for the `,` and `=`, which have a specific
 meaning in the pattern) is matched literally - it must be paired with identical
 token in the text. In the following example the content of the first block
@@ -1516,6 +1610,7 @@ to the text the wildcard was matched with.
 
   A parameter name in pattern can have an extra `?` character attached to it
 to indicate that it is a case-insensitive name.
+
   The `=` character causes the token that follows it to be matched literally.
 It allows to perform matching of name tokens, and also of special characters
 that would otherwise have a different meaning, like `,` or `=`, or `?` following
@@ -1650,6 +1745,7 @@ the last value, can be rewritten to use `match` instead:
 The difference between them is that `irpv` would execute its block even for
 an empty value, while in the case of `match` the `else` block would need to be
 added to handle an empty text.
+
   When the evaluation of symbolic variables in the matched text is undesirable,
 a symbol created with `define` can be used as a proxy to preserve the text,
 because the replacement is not recursive:
@@ -1675,6 +1771,7 @@ A concern could arise that `define` may modify the meaning of text by
 equipping it with a local context. But when the value for `define` comes from
 a parameter of macroinstruction (as in the above sample), it already carries
 its original context and `define` does not alter it.
+
   The `rawmatch` directive (with a synonym `rmatch`) is very similar to `match`,
 but it operates on the raw text of the second argument. Not only it does not
 evaluate the symbolic variables, but it also strips the text of any additional
@@ -1729,6 +1826,7 @@ data. When there was no such data defined just before the current position,
 this value is equal to `$`, otherwise it is equal to `$` minus the length of
 said data inside the current addressing space. Note that reserved data
 no longer counts as such when it is followed by an initialized one.
+
   The `section` instruction is similar to `org`, but it additionally trims
 all the reserved data that precedes it analogously to how the uninitialized
 data is not written into output when it is at the end of file. The `section`
@@ -1765,12 +1863,14 @@ one.
 
 The values in the comments of the above sample assume that the source contains
 no other instructions generating output.
+
   The `virtual` creates a special output area which is not written into the main
 output file. This kind of area must reside between the `virtual` and `end virtual`
 commands, and after it is closed, the output generator comes back to the area it
 was previously operating on, with position and address the same as there were just
 before opening the `virtual` block. This allows also to nest the `virtual` blocks
 within each other.
+
   When `virtual` has no argument, the base address of this area is the same
 as current address in the outer area. An argument to `virtual` can have a form
 of `at` keyword followed by an expression defining the base address for the
@@ -1786,6 +1886,7 @@ enclosed area:
 an `as` keyword and a string defining an extension of additional file where
 the initialized content of the area is going to be stored at the end of
 a successful assembly.
+
   The `load` instruction defines the value of a variable by loading the string
 of bytes from the data generated in an output area. It should be followed by
 an identifier of symbol to define, then optionally the `:` character and a
@@ -1802,6 +1903,7 @@ space between `$$` and `$` addresses.
 
 When the number of bytes is not specified, the length of loaded string is
 determined by the size associated with address.
+
   Another variant of `load` needs a special kind of label, which is created
 with `::` instead of `:`. Such label has a value that cannot be used directly,
 but it can be used with `load` instruction to access the data of the area in
@@ -1832,6 +1934,7 @@ data to replace, in one of the same two modes as allowed by `load`. However the
 `store` is not allowed to modify the data that has not been generated yet, and
 any area that has been touched by `store` becomes a variable area, forbidding
 also the `load` to read a data from such area in advance.
+
   The following example uses the combination of `load` and `store` to encrypt
 the entire contents of the current area with a simple `xor` operation:
 
@@ -1867,6 +1970,7 @@ to defining a constant with a final value of some variable:
 
   The area label can be forward-referenced by `load`, but it can never be
 forward-referenced by `store`, even if it refers to the current output area.
+
   The `virtual` instruction can have an existing area label as the only
 argument. This variant allows to extend a previously defined and closed
 block with additional data. The area label must refer to a block that was
@@ -1886,6 +1990,7 @@ present in the original `virtual` block.
 linear polynomial. The metadata of such term is the base address of the area.
 The metadata of an area label itself, accessible with `sizeof` operator,
 is equal to the current length of data within the area.
+
   There is an additional variant of `load` and `store` directives that allows
 to read and modify already generated data in the output file given simply
 an offset within that output. This variant is recognized when the `at` or
@@ -1902,6 +2007,7 @@ point and starts anew with an empty one. An optional argument may specify
 the base address of newly started output area. When `restartout` has no
 argument, the current address is preserved by using it as the base for the
 new area.
+
   The `org`, `section` and `restartout` instructions cannot be used inside
 a `virtual` block, they can only separate areas that go into the output file.
 
@@ -1922,6 +2028,7 @@ An additional argument may be optionally added (separated from the path
 by comma), and it is interpreted as a command to be executed after the file
 has been read and inserted into the source stream, just before processing
 the first line.
+
   The `eval` instruction takes a sequence of bytes defined by its arguments,
 treats it as a source text and assembles it. The arguments are either strings
 or the numeric values of single bytes, separated with commas. In the next
@@ -1970,8 +2077,10 @@ attaching a new extension if such is defined.
 it to find an instruction in the child namespace of case-insensitive symbol
 named `format`. The only built-in instruction that resides in that namespace
 is the `binary`, but additional ones may be defined in form of macroinstructions.
+
   The built-in symbol `__time__` (with legacy synonym `%t`) has the constant value
 of the timestamp marking the point in time when the assembly was started.
+
   The `__file__` is a built-in symbol whose value is a string containing
 the name of currently processed source file. The accompanying `__line__` symbol
 provides the number of currently processed line in that file. When these symbols
@@ -1979,8 +2088,10 @@ are accessed within a macroinstruction, they keep the same value they had for th
 calling line. If there are several levels of macroinstructions calling each
 other, these symbols have the same value everywhere, corresponding to the line
 that called the outermost macroinstruction.
+
   The `__source__` is another built-in symbol, with value being a string containing
 the name of the main source file.
+
   The `retaincomments` directive switches the assembler to treat a semicolon as
 a regular token and therefore not strip comments from lines before processing.
 This allows to use semicolons in places like MATCH pattern.
@@ -2001,6 +2112,7 @@ This allows to use semicolons in places like MATCH pattern.
 
   The `isolatelines` directive prevents the assembler from subsequently combining
 lines read from the source text when the line break is preceded by a backslash.
+
   The `removecomments` directive brings back the default behavior of semicolons
 and the `combinelines` directive allows lines from the source text to be combined
 as usual.
@@ -2014,22 +2126,27 @@ which operate on a straightforward principle of textual substitution, CALM
 (Compiled Assembly-Like Macro) instructions are able to perform many operations
 without passing any text through the standard preprocessing and assembly cycle.
 This allows for a finer control, better error handling and faster execution.
+
   All references to symbols in the text defining a CALM instruction are fixed
 at the time of definition. As a consequence, any symbols local to the CALM instruction
 are shared among all its executed instances (for example consecutive instances may see
 the values of local symbols left by the previous ones). To aid in reusing these
 references, commands in CALM are generally operating on variables, routinely rewriting
 the symbols with new values.
+
   A `calminstruction` statement follows the same rules as `macro` declaration,
 including options like `!` modifier to define unconditional instruction, `*` to mark
 a required argument, `:` to give it a default value and `&` to indicate that
 the final argument consumes all the remaining text in line.
+
   However, because CALM instruction operates outside of the standard preprocessing
 and assembly cycle, its arguments do not become preprocessed parameters. Instead
 they are local symbolic variables, given new values every time the instruction is called.
+
   If the name of defined instruction is preceded by another name enclosed in round
 brackets, the statement defines a labeled instruction and enclosed name is the
 argument that is going to receive the text of the label.
+
   In the definition of CALM instruction, only the statements of its specialized
 language are identified. The initial symbol of every line must be a simple name without
 modifiers and it is only recognized as valid instruction if a case-insensitive symbol with
@@ -2039,10 +2156,12 @@ of customization, is accessible as the namespace anchored at the case-insensitiv
 become a label if it is followed by `:`, it is then treated as a case-sensitive symbol
 belonging to a specialized class. Symbols of this class are only recognized when used
 as arguments to CALM jump commands (described further down).
+
   An `end calminstruction` statement needs to be used to close the definition and
 bring back normal mode of assembly. It is not a regular `end` command,
 but an identically named instruction in the CALM namespace, which only accepts
 `calminstruction` as its argument.
+
   The `assemble` is a command that takes a single argument, which should be
 an identifier of a symbolic variable. The text of this variable is passed directly
 to assembly, without any preprocessing (if the text came from an argument to
@@ -2086,6 +2205,7 @@ succeeded.
 To further control the flow of processing, the `jump` command allows to jump
 unconditionally, and with `exit` it is possible to terminate processing of
 CALM instruction at any moment (this command takes no arguments).
+
   While the symbols used for the arguments of the instruction are implicitly local,
 other identifiers may become fixed references to global symbols if they are seen
 as accessible at the time of definition (because in CALM instruction all such references
@@ -2112,11 +2232,13 @@ by one or more names separated with commas.
         end calminstruction
 
 A symbol made local is initally assigned a defined but unusable value.
+
   If a pattern in CALM instruction has a `?` character immediately following the name
 of a wildcard, it does not affect how the symbol is identified (whether the used symbol
 is case-insensitive depends on what is present in the local scope at the time
 the instruction is defined). Instead, modifying the name of a wildcard with `?` allows it
 to be matched with an empty text.
+
   Since the source text for `match` is in this variant given by just a single identifier,
 this syntax allows to have more optional arguments. A third argument to `match` may
 contain a pair of bracket characters. Any wildcard element must then be matched with
@@ -2136,11 +2258,13 @@ a text that has this kind of brackets properly balanced.
         please display 'H',('g'+2) + display '!'
 
 The brackets selected by the third argument must not be used anywhere in the pattern.
+
   The `arrange` command is like an inverse of `match`, it can build up a text
 containing the values of one or more symbolic variables. The first argument defines
 a variable where the constructed text is going to be stored, while the second argument
 is a pattern formed in the same way as for `match` (except that it does not need
 to precede a comma with `=` to have it included in the argument).
+
 All non-name tokens other than `=` and tokens preceded with `=` are copied literally
 into the constructed text and they do not carry any recognition context with them.
 The name tokens that are not made literal with `=` are treates as names of variables
@@ -2158,6 +2282,7 @@ whose symbolic values are put in their place into the constructed text.
 
 With suitably selected patterns, `arrange` can be used to copy symbolic value
 from one variable to another or to assign it a fixed value (even an empty one).
+
   If a variable used in pattern turns out to have a numeric value instead of symbolic,
 as long as it is a non-negative number with no additional terms, it is converted
 into a decimal token stored into the constructed symbolic value (an operation
@@ -2175,6 +2300,7 @@ that outside of CALM instructions would require use of a `repeat 1` trick):
 
 This is the only case when a non-symbolic value is converted to symbols that may be
 put into text composed by `arrange`, other types are not supported.
+
   The `compute` command allows to evaluate expressions and assign numeric results to
 variables. The first argument to `compute` defines a target where the result should
 be stored, while the second argument can be any numeric expression, which is
@@ -2182,6 +2308,7 @@ becomes pre-compiled at the time of definition. When the expression is evaluated
 and any of the symbols it refers to turns out to have symbolic value, this text
 is parsed as a new sub-expression, and its calculated value is then used in the
 computation of the main expression.
+
   A `compute` therefore can be used not only to evaluate a pre-defined expression,
 but also to parse and compute an expression from a text of a symbolic variable
 (like one coming from an argument to the instruction), or a combination of both:
@@ -2196,6 +2323,7 @@ but also to parse and compute an expression from a text of a symbolic variable
 
 Because symbolic variable is evaluated as a sub-expression, its use here has no
 side-effects that would be caused by a straightforward text substitution.
+
   The `check` command is analogous to `if`. It evaluates a condition defined by
 the logical expression that follows it and accordingly sets up the result flag which
 may be tested with `jyes` or `jno` command. The values of symbolic variables
@@ -2215,6 +2343,7 @@ to logical expression).
 
 All commands that are not explicitly said to set the flag that is checked by `jyes`
 and `jno`, keep the value of this flag unchanged.
+
   The `publish` command allows to assign a value to a symbol identified by the text
 held in a variable. This allows to define a symbol with a name constructed with
 a command like `arrange`, or a name that was passed in an argument to an instruction.
@@ -2236,6 +2365,7 @@ or it can be preceded by `:` to make the value stacked on top of the previous on
 
 The above instruction allows to define a symbolic constant, something that is not
 possible with standard directives of the assembler.
+
   The purpose of `transform` command is to replace identifiers of symbolic variables
 (or constants) with their values in a given text, which is the same operation as done
 by `equ` directive when it prepares the value to assign. The argument to `transform`
@@ -2258,9 +2388,11 @@ has been done.
         end calminstruction
 
 The result flag is modified only by some of the commands, like `check`, `match` or `transform`. Other commands keep it unchanged.
+
   Optionally, `transform` can have two arguments, with second one specifying
 a namespace. Identifiers in the text given by the first argument are then interpreted
 as symbols in this namespace regardless of their original context.
+
   The `stringify` is a command that converts text of a variable into a string
 and writes it into the same variable, specified by the only argument. This operation
 is similar to the one performed by `` ` `` operator in preprocessing, but it produces
@@ -2302,6 +2434,7 @@ whether there is an available value without affecting it.
 
 A symbol accessed as either destination or source by a `take` command can never be
 forward-referenced even if it could otherwise.
+
   Defining macro instructions in the namespace of case-insensitive `calminstruction`
 allows to add customized commands to the language of CALM instructions. However,
 they must be defined as case-insensitive to be recognized as such.
@@ -2342,6 +2475,7 @@ namespace of the `show` instruction. This allows the `display` command to access
 the `text` even though it is local to the CALM instruction and therefore normally
 visible only in the scope of the definition of `show`. This is similar to the use
 of `define` to form symbolic links.
+
   The `call` command allows to directly execute another CALM instruction. Its
 first argument must provide an identifier of an instruction-class symbol, and
 at the execution time this symbol must be defined as CALM (it is not possible
@@ -2365,6 +2499,7 @@ after the called instruction finishes.
 
 When looking up the instruction symbol, the assembler skips the local namespace
 of the CALM instruction, as it is not expected to contain instruction definitions.
+
   Additional arguments to `call` should be identifiers of variables (or constants)
 whose values are going to be passed as arguments to the called instruction.
 The values of these symbols are assigned directly to the argument variables,
@@ -2374,7 +2509,7 @@ some values that otherwise would be impossible to pass directly, like numeric on
 text and assigned as symbolic values). An argument may be omitted when the definition
 of called instruction allows it, in such case the default value for that argument
 is used.
-
+```assembly
         calminstruction hex_nibble digit*, command: display
                 compute digit, 0FFh and '0123456789ABCDEF' shr (digit*8)
                 arrange command, command digit
@@ -2399,7 +2534,7 @@ is used.
         end calminstruction
 
         demo
-
+```
 
 ### 16. Assembly commands in CALM instructions
 
