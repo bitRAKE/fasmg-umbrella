@@ -2510,30 +2510,30 @@ text and assigned as symbolic values). An argument may be omitted when the defin
 of called instruction allows it, in such case the default value for that argument
 is used.
 ```assembly
-        calminstruction hex_nibble digit*, command: display
-                compute digit, 0FFh and '0123456789ABCDEF' shr (digit*8)
-                arrange command, command digit
-                assemble command
-        end calminstruction
+calminstruction hex_nibble digit*, command: display
+	compute	digit, 0FFh and '0123456789ABCDEF' shr (digit*8)
+	arrange	command, command digit
+	assemble command
+end calminstruction
 
-        calminstruction display_hex_byte value: DATA
-                compute value, value
-                local   digit
-                compute digit, (value shr 4) and 0Fh
-                call    hex_nibble, digit
-                compute digit, value and 0Fh
-                call    hex_nibble, digit
-        end calminstruction
+calminstruction display_hex_byte value: DATA
+	compute	value, value
+	local	digit
+	compute	digit, (value shr 4) and 0Fh
+	call	hex_nibble, digit
+	compute	digit, value and 0Fh
+	call	hex_nibble, digit
+end calminstruction
 
-        DATA = 0xedfe
+DATA = 0xedfe
 
-        calminstruction demo
-                call    display_hex_byte
-                compute DATA, DATA shr 8
-                call    display_hex_byte
-        end calminstruction
+calminstruction demo
+	call	display_hex_byte
+	compute	DATA, DATA shr 8
+	call	display_hex_byte
+end calminstruction
 
-        demo
+demo
 ```
 
 ### 16. Assembly commands in CALM instructions
