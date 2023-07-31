@@ -229,14 +229,12 @@ Display__HRESULT:
 ;	cmp dword [.hMod],0
 ;	jz .E_UNEXPECTED
 
-	collect DATA.2
-		Display__HRESULT.UNEXPECTED \
-			du 'E_UNEXPECTED',0
-		Display__HRESULT.pattern \
-			du '{0} : {1}',10,0
-	end collect
+	virtual DATA.2
+		.UNEXPECTED du 'E_UNEXPECTED',0
+		.pattern du '{0} : {1}',10,0
+	end virtual
 	LocalAlloc LPTR,32
-	vmovdqu ymm0,qqword [.UNEXPECTED]
+	vmovdqu ymm0, qqword [.UNEXPECTED]
 	vmovdqu [rax],ymm0
 	mov [.fmt],rax
 @@:	; use icu.dll for format string for output
@@ -313,11 +311,11 @@ iterate <iid,uuid>,\
 	end if
 end iterate
 end macro
-collect CONST.16
+virtual CONST.16
 	uuid_table_gen	; single use macro
 	align 16	; compensate for unknown size
-end collect
+end virtual
 
-collect BSS.64
+virtual BSS.64
 	buffer rw 1024
-end collect
+end virtual

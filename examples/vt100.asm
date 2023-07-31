@@ -2,9 +2,9 @@ format PE64 CONSOLE 6.2 at 0x1_0000
 define UMBRELLA_LIBRARY "windowscoreheadless"
 include 'umbrella.g'
 
-collect CONST.1
+virtual CONST.1
 	digit_table db '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-end collect
+end virtual
 
 UINT64__Baseform:
 ; RAX number to convert
@@ -88,7 +88,7 @@ if definite Have_an_older_Windows_version.
 	SetConsoleMode [.hStdIn],[.dwMode]
 end if
 
-	collect CONST.1
+	virtual CONST.1
 	.msg db \
 		27,'[32m',\
 		'green',10,\
@@ -101,7 +101,7 @@ end if
 		27,'[m',\
 		'back to noral text',10
 	.msg_bytes := $ - .msg
-	end collect
+	end virtual
 	WriteConsoleA [.hStdOut],ADDR .msg,.msg_bytes,ADDR .rit,0
 
 	mov [.i],0
@@ -152,13 +152,11 @@ end if
 	cmp [.i],11
 	jnz .lines
 
-
-
 	xor eax,eax
 	leave
 	pop rdi rsi
 	retn
 
-collect BSS.64
+virtual BSS.64
 	buffer rw 1024
-end collect
+end virtual

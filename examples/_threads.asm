@@ -289,13 +289,13 @@ MAXIMUM_WAIT_OBJECTS	:= 0x0000_0040
 	int3
 
 
-collect BSS.64
+virtual BSS.64
 	buffer rw 1024 ; api limits to 1k characters
 
 	align __CACHE_LINE__ ; in case it's larger than 64
 	ThreadData rb ThreadData.bytes*64
 	ThreadData_at ThreadData
-end collect
+end virtual
 
 
 ;while (($ - $$) and (__CACHE_LINE__-1)) \

@@ -122,11 +122,11 @@ WndMainProc:
 	retn
 
 
-collect DATA.8
+virtual DATA.8
 	g_hMenu dq ?
 
 	Main.wc WNDCLASSEXW\
-		cbSize:		sizeof WNDCLASSEX,\
+		cbSize:		sizeof Main.wc,\
 		style:		CS_HREDRAW or CS_VREDRAW,\
 		lpfnWndProc:	WndMainProc,\
 		hbrBackground:	COLOR_BTNTEXT + 1,\; black client area
@@ -142,7 +142,7 @@ collect DATA.8
 
 	Main.ClassName du 'bitRAKE.2023',0
 	align 64
-end collect
+end virtual
 
 
 ; HBITMAP
@@ -235,9 +235,9 @@ define _ ,9,
 restore _
 purge MAKE_MainMenuTemplate
 end macro
-collect CONST.4
+virtual CONST.4
 	MAKE_MainMenuTemplate
-end collect
+end virtual
 
 
 SECTION '.rsrc' RESOURCE DATA READABLE

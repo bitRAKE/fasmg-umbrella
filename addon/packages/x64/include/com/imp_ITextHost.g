@@ -181,7 +181,7 @@ TxSetCursor: ; HCURSOR hcur, BOOL fText
 	retn ; void
 
 
-;: converts screen coordinates of a specified point to the client coordinates 
+;: converts screen coordinates of a specified point to the client coordinates
 TxScreenToClient: ; LPPOINT lppt
 	xor eax,eax ; FALSE
 	retn ; BOOL
@@ -332,7 +332,7 @@ TxIsDoubleClickPending:
 	retn ; BOOL
 
 
-;: get the overall window for this control	 
+;: get the overall window for this control
 TxGetWindow: ; HWND* phwnd
 ;	mov [rdx],rax
 	xor eax,eax ; S_OK
@@ -406,7 +406,7 @@ TxGetHorzExtent: ; LONG* plHorzExtent
 end namespace ; xITextHost2
 
 
-collect DATA.8
+virtual DATA.8
 xITextHost2.vftable dq \
 	xITextHost2.QueryInterface,\
 	xITextHost2.AddRef,\
@@ -463,4 +463,4 @@ xITextHost2.vftable dq \
 	xITextHost2.TxShowDropCaret,\
 	xITextHost2.TxDestroyCaret,\
 	xITextHost2.TxGetHorzExtent
-end collect
+end virtual

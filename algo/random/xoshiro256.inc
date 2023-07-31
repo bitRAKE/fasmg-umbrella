@@ -42,6 +42,15 @@ next:	mov r11,[state+1*8]
 	mov [state+2*8],rdx
 	retn ; return result and flags based on result
 
+; [1.0,2.0)
+macro double2.0
+	call xoshiro256.next
+	or rax,0x3FF
+	ror rax,10		; favor high random bits
+	shr rax,2		; clear top two bits
+end macro
+
+end namespace ; xoshiro256
 
 ; Jump functions for the generator are equivalent to 2^K calls of next()
 ; it can be used to generate 2^(256-K) non-overlapping subsequences for
@@ -57,35 +66,24 @@ iterate <FUNCTION,DATAS>,\
 		0x76E15D3EFEFDCBBF,0xC5004E441C522FB3,\
 		0x77710069854EE241,0x39109BB02ACBE635>
 
-	if used FUNCTION
-		collect CONST.32
-			xoshiro256.% dq DATAS
-		end collect
-
+	if used xoshiro256.FUNCTION
 		align 16, codepad #
-		FUNCTION: ; 34 bytes
+		xoshiro256.FUNCTION: ; 34 bytes
+			virtual CONST.32
+				.% dq DATAS
+			end virtual
+
 			xor ecx,ecx
 			vpxor ymm0,ymm0,ymm0
 		.scan:
-			bt dword [xoshiro256.%],ecx
+			bt dword [.%],ecx
 			jnc .skip
-			vpxor ymm0,ymm0,qqword [state]
+			vpxor ymm0,ymm0,qqword [xoshiro256.state]
 		.skip:
-			call next
+			call xoshiro256.next
 			inc cl
 			jnz .scan
-			vmovdqa [state],ymm0
+			vmovdqa [xoshiro256.state],ymm0
 			retn
 	end if ; used FUNCTION
 end iterate
-
-
-; [1.0,2.0)
-macro double2.0
-	call xoshiro256.next
-	or rax,0x3FF
-	ror rax,10		; favor high random bits
-	shr rax,2		; clear top two bits
-end macro
-
-end namespace ; xoshiro256

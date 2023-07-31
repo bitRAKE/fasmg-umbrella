@@ -29,10 +29,10 @@ glob_testing: entry $
 		'b*c*d',		'abbcccd',		1,	6,\
 		'b*c*$',		'abbccc',		1,	5,\
 
-		collect CONST.1
-			glob_testing.pattern.% db PATTERN,0
-			glob_testing.case.% db CASE,0
-		end collect
+		virtual CONST.1
+			.pattern.% db PATTERN,0
+			.case.% db CASE,0
+		end virtual
 
 		lea rsi,[.pattern.%]
 		lea rdi,[.case.%]

@@ -23,12 +23,12 @@ iterate <_FILE,			FUNCTION,		B_ID>,\
 	eval 'include "samples\',_FILE,'.inc"'
 	GATHER equ dq FUNCTION#_Sample
 	if % = %%
-		collect CONST.8
+		virtual CONST.8
 			label WinMain.Table:%%
 			irpv G,GATHER
 				G
 			end irpv
-		end collect
+		end virtual
 	end if
 end iterate
 

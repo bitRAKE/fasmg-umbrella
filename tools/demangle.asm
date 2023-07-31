@@ -29,14 +29,14 @@ struc(named) ARRAY_W line&
 	end namespace ; named
 end struc
 
-collect CONST.2
+virtual CONST.2
 manglednames ARRAY_W \
 	"??_7FooBase@Leap@@6B@",\
 	"??4FooBase@Leap@@QAEAAV01@ABV01@@Z",\
 	"??_R0?AVbad_alloc@std@@@8",\
 	"??0CAboutDlg@@QAE@XZ",\
 	"?get@Foo@Leap@@QAEHXZ"
-end collect
+end virtual
 
 
 main: entry $
@@ -97,9 +97,9 @@ end virtual
 	ExitProcess 0
 	int3
 
-collect BSS.64
+virtual BSS.64
 	label unName:4096 ; characters
 		rw sizeof unName
 	label buffer:4096 ; characters
 		rw sizeof buffer
-end collect
+end virtual

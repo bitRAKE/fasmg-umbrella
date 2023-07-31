@@ -6,14 +6,19 @@ struct GUID
 ends
 
 macro UUID line&
-	match A - B - C - D - E, line
-		dd 0x#A
-		dw 0x#B,0x#C
-		dq 0x#D#E bswap 8
-	else match { A =, B =, C =, D { E } },line
+	; try to match complex forms first ...
+	match { A =, B =, C =, D { E } }, line
 		dd A
 		dw B,C
 		db D E
+	else match { A - B - C - D - E }, line
+		dd 0x#A
+		dw 0x#B,0x#C
+		dq 0x#D#E bswap 8
+	else match A - B - C - D - E, line
+		dd 0x#A
+		dw 0x#B,0x#C
+		dq 0x#D#E bswap 8
 	else ; assume brief
 		ddq line
 	end match
@@ -36,9 +41,10 @@ end repeat
 end virtual
 end postpone
 
-collect CONST.64
+virtual CONST.64
 	GUIDS db __GUID__
-end collect
+	align 64
+end virtual
 
 
 

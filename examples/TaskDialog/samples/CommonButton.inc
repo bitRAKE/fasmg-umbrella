@@ -55,9 +55,9 @@ Common_Buttons_Sample:
 		end if
 
 		if % = %%
-			collect CONST.2
+			virtual CONST.2
 				label Common_Buttons_Sample.Table:%%
 				dw Common_Buttons_Sample.Table.Data
-			end collect
+			end virtual
 		end if
 	end iterate

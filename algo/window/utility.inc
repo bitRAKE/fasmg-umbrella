@@ -137,7 +137,9 @@ end if ; _GetWorkAreaRect
 
 
 macro CenterWindowPos_FromPoint point,hWnd*,hwndAfter*,width*,height*,flags:SWP_NOACTIVATE
-	push rbp,flags,height,width,hwndAfter,hWnd
+	iterate value, rbp,flags,height,width,hwndAfter,hWnd
+		push value
+	end iterate
 	call _CenterWindowPos_FromPoint, point
 end macro
 if used _CenterWindowPos_FromPoint

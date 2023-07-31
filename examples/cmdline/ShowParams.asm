@@ -73,6 +73,6 @@ Main:
 	pop rdi rbx
 	retn
 
-collect BSS.64
+virtual BSS.64
 	buffer rw 1024
-end collect
+end virtual

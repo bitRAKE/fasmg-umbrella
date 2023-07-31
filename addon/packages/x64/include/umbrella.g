@@ -1,37 +1,105 @@
-; windows OneCore/UWP api support
-;	+ no TCHAR or API renaming - use A or W directly
 
+; NOTE : will not
+calminstruction (target) AreaContent? area*
+        local string, empty
+	check sizeof area = 0
+	jyes empty
+        load string, area: 0, sizeof area
+        publish target, string
+	exit
+empty:
+	arrange string, 0
+        publish target, string
+end calminstruction
+
+; Advanced Data Model
+;
+; We start with creating virtual areas to capture data throughout. Then program
+; layout determines where different types of data appears in the object file.
+; Merging of sections or late sections (relative to code) can be realized. Late
+; sections need to be POSTPONED.
+;	+ need granularity coverage for all useful ranges and data types
+;		+ CONST - read only data
+;		+ DATA - initialized read/write data
+;		+ BSS - uninitialized read/write data
+;	+ ordering of data within PE is arbitrary
+;	+ uses base fasmg syntax
+;	+ warn of non-zero data in BSS
+
+iterate grain, 64,32,16,8,4,2,1
+	virtual at CONST.grain.BASE
+	CONST.grain::
+	end virtual
+
+	virtual at DATA.grain.BASE
+	DATA.grain::
+	end virtual
+
+;	virtual at BSS.grain.BASE
+;	BSS.grain::
+;	end virtual
+; HACK : {{{ work-around for error reading completely uninitialized area
+	virtual at BSS.grain.BASE
+	BSS.grain::
+		if BSS.grain.DUMMY
+			db -1
+		end if
+	end virtual
+; }}}
+end iterate
+
+; Delayed definition of *.DATA and *.SIZE to capture all area expansions, and
+; enable layout flexiblity.
+postpone
+	iterate grain, 64,32,16,8,4,2,1
+		CONST.grain.DATA AreaContent CONST.grain
+		DATA.grain.DATA AreaContent DATA.grain
+
+;		BSS.grain.DATA AreaContent BSS.grain
+; HACK : {{{ work-around for error reading completely uninitialized area
+virtual BSS.grain
+	if $ - BSS.grain.BASE ; if content
+		BSS.grain.DUMMY := 1 ; more content
+		BSS.grain.TEMP AreaContent BSS.grain
+		BSS.grain.DATA = BSS.grain.TEMP shr 8
+	else ; empty
+		BSS.grain.DUMMY := 0
+		BSS.grain.DATA AreaContent BSS.grain
+	end if
+end virtual
+; }}}
+		if BSS.grain.DATA <> 0
+			display 10,10,'Warning: initialized data in BBS.',`grain,' ignored!',10
+		end if
+		BSS.grain.SIZE := sizeof BSS.grain
+	end iterate
+end postpone
+
+;-------------------------------------------------------------------------------
+
+;format PE64 CONSOLE 6.2 at 0x1_4000_0000
 include 'format\format.inc'
-define __ImageBase PE.IMAGE_BASE ; HINSTANCE constant
-
 include 'encoding\utf8.inc'
 
 ; prefer advanced functionality macros
 include '..\..\utility\@@.inc'
 include '..\..\utility\align.inc'
-; WARNING:
-;	- this shouldn't be needed for each section
-;	- fixed base can align beyond section alignment
-	mvmacro temp, section?
-	macro section?
-		namespace PE
-			if defined Fixups
-				align.assume SECTION_BASE, SECTION_ALIGNMENT
-			end if
-		end namespace
-		section
-	end macro ; section
-	mvmacro section?, temp
-
 include 'macro\codepad.inc' ; for use with align
 
+if PE.RELOCATION relativeto 0
+; NOTE : not needed for non-variable term:
+;	align.assume IMAGE_BASE, 0x1_0000
+else
+	align.assume PE.RELOCATION, PE.SECTION_ALIGNMENT
+end if
+
+
 include 'macro\struct.inc'
-include 'macro\resource.inc'
-
-
 Struct.CheckAlignment = 1
 
-; don't use TCHAR - only for existing /equates/*
+include 'macro\resource.inc'
+
+; HACK : don't use TCHAR - only for existing /equates/*
 ; (which will be replaced in time ... )
 struc? TCHAR args:?&
 	. du args
@@ -40,7 +108,6 @@ macro TCHAR args:?&
 	du args
 end macro
 sizeof.TCHAR = 2
-
 
 include 'equates\kernel64.inc'
 include 'equates\user64.inc'
@@ -51,7 +118,7 @@ include 'equates\shell64.inc'
 include 'equates\advapi64.inc'
 include 'equates\wsock32.inc'
 
-; superfluous renaming
+; HACK : superfluous renaming (should be replaced in time - don't use abiguous A/W symbols)
 iterate <NAME_OUT,	NAME_IN>,\
 	WNDCLASSEXW,	WNDCLASSEX
 
@@ -62,42 +129,19 @@ end iterate
 
 UNICODE := 1
 include 'equates\WinUser.g'
-
-
+include 'equates\windef.g'
 
 include 'macro\rstrings.inc'
 dummy RSTRING ; zero id
 
-include 'macro\collect.inc'
-
-; initialize data collections
-repeat 7
-repeat 1,I:1 shl (7-%)
-	collect CONST.I		; read-only
-	end collect
-	collect DATA.I		; initialized read-write
-	end collect
-	collect BSS.I		; uninitialized read-write
-	end collect
-end repeat
-end repeat
-
-
-macro push? line&
-	iterate item,line
-		push item
-	end iterate
-end macro
-macro rpop? line&
-	iterate item,line
-		indx %%-%+1
-		pop item
-	end iterate
-end macro
-
+include 'macro\fixed_array.g'
 
 ; Macros are written to process 64-bit/32-bit register inputs. yet, sometimes
-; conversion to register parts is convenient.
+; conversion to register parts is convenient. Root namespaces are globally accessible.
+define reg8low reg8low
+define reg8high reg8high
+define reg16low reg16low
+define reg32 reg32
 iterate <reg,	rhigh,	rlow>,\
 	ax,	ah,	al,\
 	cx,	ch,	cl,\
@@ -127,213 +171,49 @@ repeat 8, i:8
 	define reg8low.r#i? r#i#b
 end repeat
 
+include 'macro\win64abi.g'
 
-; constant fixed size arrays for any data type
-struc FIXED_ARRAY line
-	local items,max
-	label .:items
-	max = 0
-	iterate item,line
-		.% item ; zero implied padding
-		if $ - .% > max
-			max = $ - .%
-		end if
-		rb .stride - ($ - .%)
-		if % = %%
-			items := %%
-		end if
-	end iterate
-	.stride	:= max
-end struc
+;---------------------------------------------------------------- Object Layout:
 
-
-
-
-; TODO: doing something like "ExitProcess,0" produces a strange error - need to catch that to make the error very verbose?
-
-macro win64abi api*,line&
-	iterate P,line
-		repeat 1,I:%%-%+1
-		indx I
-		win64abi_parm I,P
-		end repeat
-	end iterate
-	call [api]
-end macro
-
-macro call? function,line&
-	iterate P,line
-		repeat 1,I:%%-%+1
-		indx I
-		win64abi_parm I,P
-		end repeat
-	end iterate
-	call function
-end macro
-
-; don't try to overload x86 instructions, irregular types should be built-up prior (i.e. instead of supporting ( SIGNED {size}? [] --> MOVSX ) just do the MOVSX)
-macro win64abi_parm index*,arg&
-local llabl,word_id,dest
-iterate reg, rcx,rdx,r8,r9,rax,r10,r11
-	if index < 5
-		indx index
-	else
-		indx 5 + ((index-4) mod (%%-4))
-	end if
-	match [any],arg
-		if index < 5
-			mov reg,[any]
-		else
-			push [any]
-			pop [.P#index]
-		end if
-	else match =ADDR? any,arg
-		if index < 5
-			lea reg,[any]
-		else
-			lea reg,[any]
-			mov [.P#index],reg
-		end if
-	else match =CONST? any,arg
-		lea reg,< any >
-		if 4 < index
-			mov [.P#index],reg
-		end if
-	else match =_W any,arg
-		lea reg,< arg >
-		if 4 < index
-			mov [.P#index],reg
-		end if
-	else match =_A any,arg
-		lea reg,< arg >
-		if 4 < index
-			mov [.P#index],reg
-		end if
-	else match =_R any,arg
-		word_id RSTRING any
-		if index < 5
-			mov reg32.reg,word_id
-		else
-			mov [.P#index],word_id
-		end if
-	else
-		x86.parse_operand@src arg
-		if @src.type = 'reg'
-			if index < 5
-				match =reg?,arg
-				else
-; TODO: reg rax -> XCHG
-					mov reg,arg
-				end match
-			else
-				mov [.P#index],arg
-			end if
-		else if @src.type = 'mem'
-			match =DWORD? any,arg
-				mov reg32.reg,arg
-				if index > 4
-					mov [.P#index],reg
-				end if
-			else
-				display 10,'MEMORY! Implement more types'
-			end match
-		else if @src.type = 'imm'
-			if arg = 0
-				if index < 5
-					xor reg32.reg,reg32.reg
-				else
-					and [.P#index],0
-				end if
-			else if arg = -1
-				if index < 5
-					or reg,-1
-				else
-					or [.P#index],-1
-				end if
-			else if -$81 < arg & arg < $80
-				push arg
-				if index < 5
-					pop reg
-				else
-					pop [.P#index]
-				end if
-			else if -1 < arg & arg < $10000_0000 & index < 5
-				mov reg32.reg,arg
-			else if -$8000_0001 < arg & arg < $8000_0000
-				if index < 5
-					mov reg,arg
-				else
-					mov [.P#index],arg
-				end if
-			else ; only use proxy in extreme case
-				mov reg,arg
-				if index > 4
-					mov [.P#index],reg
-				end if
-			end if
-		end if
-	end match
-break
+if CONST.DATA.SIZE <> 0
+	section '.rdata' data readable ; ---------------------------------------
+end if
+iterate grain, 64,32,16,8,4,2,1
+	CONST.grain.BASE:
+		db CONST.grain.DATA
 end iterate
-end macro
+CONST.DATA.SIZE := $ - CONST.64.BASE
+repeat 1, N:CONST.DATA.SIZE
+	display 10,9,`N,' bytes for constant data'
+end repeat
 
 
-; DEPRECATED ; this version factors out variable terms in address space, and assumes base is infinitely alignable (use wisely)
-;macro ? value*,something:db ?
-;	while ($-$$) and (value-1)
-;		something
-;	end while
-;end macro
+if DATA.DATA.SIZE <> 0 ; merge both read/write sections
+	section '.data' data readable writeable ; ------------------------------
+else if BSS.DATA.SIZE <> 0 ; create uninitialized data section
+	section '.data' udata readable writeable ; -----------------------------
+end if
 
-macro lea? line&
-; NOTE: spaces needed for possible line breaks! Use most general configuration!
-	match any =, =< values =>,line
-		local nstart,nend
-		match =_A V,values
-			collect CONST.1
-				nstart db V,0
-				label nend
-			end collect
-		else match =_W V,values
-			collect CONST.2
-				nstart du V,0
-				label nend
-			end collect
-		else ; TODO: could assume granularity group based on size
-			collect CONST.1
-				label nstart
-				values
-				label nend
-			end collect
-		end match
-		lea any,[nstart]
-		.bytes = nend - nstart
-	else
-		lea line
-	end match
-end macro
+iterate grain, 64,32,16,8,4,2,1
+	DATA.grain.BASE:
+		db DATA.grain.DATA
+end iterate
+DATA.DATA.SIZE := $ - DATA.64.BASE
+repeat 1, N:DATA.DATA.SIZE
+	display 10,9,`N,' bytes for initialized data'
+end repeat
 
-macro mov? line&
-; NOTE: spaces needed for possible line breaks! Use most general configuration!
-	match any =, =< values =>,line
-		local word_id
-		match =_R V,values
-			word_id RSTRING V
-		else
-			err ; unsupported type
-		end match
-		if word_id < $80
-			push word_id
-			pop any
-		else
-			mov any,word_id
-		end if
-	else
-		mov line
-	end match
-end macro
+iterate grain, 64,32,16,8,4,2,1
+	BSS.grain.BASE:
+		rb BSS.grain.SIZE
+end iterate
+BSS.DATA.SIZE := $ - BSS.64.BASE
+repeat 1, N:BSS.DATA.SIZE
+	display 10,9,`N,' bytes for uninitialized data'
+end repeat
 
-section '.text' code readable executable
+
+section '.text' code readable executable ; -------------------------------------
 
 ; If needed, resource data should be at end of program:
 ;	+ resource file
@@ -354,65 +234,24 @@ match =UMBRELLA_LIBRARY,UMBRELLA_LIBRARY
 else
 	eval "include 'api\",UMBRELLA_LIBRARY,".g'"
 end match
+
 postpone
-	; The following defines the section layout for the executable:
-
-	; Grouping starts at cacheline size and decreases to one. This insures each
-	; successive group is aligned.
-	;
-	; "How can multiple sections of file be generated in parallel?"
-	; https://flatassembler.net/docs.php?article=fasmg
-	section '.rdata' data readable ; granularity groups for constant data
-		CONST.64
-		CONST.32
-		CONST.16
-		CONST.8
-		CONST.4
-		CONST.2
-		CONST.1
-		if $ = $$ ; loader doesn't like zero length sections
-			db 0
-		end if
-
-	section '.data' data readable writeable ; granularity groups for variable data
-		DATA.64
-		DATA.32
-		DATA.16
-		DATA.8
-		DATA.4
-		DATA.2
-		DATA.1
-
-		align 64
-
-		BSS.64
-		BSS.32
-		BSS.16
-		BSS.8
-		BSS.4
-		BSS.2
-		BSS.1
-		if $ = $$ ; loader doesn't like zero length sections
-			db ?
-		end if
+; TODO : abstract imports so this section can be located anywhere in object
 
 	include 'api\__import64.g' ; build import table
 
-	; Assume user wants 32-bit addressing if they specifying a low base,
-	; don't output fixups to force loader to do what is implied.
-	; (NOTE: zero base always relocates.)
+; NOTE : Assume user wants 32-bit addressing if they specifying a low base,
+; don't output fixups to force loader to do what is implied.
+; (CAUTION: zero base always relocates.)
 	if (PE.IMAGE_BASE - PE.RELOCATION) > 0x30_0000 \
-	| (PE.IMAGE_BASE - PE.RELOCATION) = 0
-	section '.reloc' fixups data readable discardable
-		if $ = $$ ; loader doesn't like zero length sections
-			dd 0,8 ; if there are no fixups, generate dummy entry
-			display 10,9,"No relocations needed."
-		else
-			repeat 1,D:PE.NUMBER_OF_RELOCATIONS
-				display 10,9,`D,' relocations needed.'
-			end repeat
-		end if
+	| (PE.IMAGE_BASE - PE.RELOCATION) = 0 \
+	& PE.RELOCATION_INDEX ; no more relocations possible
+
+		section '.reloc' fixups data readable discardable
+		repeat 1,D:PE.NUMBER_OF_RELOCATIONS
+			display 10,9,`D,' relocations needed.'
+		end repeat
 	else
-		display 10,9,"Fixed base address: No relocations needed."
+		display 10,9,"No relocations needed."
 	end if
 end postpone

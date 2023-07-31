@@ -5,7 +5,9 @@
 ; Works well with advanced align macro (..\..\utility\align.inc):
 ;	align 16, codepad #
 ;
-; bitRAKE: using different selection for multi-instruction alignment
+; bitRAKE:
+;	- using different selection for multi-instruction alignment
+;	- allow greater than 15 byte fill, mainly for cachline alignment
 
 struc bstr? bytes&
 	virtual at 0

@@ -130,13 +130,13 @@ no_snap:
 skip:
 end macro
 
+end namespace ; NAMED
 
-collect DATA.16
+virtual DATA.16
 	NAMED.HotSpot	POINT
 	NAMED.Snap	dd SNAP_PIXELS	; unsigned
 	NAMED.Dragging	db ?		; 0 or 1
 	align 16
-end collect
+end virtual
 
-end namespace ; NAMED
 end struc ; MagneticWindow

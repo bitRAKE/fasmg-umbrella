@@ -7,9 +7,9 @@
 
 if used SplitMix64.Next
 namespace SplitMix64
-	collect DATA.8
+	virtual DATA.8
 		x dq ? ; seed with any value
-	end collect
+	end virtual
 
 align 16, codepad #
 Next:	mov rax,0x9E3779B97F4A7C15

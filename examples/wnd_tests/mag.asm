@@ -15,13 +15,12 @@ WndProc:
 		.P6	dq ?
 		.P7	dq ?
 
-		.mag	MagneticWindow 24 ; set snap distance
-
 			align.assume rbp, 16
 			align 16
 		.frame := $ - $$
 			dq ?,?
 		.hWnd	dq ?
+		.mag	MagneticWindow 24 ; set snap distance
 	end virtual
 	enter .frame,0
 	mov [.hWnd],rcx
@@ -72,19 +71,19 @@ WndProc:
 
 
 
-collect DATA.64
+virtual DATA.64
 	WinMain.wc WNDCLASSEXW	\
 		cbSize:		sizeof WNDCLASSEX,\
 		style:		CS_HREDRAW or CS_VREDRAW,\
 		lpfnWndProc:	WndProc,\
 		hbrBackground:	COLOR_BTNTEXT + 1,\
-		hInstance:	__ImageBase,\
+		hInstance:	PE.IMAGE_BASE,\
 		lpszMenuName:	IDM_MAIN,\
 		lpszClassName:	ClassName
 
 	ClassName du 'bitRAKE.2022',0
 	align 64
-end collect
+end virtual
 
 WinMain.fatal:
 	ExitProcess 255
@@ -122,10 +121,10 @@ WinMain: ENTRY $
 if 0 ; WS_POPUP windows don't have non-client rendering ...
 	; disable non-client rendering (i.e. drop shadow, rounded corners)
 	mov dword [.P5],DWMNCRP_DISABLED
-	DwmSetWindowAttribute [.hWnd], DWMWA_NCRENDERING_POLICY, ADDR .P5, 4
+	DwmSetWindowAttribute [.hWnd], DWMWA_NCRENDERING_POLICY, & .P5, 4
 end if
 
-	GetCursorPos ADDR .P5
+	GetCursorPos & .P5
 	CenterWindowPos_FromPoint [.P5], [.hWnd], HWND_TOPMOST, 256, 256, SWP_SHOWWINDOW
 	jmp @F
 .message_loop:

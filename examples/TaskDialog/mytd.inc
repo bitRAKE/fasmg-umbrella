@@ -78,11 +78,11 @@ align 16, codepad #
 .S_OK:	xor eax,eax
 	retn
 
-.fatal:	int3 ; TODO: not nice, but never happens?
+.fatal:	int3 ; HACK: not nice, but never happens?
 
 
 
-collect DATA.64
+virtual DATA.64
 ; perform as much static initialization of global structure as possible
 ;	+ center within parent window
 ;	+ always allow ESC, Alt-F4, Close Button
@@ -95,7 +95,7 @@ MyTD_Template MY_TD <\
 	TaskDialog__Callback.S_OK
 MyTD_Template_end:
 align 64,0xFF
-end collect
+end virtual
 
 
 ; Create an array of TASKDIALOG_BUTTON items. Works for regular buttons and
@@ -110,10 +110,10 @@ struc(NAMED) TD_BUTTONS line&
 ;		gather equ ID,NAMED.%	; 32-bit only
 		total = %%
 	end iterate
-	collect CONST.4
+	virtual CONST.4
 		label NAMED:total
 		irpv G,gather
 			dd G
 		end irpv
-	end collect
+	end virtual
 end struc
