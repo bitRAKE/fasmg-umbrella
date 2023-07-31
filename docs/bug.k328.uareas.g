@@ -4,6 +4,7 @@
 
 FIX_BUG		:= 0
 USE_CALM	:= 0
+EMPTY		:= 0 ; empty doesn't produce error
 
 virtual at Reserved.BASE
 Reserved::
@@ -13,9 +14,11 @@ Reserved::
 end virtual
 
 Reserved.BASE:
-virtual Reserved
-	rb 16 ; bug only happens when the whole area is uninitialized
-end virtual
+if ~EMPTY | FIX_BUG
+	virtual Reserved
+		rb 16 ; bug only happens when the whole area is uninitialized
+	end virtual
+end if
 
 if USE_CALM
 	contents AreaContent Reserved
