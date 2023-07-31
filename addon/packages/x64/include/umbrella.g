@@ -1,14 +1,7 @@
 
-; NOTE : will not
 calminstruction (target) AreaContent? area*
         local string, empty
-	check sizeof area = 0
-	jyes empty
         load string, area: 0, sizeof area
-        publish target, string
-	exit
-empty:
-	arrange string, 0
         publish target, string
 end calminstruction
 
@@ -62,16 +55,18 @@ virtual BSS.grain
 		BSS.grain.DUMMY := 1 ; more content
 		BSS.grain.TEMP AreaContent BSS.grain
 		BSS.grain.DATA = BSS.grain.TEMP shr 8
+		BSS.grain.SIZE := sizeof BSS.grain - 1
 	else ; empty
 		BSS.grain.DUMMY := 0
 		BSS.grain.DATA AreaContent BSS.grain
+		BSS.grain.SIZE := sizeof BSS.grain
 	end if
 end virtual
 ; }}}
 		if BSS.grain.DATA <> 0
 			display 10,10,'Warning: initialized data in BBS.',`grain,' ignored!',10
 		end if
-		BSS.grain.SIZE := sizeof BSS.grain
+;		BSS.grain.SIZE := sizeof BSS.grain
 	end iterate
 end postpone
 
@@ -85,14 +80,6 @@ include 'encoding\utf8.inc'
 include '..\..\utility\@@.inc'
 include '..\..\utility\align.inc'
 include 'macro\codepad.inc' ; for use with align
-
-if PE.RELOCATION relativeto 0
-; NOTE : not needed for non-variable term:
-;	align.assume IMAGE_BASE, 0x1_0000
-else
-	align.assume PE.RELOCATION, PE.SECTION_ALIGNMENT
-end if
-
 
 include 'macro\struct.inc'
 Struct.CheckAlignment = 1
@@ -178,6 +165,7 @@ include 'macro\win64abi.g'
 if CONST.DATA.SIZE <> 0
 	section '.rdata' data readable ; ---------------------------------------
 end if
+
 iterate grain, 64,32,16,8,4,2,1
 	CONST.grain.BASE:
 		db CONST.grain.DATA
@@ -203,6 +191,7 @@ repeat 1, N:DATA.DATA.SIZE
 	display 10,9,`N,' bytes for initialized data'
 end repeat
 
+align 64
 iterate grain, 64,32,16,8,4,2,1
 	BSS.grain.BASE:
 		rb BSS.grain.SIZE
