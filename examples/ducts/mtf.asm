@@ -40,18 +40,17 @@ duct.usage_unknown:
 	.buf.Create 1 shl 12 ; 4k buffer
 	GetCommandLineW
 	xchg r8,rax
-	wsprintfW [.buf.head],\
-		<_W 10,27,'[31mInvalid:',9,27,'[7m%s',27,'[m',10>,r8
-	xchg r8,rax ; characters
-	WriteConsoleW [.hErr],[.buf.head],r8,ADDR .P6,0
+	wsprintfW [.buf.head], <_W 10,27,'[31mInvalid:',9,27,'[7m%s',27,'[m',10>, r8
+	xchg r8, rax ; characters
+	WriteConsoleW [.hErr], [.buf.head], r8, & .P6, 0
 	.buf.Destroy
 duct.usage:
 	duct.FRAME
-	lea rdx,<db 10,\
+	lea rdx, <db 10,\
 		"Usage: duct.mtf.exe {options} < [input] > [output]",10,\
 		9,	'd',9,	'decode',10,\
 		9,	'e',9,	'encode',10>
-	WriteFile [.hErr],rdx,.bytes,0,0
+	WriteFile [.hErr], rdx, .bytes, 0, 0
 duct.fatal:
 	ExitProcess 1
 	int3

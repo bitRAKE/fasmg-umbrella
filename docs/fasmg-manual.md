@@ -720,7 +720,7 @@ Table 1: Data directives
 | 16           | ddq           | rdq          |
 | 32           | dqq           | rqq          |
 | 64           | ddqq          | rdqq         |
-| *            | emit          |              |
+| *            | emit, dbx     |              |
 
 
 ### 7. Conditional assembly<a id='7'></a>
