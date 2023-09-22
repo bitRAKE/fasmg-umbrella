@@ -71,7 +71,6 @@ more:
 	bt [number], ecx
 	setc al
 	movzx edx, [transitions + rdx + rax]
-entry:
 	dec ecx
 	jns more
 	mov al, [transitions + rdx + 2]
