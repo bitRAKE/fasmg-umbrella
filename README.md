@@ -1,3 +1,6 @@
+> [!WARNING]
+> This software is unfinished. Keep your expectations low.
+
 # fasmg-umbrella
 Umbrella libraries for modern windows development (using [fasmg](https://github.com/tgrysztar/fasmg)).
 
