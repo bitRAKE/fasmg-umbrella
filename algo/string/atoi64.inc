@@ -27,14 +27,14 @@ iterate <EXPECTED,	NUMBER,				DESCRIPTION>,\
 		db 9,DESCRIPTION,', "'
 		label .%.number
 		match < ANY >, NUMBER
-			db ANY
+			db ANY,13,10
 		else if NUMBER < 0
 			repeat 1, N:-NUMBER
-				db '-',`N,0
+				db '-',`N,0,13,10
 			end repeat
 		else
 			repeat 1, N:NUMBER
-				db `N,0
+				db `N,0,13,10
 			end repeat
 		end if
 		.%.strlen := $ - .%.string
@@ -50,21 +50,19 @@ iterate <EXPECTED,	NUMBER,				DESCRIPTION>,\
 		end virtual
 		cmp [.%.value], rax
 	end match
-	; FAIL (compile-time) != FAIL (run-time), or value incorrect
-	jnz .%.bad_result
-	lea rdx, <_A 13,10,27,'[32m','pass',27,'[m'>
-	WriteConsoleA rbx, rdx, .bytes, & .P5, 0
-	jmp .%.continue
+	lea rdx, <_A 27,'[32m','pass',27,'[m'>
+	; FAIL (compile-time) = FAIL (run-time), or value correct
+	jz .%.continue
 .%.bad_result:
-	inc esi
-	lea rdx, <_A 13,10,27,'[91m','FAIL',27,'[m'>
-	WriteConsoleA rbx, rdx, .bytes, & .P5, 0
+	lea rdx, <_A 27,'[91m','FAIL',27,'[m'>
+	inc esi ; test case did not pass
 .%.continue:
-	mov byte [.%.string + .%.strlen - 1], '"'
+	WriteConsoleA rbx, rdx, .bytes, & .P5, 0
+	mov byte [.%.string + .%.strlen - 3], '"'
 	WriteConsoleA rbx, & .%.string, .%.strlen, & .P5, 0
 end iterate
 
-; TODO: perform batch of random tests in boundary ranges
+; TODO: perform batch of random tests in boundary ranges?
 ; [-0x2_0000_0000_0000_0000, 0x2_0000_0000_0000_0000]
 
 ExitProcess rsi ; return failed tests
