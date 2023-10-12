@@ -1,3 +1,4 @@
 [submodule "fasmg"]
 	path = fasmg
 	url = https://github.com/bitRAKE/fasmg.git
+	branch = umbrella
