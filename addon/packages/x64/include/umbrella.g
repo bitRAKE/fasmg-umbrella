@@ -28,17 +28,9 @@ iterate grain, 64,32,16,8,4,2,1
 	DATA.grain::
 	end virtual
 
-;	virtual at BSS.grain.BASE
-;	BSS.grain::
-;	end virtual
-; HACK : {{{ work-around for error reading completely uninitialized area
 	virtual at BSS.grain.BASE
 	BSS.grain::
-		if BSS.grain.DUMMY
-			db -1
-		end if
 	end virtual
-; }}}
 end iterate
 
 ; Delayed definition of *.DATA and *.SIZE to capture all area expansions, and
@@ -47,26 +39,11 @@ postpone
 	iterate grain, 64,32,16,8,4,2,1
 		CONST.grain.DATA AreaContent CONST.grain
 		DATA.grain.DATA AreaContent DATA.grain
-
-;		BSS.grain.DATA AreaContent BSS.grain
-; HACK : {{{ work-around for error reading completely uninitialized area
-virtual BSS.grain
-	if $ - BSS.grain.BASE ; if content
-		BSS.grain.DUMMY := 1 ; more content
-		BSS.grain.TEMP AreaContent BSS.grain
-		BSS.grain.DATA = BSS.grain.TEMP shr 8
-		BSS.grain.SIZE := sizeof BSS.grain - 1
-	else ; empty
-		BSS.grain.DUMMY := 0
 		BSS.grain.DATA AreaContent BSS.grain
-		BSS.grain.SIZE := sizeof BSS.grain
-	end if
-end virtual
-; }}}
 		if BSS.grain.DATA <> 0
 			display 10,10,'Warning: initialized data in BBS.',`grain,' ignored!',10
 		end if
-;		BSS.grain.SIZE := sizeof BSS.grain
+		BSS.grain.SIZE := sizeof BSS.grain
 	end iterate
 end postpone
 
