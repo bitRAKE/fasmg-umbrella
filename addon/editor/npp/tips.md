@@ -25,3 +25,31 @@ By changing the `/K` to `/C` and appending `$(FILE_NAME)` the build commands can
 
 
 It's a great way to test snippets of code with various tools.
+
+# debugging
+
+Debug the executable of the same name as the current file (32-bit or 64-bit), using the current selection as the commandline for the application.
+```
+"Y:\x64dbg\release\x96dbg.exe" "$(CURRENT_DIRECTORY)\$(NAME_PART).exe" "$(CURRENT_WORD)"
+```
+
+
+
+
+# Test Notepad++ Configuration:
+
+cmd /c echo $(CURRENT_DIRECTORY) && pause
+cmd /K cd &quot;$(CURRENT_DIRECTORY)&quot; ^&amp;^&amp; &quot;$(FULL_CURRENT_PATH)&quot;
+
+
+| value type          | syntax to use        | notes:               |
+|---------------------|----------------------|----------------------|
+| {selection}         | $(CURRENT_WORD)      | not word restricted  |
+| FileName            | $(NAME_PART)         |                      |
+| FileName.Ext        | $(FILE_NAME)         |                      |
+| X:\path             | $(CURRENT_DIRECTORY) | settings dependent   |
+| X:\path\FileName.Ext| $(FULL_CURRENT_PATH) |                      |
+| ?:\\{install path}  | $(NPP_DIRECTORY)     |                      |
+
+
+
