@@ -1,6 +1,7 @@
 
 ; global dynamic freelist implementation (WIP)
 ;	- two instruction get/put for algorithms
+;	- multi-threading: each thread creates its own freelist
 ;	- paranoid exception handling (only linear growth)
 ;
 ; requirements:
@@ -19,6 +20,7 @@ FreeList__hVector	dq ?		;
 			dq ?		;
 end virtual
 
+define FreeList FreeList
 namespace FreeList
 
 REGISTER equ r15 ; default global get/set register (or state explicitly)
