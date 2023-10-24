@@ -44,7 +44,6 @@ assert WINDOW_LIMIT_WIDTH > BORDER_SIZE*3 + 2*32
 assert WINDOW_LIMIT_HEIGHT > BORDER_SIZE*2 + 32
 
 
-
 format PE GUI 4.0
 entry start
 

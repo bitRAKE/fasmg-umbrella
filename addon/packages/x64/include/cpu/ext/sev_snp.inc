@@ -1,0 +1,12 @@
+macro rmpupdate?
+	db 0F2h,0Fh,1,0FEh
+end macro
+macro pvalidate?
+	db 0F2h,0Fh,1,0FFh
+end macro
+macro rmpadjust?
+	db 0F3h,0Fh,1,0FEh
+end macro
+macro psmash?
+	db 0F3h,0Fh,1,0FFh
+end macro
