@@ -34,7 +34,7 @@ Although, fasmg cannot be completely parsed by the KSyntaxHighlighting engine, i
 [^1]: [KSyntaxHighlighting](https://api.kde.org/frameworks/syntax-highlighting/html/index.html)
 [^2]: [Working with Syntax Highlighting](https://docs.kde.org/trunk5/en/kate/katepart/highlight.html)
 [^3]: [Over 300 syntax definition files](https://invent.kde.org/frameworks/syntax-highlighting/-/tree/master/data/syntax)
-[^4]: [fasmg Highlighting for NotepadPlusPlus](/addon/editor/npp/)
+[^4]: [fasmg Highlighting for NotepadPlusPlus](../npp/)
 [^5]: [How to change default syntax-highlighting for files in Kate (with images).](https://unix.stackexchange.com/questions/137989/how-to-change-default-syntax-highlighting-for-header-file-in-kate)
 
 
