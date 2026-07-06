@@ -1,6 +1,18 @@
-# skip /.wip/ directories wherever they appear
-.wip*
+# Scratch output from rebuild.cmd and manual example builds.
+.wip/
+.wip*/
 
-# don't include executables in repo
+# Local binaries and linker/debugger byproducts.
 *.exe
 *.dll
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Local assembler listing/symbol/map files.
+*.fas
+*.lst
+*.map
+*.sym
