@@ -12,28 +12,28 @@ PUSHD "%~dp0"
 ECHO. >>%DEBUG_LOG%
 ECHO. >>%DEBUG_LOG%
 ECHO	-----	building examples ----- >>%DEBUG_LOG%
-fasmg examples\_threads.asm >>%DEBUG_LOG%
-fasmg examples\test.ITextHost2.asm >>%DEBUG_LOG%
-fasmg examples\vt100.asm >>%DEBUG_LOG%
-fasmg examples\xoshiro_threads.asm >>%DEBUG_LOG%
+CALL :run fasmg examples\_threads.asm || GOTO :fail
+CALL :run fasmg examples\test.ITextHost2.asm || GOTO :fail
+CALL :run fasmg examples\vt100.asm || GOTO :fail
+CALL :run fasmg examples\xoshiro_threads.asm || GOTO :fail
 
-fasmg examples\glob_test\glob_test.asm >>%DEBUG_LOG%
-fasmg examples\ducts\mtf.asm >>%DEBUG_LOG%
-fasmg examples\cmdline\ShowParams.asm >>%DEBUG_LOG%
-fasmg examples\TaskDialog\TaskDlgSamples.asm >>%DEBUG_LOG%
-fasmg examples\wnd_tests\mag.asm >>%DEBUG_LOG%
+CALL :run fasmg examples\glob_test\glob_test.asm || GOTO :fail
+CALL :run fasmg examples\ducts\mtf.asm || GOTO :fail
+CALL :run fasmg examples\cmdline\ShowParams.asm || GOTO :fail
+CALL :run fasmg examples\TaskDialog\TaskDlgSamples.asm || GOTO :fail
+CALL :run fasmg examples\wnd_tests\mag.asm || GOTO :fail
 
 PUSHD "examples\in-tale" 2>>NUL
 If %errorlevel% EQU 0 (
 	ECHO	-----	menu.cmd ----- >>%DEBUG_LOG%
-	CALL menu.cmd >>%DEBUG_LOG%
+	CALL :run CALL menu.cmd || (POPD & GOTO :fail)
 	POPD
 )
 
 PUSHD "tools" 2>>NUL
 If %errorlevel% EQU 0 (
 	ECHO	-----	build.cmd ----- >>%DEBUG_LOG%
-	CALL build.cmd >>%DEBUG_LOG%
+	CALL :run CALL build.cmd || (POPD & GOTO :fail)
 	POPD
 )
 
@@ -46,3 +46,16 @@ If %errorlevel% EQU 0 (
 ::		+ .CMD files are not highlighted
 
 POPD
+EXIT /B 0
+
+:run
+%* >>%DEBUG_LOG%
+IF ERRORLEVEL 1 (
+	ECHO build failed: %* >>%DEBUG_LOG%
+	EXIT /B 1
+)
+EXIT /B 0
+
+:fail
+POPD
+EXIT /B 1
